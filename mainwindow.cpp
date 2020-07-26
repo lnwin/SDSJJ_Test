@@ -8,7 +8,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)// 载入函数
+MainWindow::MainWindow(QWidget *parent)// 载入函数是
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
