@@ -49,7 +49,7 @@ void MainWindow::on_PortButton_clicked()//串口开启函数
          }
          else
          {
-             ui->textEdit->append( srcDirPath) ;
+             ui->pointfilelineEdit->setText(srcDirPath) ;
 
          }
  }
