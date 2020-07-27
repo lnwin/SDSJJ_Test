@@ -1,8 +1,11 @@
-QT       += core gui
+QT += core gui
+QT +=multimedia
+QT +=multimediawidgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4):
 
-QT       += serialport
+QT += widgets
+QT += serialport
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use

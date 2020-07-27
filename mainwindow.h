@@ -5,12 +5,22 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QMessageBox>
 #include <QFileDialog>
-#include <QDebug>
 #include<optional>
+#include <QCamera>
+#include <QCameraViewfinder>
+#include <QCameraImageCapture>
+#include <QCameraInfo>
+#include <QDebug>
+#include <QList>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+class QCamera;
+class QCameraViewfinder;
+class QCameraImageCapture;
 
 class MainWindow : public QMainWindow
 {
@@ -22,16 +32,26 @@ public:
     void searchPort();
     void ReadData();
     void SendData();
+    void captureImage();
+    void displayImage(int,QImage);
+    void saveImage();
+    void searchCamera();
 private slots:
     void on_PortButton_clicked();
     void on_senddatabutton_clicked();
     void on_pointfilepushButton_clicked();
-   // void on_closeButton_clicked();
-   // void on_sendSpeedButton_clicked();
+    void on_intCamera_clicked();
+
 
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
+    QCamera *camera;//相机
+    QCameraViewfinder *viewfinder;//取景器
+    QCameraImageCapture *imageCapture;//图片捕捉器
+
+
+
 
 static QString getOpenFileName(   //定义点云文件路径属性
 QWidget *parent = Q_NULLPTR,

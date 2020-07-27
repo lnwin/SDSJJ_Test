@@ -8,12 +8,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)// 载入函数是
+
+MainWindow::MainWindow(QWidget *parent)// 载入函数
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     searchPort();
+    searchCamera();
+
 }
 
 MainWindow::~MainWindow()
@@ -25,6 +28,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_PortButton_clicked()//串口开启函数
 {
+    delete serial;
     serial = new QSerialPort;
     serial->setPortName(ui->portcomboBox->currentText());//设置串口名
     serial->open(QIODevice::ReadWrite);//以读写方式打开串口
@@ -39,7 +43,7 @@ void MainWindow::on_PortButton_clicked()//串口开启函数
  {
       SendData();
  }
- void MainWindow::on_pointfilepushButton_clicked()//点云选择
+ void MainWindow::on_pointfilepushButton_clicked()//点云路径选择
  {
 
     QString  srcDirPath = QFileDialog::getExistingDirectory( this, "请选择点云存储路径", "/");
@@ -91,7 +95,68 @@ void MainWindow::searchPort()//串口搜索函数
             {
                ui->portcomboBox->addItem(serial.portName());
                serial.close();
+
             }
         }
 }
+ QList <QCameraInfo>list;
+void MainWindow::searchCamera()//摄像头搜索函数
+{
+
+    list = QCameraInfo::availableCameras();
+    for (int i = 0; i < list.size(); i++)
+    {
+
+        ui->cameralist->addItem( list.at(i).description());  //获取设备名
+
+    }
+
+}
+QString resolution;
+  void MainWindow::on_intCamera_clicked()//摄像头加载按钮
+  {
+      viewfinder =new QCameraViewfinder(this);
+       ui->cameraLayout->addWidget(viewfinder);
+     // delete camera;
+      camera =new QCamera(list.at(ui->cameralist->currentIndex()));
+      camera->setCaptureMode(QCamera::CaptureStillImage);
+      camera->setViewfinder(viewfinder);
+      camera->start();
+
+      QList<QCameraViewfinderSettings > ViewSets = camera->supportedViewfinderSettings();
+
+       foreach (QCameraViewfinderSettings ViewSet, ViewSets)
+       {
+             resolution=QString::number(ViewSet.resolution().width())+"x"+QString::number(ViewSet.resolution().height());
+             ui->cameraResolution->addItem(resolution);
+       }
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
