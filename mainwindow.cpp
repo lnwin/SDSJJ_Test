@@ -20,6 +20,12 @@ MainWindow::MainWindow(QWidget *parent)// 载入函数
 
     searchPort();
     searchCamera();
+    //------------------------------------------------opencv摄像参数设置
+    cvVideocapture = new VideoCapture(0);
+    cvVideocapture->set(CAP_PROP_FRAME_WIDTH,1280);
+    cvVideocapture->set(CAP_PROP_FRAME_HEIGHT,720);
+    //------------------------------------------------opencv摄像参数设置
+
 
 
 }
@@ -123,12 +129,11 @@ void MainWindow::searchCamera()//摄像头搜索函数
       viewfinder =new QCameraViewfinder(this);
       ui->cameraLayout->addWidget(viewfinder);
       ui->capturelable->setScaledContents(true);
-      delete camera;
+
       camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
       camera->setViewfinder(viewfinder);
       camera->start();
-      imageCapture = new QCameraImageCapture(camera);
-      connect(imageCapture,SIGNAL(imageCaptured(int,QImage)),this,SLOT(cameraImageCaptured(int,QImage)));
+
       QList<QCameraViewfinderSettings > ViewSets = camera->supportedViewfinderSettings();
 
        foreach (QCameraViewfinderSettings ViewSet, ViewSets)
@@ -138,17 +143,109 @@ void MainWindow::searchCamera()//摄像头搜索函数
        }
 
   }
+  void MainWindow::on_closeCamera_clicked()//关闭Qt摄像头按钮
+  {
+      camera->stop();
+      delete camera;
+      delete  viewfinder;
+      ui->cameraResolution->clear();
+  }
 
-void MainWindow::cameraImageCaptured(int ,QImage image )
+
+void MainWindow::on_captureimage_clicked() //捕捉图片按钮
 {
-   ui->capturelable->setPixmap(QPixmap::fromImage(image));
+    opencvreadimage();
 }
-void MainWindow::on_captureimage_clicked()
+ cv::Mat MainWindow::QImage2cvMat(QImage image)// QImage转Mat
+{
+    cv::Mat mat;
+    switch (image.format())
+    {
+    case QImage::Format_ARGB32:
+    case QImage::Format_RGB32:
+    case QImage::Format_ARGB32_Premultiplied:
+        mat = Mat(image.height(), image.width(), CV_8UC4, (void*)image.constBits(), image.bytesPerLine());
+        break;
+    case QImage::Format_RGB888:
+        mat = Mat(image.height(), image.width(), CV_8UC3, (void*)image.constBits(), image.bytesPerLine());
+        cv::cvtColor(mat, mat, CV_BGR2RGB);
+        break;
+    case QImage::Format_Indexed8:
+        mat = Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
+        break;
+    }
+    return mat;
+}
+ QImage MainWindow::cvMat2QImage(cv::Mat& mat)// Mat 转 QImage
+ {
+     if (mat.type() == CV_8UC1)                  // 单通道
+     {
+         QImage image(mat.cols, mat.rows, QImage::Format_Indexed8);
+         image.setColorCount(256);               // 灰度级数256
+         for (int i = 0; i < 256; i++)
+         {
+             image.setColor(i, qRgb(i, i, i));
+         }
+         uchar *pSrc = mat.data;                 // 复制mat数据
+         for (int row = 0; row < mat.rows; row++)
+         {
+             uchar *pDest = image.scanLine(row);
+             memcpy(pDest, pSrc, mat.cols);
+             pSrc += mat.step;
+         }
+         return image;
+     }
+
+     else if (mat.type() == CV_8UC3)             // 3通道
+     {
+         const uchar *pSrc = (const uchar*)mat.data;         // 复制像素
+         QImage image(pSrc, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);    // R, G, B 对应 0,1,2
+         return image.rgbSwapped();              // rgbSwapped是为了显示效果色彩好一些。
+     }
+     else if (mat.type() == CV_8UC4)
+     {
+         const uchar *pSrc = (const uchar*)mat.data;         // 复制像素
+                                                             // Create QImage with same dimensions as input Mat
+         QImage image(pSrc, mat.cols, mat.rows, mat.step, QImage::Format_ARGB32);        // B,G,R,A 对应 0,1,2,3
+         return image.copy();
+     }
+     else
+     {
+         return QImage();
+     }
+ }
+
+void MainWindow:: opencvreadimage()//读取cv摄像帧函数
 {
 
-   imageCapture->capture();
-}
+    cvVideocapture->read(matframe);
 
+    QImage Qimage = cvMat2QImage(matframe) ;
+
+    ui->capturelable->setPixmap(QPixmap::fromImage(Qimage));
+
+
+}
+//------------------------------------------------激光测距参数
+double PixelSize, f, baseline,step_angle,Laser_angle,RGB,Math_angle;
+int Maxindex_n;
+
+//------------------------------------------------激光测距参数
+void MainWindow::on_loadseting_clicked()
+{
+    PixelSize = ui->pixelSizeLine->text().toDouble();
+    f = ui->focalLine->text().toDouble();
+    baseline=ui->baseLineLine->text().toDouble();
+    step_angle = ui->stepAngleLine->text().toDouble();
+    Laser_angle = ui->laserAngleLine->text().toDouble();
+    RGB = ui->rgeLine->text().toDouble();
+    Math_angle =0;
+}
+void WorkThread::dataprocessing()//Qthread单线程摄像帧处理函数
+{
+
+
+}
 
 
 

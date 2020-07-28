@@ -81,6 +81,9 @@
       <property name="text">
        <string>TextLabel</string>
       </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
      </widget>
     </widget>
    </widget>
@@ -90,7 +93,7 @@
       <x>640</x>
       <y>10</y>
       <width>341</width>
-      <height>281</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -99,7 +102,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLineEdit" name="lineEdit_5">
+    <widget class="QLineEdit" name="rgeLine">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -151,7 +154,7 @@
       <string>laserAngle</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_4">
+    <widget class="QLineEdit" name="pixelSizeLine">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -186,7 +189,7 @@
       <string>baseLine</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_2">
+    <widget class="QLineEdit" name="focalLine">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -199,7 +202,7 @@
       <string>3.6</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="baseLineLine">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -212,7 +215,7 @@
       <string>650</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_3">
+    <widget class="QLineEdit" name="stepAngleLine">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -238,7 +241,7 @@
       <string>stepAngle</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_6">
+    <widget class="QLineEdit" name="laserAngleLine">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -349,7 +352,7 @@
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>110</y>
+       <y>140</y>
        <width>91</width>
        <height>23</height>
       </rect>
@@ -411,7 +414,7 @@
       <rect>
        <x>250</x>
        <y>140</y>
-       <width>75</width>
+       <width>71</width>
        <height>23</height>
       </rect>
      </property>
@@ -434,7 +437,7 @@
       <rect>
        <x>250</x>
        <y>200</y>
-       <width>75</width>
+       <width>71</width>
        <height>23</height>
       </rect>
      </property>
@@ -456,8 +459,8 @@
      <property name="geometry">
       <rect>
        <x>250</x>
-       <y>230</y>
-       <width>75</width>
+       <y>260</y>
+       <width>71</width>
        <height>23</height>
       </rect>
      </property>
@@ -465,14 +468,40 @@
       <string>捕捉图片</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="closeCamera">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>230</y>
+       <width>71</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>关闭摄像头</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="loadseting">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>110</y>
+       <width>91</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>载入参数</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QTextEdit" name="textEdit">
     <property name="geometry">
      <rect>
       <x>640</x>
-      <y>300</y>
+      <y>310</y>
       <width>341</width>
-      <height>81</height>
+      <height>71</height>
      </rect>
     </property>
    </widget>
