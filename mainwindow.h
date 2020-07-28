@@ -12,7 +12,10 @@
 #include <QCameraInfo>
 #include <QDebug>
 #include <QList>
-
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,16 +35,18 @@ public:
     void searchPort();
     void ReadData();
     void SendData();
-    void captureImage();
-    void displayImage(int,QImage);
-    void saveImage();
+    //void captureImage();
+   // void displayImage(int,QImage);
+   // void saveImage();
     void searchCamera();
+    //void cameraImageCaptured(int,QImage);
 private slots:
     void on_PortButton_clicked();
     void on_senddatabutton_clicked();
     void on_pointfilepushButton_clicked();
     void on_intCamera_clicked();
-
+    void on_captureimage_clicked();
+    void cameraImageCaptured(int,QImage);
 
 private:
     Ui::MainWindow *ui;
@@ -49,9 +54,8 @@ private:
     QCamera *camera;//相机
     QCameraViewfinder *viewfinder;//取景器
     QCameraImageCapture *imageCapture;//图片捕捉器
-
-
-
+    CvMat matframe;//opencv 图片暂存
+    cv::VideoCapture *videocapture; //
 
 static QString getOpenFileName(   //定义点云文件路径属性
 QWidget *parent = Q_NULLPTR,
