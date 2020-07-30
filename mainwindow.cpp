@@ -11,7 +11,8 @@
 #include <opencv2/opencv.hpp>
 using namespace std;
 using namespace cv;
-
+WorkThread *Qtthread =new WorkThread ();
+QList <QCameraInfo>Cameralist;
 MainWindow::MainWindow(QWidget *parent)// 载入函数
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -21,10 +22,17 @@ MainWindow::MainWindow(QWidget *parent)// 载入函数
     searchPort();
     searchCamera();
     //------------------------------------------------opencv摄像参数设置
-    cvVideocapture = new VideoCapture(0);
-    cvVideocapture->set(CAP_PROP_FRAME_WIDTH,1280);
-    cvVideocapture->set(CAP_PROP_FRAME_HEIGHT,720);
+   // cvVideocapture = new VideoCapture(0);
+  //  cvVideocapture->set(CAP_PROP_FRAME_WIDTH,1280);
+    //cvVideocapture->set(CAP_PROP_FRAME_HEIGHT,720);
     //------------------------------------------------opencv摄像参数设置
+    Qtthread-> viewfinder =new QCameraViewfinder(this);
+    ui->cameraLayout->addWidget( Qtthread-> viewfinder);
+    ui->capturelable->setScaledContents(true);
+    Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
+    Qtthread->  imageCapture =new QCameraImageCapture(Qtthread-> camera);
+    Qtthread->  camera->setViewfinder(Qtthread-> viewfinder);
+    Qtthread->  camera->start();
 
 
 
@@ -110,7 +118,7 @@ void MainWindow::searchPort()//串口搜索函数
             }
         }
 }
- QList <QCameraInfo>Cameralist;
+
 void MainWindow::searchCamera()//摄像头搜索函数
 {
 
@@ -126,36 +134,50 @@ void MainWindow::searchCamera()//摄像头搜索函数
   QString Cameraresolution;
   void MainWindow::on_intCamera_clicked()//摄像头加载按钮
   {
-      viewfinder =new QCameraViewfinder(this);
-      ui->cameraLayout->addWidget(viewfinder);
-      ui->capturelable->setScaledContents(true);
+      // viewfinder =new QCameraViewfinder(this);
+      // ui->cameraLayout->addWidget( viewfinder);
+      // ui->capturelable->setScaledContents(true);
+     //  imageCapture =new QCameraImageCapture( camera);
+     //  camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
+     //  camera->setViewfinder(viewfinder);
+     //  camera->start();
 
-      camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
-      camera->setViewfinder(viewfinder);
-      camera->start();
+     // QList<QCameraViewfinderSettings > ViewSets =  camera->supportedViewfinderSettings();
 
-      QList<QCameraViewfinderSettings > ViewSets = camera->supportedViewfinderSettings();
-
-       foreach (QCameraViewfinderSettings ViewSet, ViewSets)
-       {
-             Cameraresolution=QString::number(ViewSet.resolution().width())+"x"+QString::number(ViewSet.resolution().height());
-             ui->cameraResolution->addItem(Cameraresolution);
-       }
+     //  foreach (QCameraViewfinderSettings ViewSet, ViewSets)
+     //  {
+     //        Cameraresolution=QString::number(ViewSet.resolution().width())+"x"+QString::number(ViewSet.resolution().height());
+    //         ui->cameraResolution->addItem(Cameraresolution);
+    //   }
 
   }
+  bool Do=true;
   void MainWindow::on_closeCamera_clicked()//关闭Qt摄像头按钮
   {
-      camera->stop();
-      delete camera;
-      delete  viewfinder;
-      ui->cameraResolution->clear();
+      //camera->stop();
+     // delete camera;
+     // delete  viewfinder;
+     // ui->cameraResolution->clear();
+      Do = false;
+      Qtthread->quit();
+      Qtthread->wait();
   }
-
-
+int i =0;
+QTime ssd;
 void MainWindow::on_captureimage_clicked() //捕捉图片按钮
 {
-    opencvreadimage();
+   // opencvreadimage();
+    Qtthread->run();
+  //  ssd.start();
+  // while (i<1000)
+  //  {
+     //   imageCapture->capture("C:/Users/MIC/Desktop/112/"+QString::number(i)+".jpg");
+    //    i++;
+   // }
+   // qDebug()<<ssd.elapsed();
+   // qDebug()<<i;
 }
+//----------------------------------------------------------------------Mat和QImage转换函数
  cv::Mat MainWindow::QImage2cvMat(QImage image)// QImage转Mat
 {
     cv::Mat mat;
@@ -214,7 +236,7 @@ void MainWindow::on_captureimage_clicked() //捕捉图片按钮
          return QImage();
      }
  }
-
+//----------------------------------------------------------------------Mat和QImage转换函数
 void MainWindow:: opencvreadimage()//读取cv摄像帧函数
 {
 
@@ -223,6 +245,7 @@ void MainWindow:: opencvreadimage()//读取cv摄像帧函数
     QImage Qimage = cvMat2QImage(matframe) ;
 
     ui->capturelable->setPixmap(QPixmap::fromImage(Qimage));
+
 
 
 }
@@ -241,10 +264,22 @@ void MainWindow::on_loadseting_clicked()
     RGB = ui->rgeLine->text().toDouble();
     Math_angle =0;
 }
-void WorkThread::dataprocessing()//Qthread单线程摄像帧处理函数
+WorkThread::WorkThread()
 {
 
+};
+void WorkThread::run()//Qthread单线程摄像帧处理函数
+{
 
+    while (imageCapture->isReadyForCapture())
+        {
+
+           imageCapture->capture("C:/Users/MIC/Desktop/112/"+QString::number(i)+".jpg");
+           i++;
+           qDebug()<<i;
+        }
+
+    qDebug()<<"结束循环";
 }
 
 

@@ -17,6 +17,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <QThread>
+#include <QTime>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,8 +30,12 @@ class WorkThread:public QThread
 {
   public:
     WorkThread();
-  private:
-    void dataprocessing();
+    QCamera *camera;//相机
+    QCameraViewfinder *viewfinder;//取景器
+    QCameraImageCapture *imageCapture;//图片捕捉器
+ // private:
+    void run();
+
 
 };
 class MainWindow : public QMainWindow
@@ -61,12 +66,12 @@ private slots:
     void on_closeCamera_clicked();
     void on_loadseting_clicked();
 
+
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
-    QCamera *camera;//相机
-    QCameraViewfinder *viewfinder;//取景器
-    QCameraImageCapture *imageCapture;//图片捕捉器
+
     cv::Mat matframe;//opencv 图片暂存
     cv::VideoCapture *cvVideocapture; //opencv 视频类
     void opencvreadimage();
