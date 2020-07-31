@@ -17,6 +17,8 @@ WorkThread *Qtthread =new WorkThread ();
 QList <QCameraInfo>Cameralist;
 QString Cameraresolution;
 bool Do=true; //线程标志位
+int count_CloudDataProcess =0;
+QTime counttime;
 //---------------------------------------------------------------------------------------激光测距参数
 double PixelSize, f, baseline,step_angle,Laser_angle,RGB,Math_angle;
 int Maxindex_n;
@@ -27,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->progressBar->setRange(0,1000);
     searchPort();
     searchCamera();
     //------------------------------------------------Qt摄像参数载入
@@ -34,13 +37,15 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     ui->cameraLayout->addWidget( Qtthread-> viewfinder);
     Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
     QCameraViewfinderSettings set;
+   // set.setResolution(1280,720);
     set.setResolution(640,400);
-   // Qtthread->camera->setViewfinderSettings(set);
+    Qtthread->camera->setViewfinderSettings(set);
     Qtthread-> camera->setViewfinder(Qtthread-> viewfinder);
     Qtthread-> camera->start();
     Qtthread-> imageCapture =new QCameraImageCapture(Qtthread-> camera);
     //------------------------------------------------Qt摄像参数载入
-    //connect(Cameraresolution,SIGNAL());
+    connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
+    connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
 }
 MainWindow::~MainWindow()
 {
@@ -161,16 +166,16 @@ void MainWindow::on_closeCamera_clicked()//-------------------------------------
     Qtthread->quit();
     Qtthread->wait();
 }
-int i =0;
-QTime ssd;
 void MainWindow::on_captureimage_clicked() //--------------------------------------------捕捉图片按钮
 {
 
+    ui->tabWidget->setCurrentIndex(0);
     Qtthread->start();
+
 
 }
 //---------------------------------------------------------------------------------------Mat和QImage转换函数
-cv::Mat MainWindow::QImage2cvMat(QImage image)// ----------------------------------------QImage转Mat
+cv::Mat WorkThread::QImage2cvMat(QImage image)// ----------------------------------------QImage转Mat
 {
     cv::Mat mat;
     switch (image.format())
@@ -190,7 +195,7 @@ cv::Mat MainWindow::QImage2cvMat(QImage image)// -------------------------------
     }
     return mat;
 }
-QImage MainWindow::cvMat2QImage(cv::Mat& mat)//----------------------------------------- Mat 转 QImage
+QImage WorkThread::cvMat2QImage(cv::Mat& mat)//----------------------------------------- Mat 转 QImage
 {
     if (mat.type() == CV_8UC1)                  // 单通道
     {
@@ -241,7 +246,6 @@ void MainWindow:: opencvreadimage()//-------------------------------------------
 
 
 }
-
 void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
 {
     PixelSize = ui->pixelSizeLine->text().toDouble();
@@ -252,21 +256,33 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     RGB = ui->rgeLine->text().toDouble();
     Math_angle =0;
 }
+void MainWindow::receivedFromThread(int ID)//--------------------------------------------进度条传递函数
+{
+   ui->progressBar->setValue(ID);
+}
+void MainWindow:: receivedSetTabWidgt2Camera(int K)//------------------------------------窗体切换传递函数
+{
+    ui->tabWidget->setCurrentIndex(K);
+}
 void WorkThread::run()//-----------------------------------------------------------------Qthread单线程摄像帧处理函数
 {
-    ssd.start();
-    while (i<1000)
+    counttime.start();
+    while (count_CloudDataProcess<1000)
     {
 
         if(imageCapture->isReadyForCapture())
         {
-            imageCapture->capture("C:/Users/MIC/Desktop/112/"+QString::number(i)+".jpg");
-            i++;
+            imageCapture->capture("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg");
+            //imageCapture->capture();
+            count_CloudDataProcess++;
+           emit sendMessage2Main(count_CloudDataProcess);
         }
 
     }
-    qDebug()<<ssd.elapsed();
+    qDebug()<<counttime.elapsed()<< "++"<<count_CloudDataProcess;
     qDebug()<<"结束循环";
+    count_CloudDataProcess=0;
+    emit setTabWidgt2Camera(1);
 }
 void WorkThread::cloudDataProcessing()//-------------------------------------------------点云数据处理函数
 {

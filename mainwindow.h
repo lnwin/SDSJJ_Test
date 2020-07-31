@@ -35,11 +35,14 @@ class WorkThread:public QThread
     QCameraImageCapture *imageCapture;//图片捕捉器
     cv::Mat matframe;//opencv 图片暂存
     cv::VideoCapture *cvVideocapture; //opencv 视频类
-
+    cv::Mat QImage2cvMat(QImage);
+    QImage cvMat2QImage(cv::Mat & mat);
     void run();
     void cloudDataProcessing();
     void cloudDataRecord();
-
+    signals:
+    void sendMessage2Main(int);
+    void setTabWidgt2Camera(int);
 
 };
 class MainWindow : public QMainWindow
@@ -69,7 +72,8 @@ private slots:
     void on_captureimage_clicked();
     void on_closeCamera_clicked();
     void on_loadseting_clicked();
-
+    void receivedFromThread(int);
+    void receivedSetTabWidgt2Camera(int);
 
 
 private:
@@ -78,8 +82,7 @@ private:
 
 
     void opencvreadimage();
-    cv::Mat QImage2cvMat(QImage);
-    QImage cvMat2QImage(cv::Mat & mat);
+
 
 
 
