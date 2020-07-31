@@ -18,24 +18,22 @@ MainWindow::MainWindow(QWidget *parent)// 载入函数
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     searchPort();
     searchCamera();
     //------------------------------------------------opencv摄像参数设置
-   // cvVideocapture = new VideoCapture(0);
-  //  cvVideocapture->set(CAP_PROP_FRAME_WIDTH,1280);
-    //cvVideocapture->set(CAP_PROP_FRAME_HEIGHT,720);
+   // Qtthread->  cvVideocapture = new VideoCapture(0);
+   // Qtthread->  cvVideocapture->set(CAP_PROP_FRAME_WIDTH,640);
+ //  Qtthread->   cvVideocapture->set(CAP_PROP_FRAME_HEIGHT,400);
+  // Qtthread->   cvVideocapture->set(CAP_PROP_FPS,120);
+  // Qtthread->   cvVideocapture->set(CAP_PROP_FOCUS,CV_FOURCC('M', 'J', 'P', 'G'));
     //------------------------------------------------opencv摄像参数设置
     Qtthread-> viewfinder =new QCameraViewfinder(this);
     ui->cameraLayout->addWidget( Qtthread-> viewfinder);
     ui->capturelable->setScaledContents(true);
     Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
-    Qtthread->  imageCapture =new QCameraImageCapture(Qtthread-> camera);
-    Qtthread->  camera->setViewfinder(Qtthread-> viewfinder);
-    Qtthread->  camera->start();
-
-
-
+    Qtthread-> camera->setViewfinder(Qtthread-> viewfinder);
+    Qtthread-> camera->start();
+    Qtthread-> imageCapture =new QCameraImageCapture(Qtthread-> camera);
 }
 
 MainWindow::~MainWindow()
@@ -167,15 +165,16 @@ QTime ssd;
 void MainWindow::on_captureimage_clicked() //捕捉图片按钮
 {
    // opencvreadimage();
-    Qtthread->run();
-  //  ssd.start();
-  // while (i<1000)
+    Qtthread->start();
+   // ssd.start();
+  // while (Do)
   //  {
-     //   imageCapture->capture("C:/Users/MIC/Desktop/112/"+QString::number(i)+".jpg");
-    //    i++;
+       //   imageCapture->capture("C:/Users/MIC/Desktop/112/"+QString::number(i)+".jpg");
+       //   i++;
+    //   cvVideocapture->read(matframe);
    // }
-   // qDebug()<<ssd.elapsed();
-   // qDebug()<<i;
+  //  qDebug()<<ssd.elapsed();
+  //  qDebug()<<i;
 }
 //----------------------------------------------------------------------Mat和QImage转换函数
  cv::Mat MainWindow::QImage2cvMat(QImage image)// QImage转Mat
@@ -240,11 +239,11 @@ void MainWindow::on_captureimage_clicked() //捕捉图片按钮
 void MainWindow:: opencvreadimage()//读取cv摄像帧函数
 {
 
-    cvVideocapture->read(matframe);
+   // cvVideocapture->read(matframe);
 
-    QImage Qimage = cvMat2QImage(matframe) ;
+   // QImage Qimage = cvMat2QImage(matframe) ;
 
-    ui->capturelable->setPixmap(QPixmap::fromImage(Qimage));
+  //  ui->capturelable->setPixmap(QPixmap::fromImage(Qimage));
 
 
 
@@ -254,7 +253,7 @@ double PixelSize, f, baseline,step_angle,Laser_angle,RGB,Math_angle;
 int Maxindex_n;
 
 //------------------------------------------------激光测距参数
-void MainWindow::on_loadseting_clicked()
+void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
 {
     PixelSize = ui->pixelSizeLine->text().toDouble();
     f = ui->focalLine->text().toDouble();
@@ -270,14 +269,18 @@ WorkThread::WorkThread()
 };
 void WorkThread::run()//Qthread单线程摄像帧处理函数
 {
-
-    while (imageCapture->isReadyForCapture())
+      ssd.start();
+    while (i<1000)
         {
 
-           imageCapture->capture("C:/Users/MIC/Desktop/112/"+QString::number(i)+".jpg");
-           i++;
-           qDebug()<<i;
+           if(imageCapture->isReadyForCapture())
+           {
+               imageCapture->capture("C:/Users/MIC/Desktop/112/"+QString::number(i)+".jpg");
+               i++;
+           }
+
         }
+          qDebug()<<ssd.elapsed();
 
     qDebug()<<"结束循环";
 }

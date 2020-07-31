@@ -33,6 +33,8 @@ class WorkThread:public QThread
     QCamera *camera;//相机
     QCameraViewfinder *viewfinder;//取景器
     QCameraImageCapture *imageCapture;//图片捕捉器
+    cv::Mat matframe;//opencv 图片暂存
+    cv::VideoCapture *cvVideocapture; //opencv 视频类
  // private:
     void run();
 
@@ -72,8 +74,7 @@ private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
 
-    cv::Mat matframe;//opencv 图片暂存
-    cv::VideoCapture *cvVideocapture; //opencv 视频类
+
     void opencvreadimage();
     cv::Mat QImage2cvMat(QImage);
     QImage cvMat2QImage(cv::Mat & mat);
