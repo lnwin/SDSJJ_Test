@@ -22,12 +22,12 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
-
 class QCamera;
 class QCameraViewfinder;
 class QCameraImageCapture;
 class WorkThread:public QThread
 {
+    Q_OBJECT
   public:
     WorkThread();
     QCamera *camera;//相机
@@ -35,8 +35,10 @@ class WorkThread:public QThread
     QCameraImageCapture *imageCapture;//图片捕捉器
     cv::Mat matframe;//opencv 图片暂存
     cv::VideoCapture *cvVideocapture; //opencv 视频类
- // private:
+
     void run();
+    void cloudDataProcessing();
+    void cloudDataRecord();
 
 
 };

@@ -63,27 +63,11 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>321</width>
+        <width>621</width>
         <height>351</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="cameraLayout"/>
-     </widget>
-     <widget class="QLabel" name="capturelable">
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>0</y>
-        <width>281</width>
-        <height>301</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-      <property name="scaledContents">
-       <bool>true</bool>
-      </property>
      </widget>
     </widget>
    </widget>
@@ -465,7 +449,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>捕捉图片</string>
+      <string>开启扫描</string>
      </property>
     </widget>
     <widget class="QPushButton" name="closeCamera">
