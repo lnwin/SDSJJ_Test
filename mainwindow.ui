@@ -67,7 +67,15 @@
         <height>351</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="cameraLayout"/>
+      <layout class="QVBoxLayout" name="cameraLayout">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </widget>

@@ -26,6 +26,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    QtVideoCapture.h \
     mainwindow.h
 
 FORMS += \

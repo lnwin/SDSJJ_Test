@@ -9,7 +9,10 @@
 #include <QCamera>
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
+#include <QAbstractVideoSurface>
 #include <QCameraInfo>
+#include <QMediaPlayer>
+#include <QVideoWidget>
 #include <QDebug>
 #include <QList>
 #include <opencv2/opencv.hpp>
@@ -18,6 +21,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <QThread>
 #include <QTime>
+#include <QBuffer>
+#include <QtVideoCapture.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,14 +30,16 @@ QT_END_NAMESPACE
 class QCamera;
 class QCameraViewfinder;
 class QCameraImageCapture;
+//----------------------------------------------------------------------
 class WorkThread:public QThread
 {
     Q_OBJECT
   public:
     WorkThread();
-    QCamera *camera;//相机
+
     QCameraViewfinder *viewfinder;//取景器
     QCameraImageCapture *imageCapture;//图片捕捉器
+    QtVideoCapture *QtVIDEO;
     cv::Mat matframe;//opencv 图片暂存
     cv::VideoCapture *cvVideocapture; //opencv 视频类
     cv::Mat QImage2cvMat(QImage);
@@ -40,11 +47,15 @@ class WorkThread:public QThread
     void run();
     void cloudDataProcessing();
     void cloudDataRecord();
+    void Delay_MSec(unsigned int );
     signals:
     void sendMessage2Main(int);
     void setTabWidgt2Camera(int);
 
 };
+//---------------------------------------------------------------------- Qt视频类
+
+//----------------------------------------------------------------------
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -61,8 +72,8 @@ public:
    // void saveImage();
     void searchCamera();
 
-
-
+    QtVideoCapture* surface_;
+    QCamera *camera;//相机
 
 private slots:
     void on_PortButton_clicked();
@@ -74,7 +85,8 @@ private slots:
     void on_loadseting_clicked();
     void receivedFromThread(int);
     void receivedSetTabWidgt2Camera(int);
-
+    void receivedCapture2QImage(QImage);
+    void showImage(QImage );
 
 private:
     Ui::MainWindow *ui;
