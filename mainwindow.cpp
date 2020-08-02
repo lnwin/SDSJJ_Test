@@ -16,6 +16,7 @@
 #include <QVideoSurfaceFormat>
 using namespace std;
 using namespace cv;
+
 //---------------------------------------------------------------------------------------参数配置
 WorkThread *Qtthread =new WorkThread ();
 //QtVideoCapture * QtVideo =new QtVideoCapture;
@@ -32,10 +33,17 @@ QImage originalQIimage;
 QMediaPlayer *mediaPlayer = new QMediaPlayer;
 bool watching=false;
 bool processing=false;
+bool cameraIsStarted=false;
+bool turnleft;
 //QtVideoSurface = new QtVideoCapture;
 //---------------------------------------------------------------------------------------激光测距参数
-double PixelSize, f, baseline,step_angle,Laser_angle,RGB,Math_angle;
-int Maxindex_n;
+float PixelSize, f, baseline,step_angle,Laser_angle,Math_angle,sumXRGB,sumX,Pic_x,Pic_y;
+float yaw_angle,laser_to_dist_pt,laser_to_current_pt,laser_to_center_pt,center_distance,real_center_distance,real_distance,pitch_angle,pitch_distance,center2target,World_x,World_y,World_z;
+const float pic_wight = 640;
+const float pic_height = 400;
+const float rotation_r = 430;
+const float PI = 3.14159265;
+int Maxindex_n,MaxRGB,RGB;
 //---------------------------------------------------------------------------------------激光测距参数
 //---------------------------------------------------------------------------------------参数配置
 MainWindow::MainWindow(QWidget *parent)// -----------------------------------------------载入函数
@@ -47,23 +55,19 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     searchPort();
     searchCamera();
    //------------------------------------------------Qt摄像参数载入
-     //Qtthread-> viewfinder =new QCameraViewfinder(this);
-     //ui->cameraLayout->addWidget( Qtthread-> viewfinder);
-     Qtthread->  camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
+     Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
      QCameraViewfinderSettings set;
      set.setResolution(1280,720);
      Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
      Qtthread-> camera->setViewfinderSettings(set);
      surface_ =new QtVideoCapture();
-     Qtthread->  camera->setViewfinder(surface_);
-   //Qtthread-> imageCapture =new QCameraImageCapture(Qtthread-> camera);
+     Qtthread->  camera->setViewfinder(surface_);   
     //------------------------------------------------Qt摄像参数载入   
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
-    connect(surface_, SIGNAL(frameAvailable(QImage)), this, SLOT(showImage(QImage)));
-   //connect(QtVideoSurface, SIGNAL(onImageOutput(QImage)), this, SLOT(showImage(QImage)));
-   //connect(Qtthread->imageCapture,SIGNAL(imageCaptured(int,QImage)),this,SLOT (receivedCapture2QImage(int,QImage)));//QImage数据传递
+    connect(surface_, SIGNAL(frameAvailable(QImage)), this, SLOT(showImage(QImage)));//QtVideo显示信号链接
+
 
 
 }
@@ -166,16 +170,21 @@ void MainWindow::searchCamera()//-----------------------------------------------
 }
 void MainWindow::on_closeCamera_clicked()//----------------------------------------------关闭Qt摄像头按钮
 {
-    watching=true;
-    processing=false;
-    Qtthread->camera->stop();
+    watching=false;
+    processing=true;
+    //Qtthread->camera->stop();
 
 }
-void MainWindow::on_openCamera_clicked()//----------------------------------------------打开Qt摄像头按钮
+void MainWindow::on_openCamera_clicked()//-----------------------------------------------打开Qt摄像头按钮
  {
      watching=true;
-     processing=true;
-     Qtthread->camera->start();
+     processing=false;
+     if(!cameraIsStarted)
+     {
+         Qtthread->camera->start();
+         cameraIsStarted=true;
+     }
+
 
  }
 void MainWindow::on_Scanningbutton_clicked() //------------------------------------------开启扫描按钮
@@ -290,7 +299,7 @@ bool QtVideoCapture::present(const QVideoFrame &frame)//------------------------
 
     return false;
 }
-QList<QVideoFrame::PixelFormat> QtVideoCapture::supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const//---------------格式设置
+QList<QVideoFrame::PixelFormat> QtVideoCapture::supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const//-----格式设置
 {
     if (handleType == QAbstractVideoBuffer::NoHandle) {
         return QList<QVideoFrame::PixelFormat>()<< QVideoFrame::Format_RGB32<< QVideoFrame::Format_ARGB32<< QVideoFrame::Format_ARGB32_Premultiplied<< QVideoFrame::Format_RGB565<< QVideoFrame::Format_RGB555;
@@ -319,15 +328,20 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 {
     ui->tabWidget->setCurrentIndex(K);
 }
-void MainWindow::receivedCapture2QImage(QImage ak47)
- {
-         originalQIimage =ak47;        
-
- }
-void MainWindow::showImage(QImage image)
+void MainWindow::showImage(QImage image)//----------------------------------------------图像显示函数
 {
     QImage tempImage = image.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
     ui->label_2 ->setPixmap(QPixmap::fromImage(tempImage));
+}
+void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
+{
+    PixelSize = ui->pixelSizeLine->text().toFloat();
+    f = ui->focalLine->text().toFloat();
+    baseline=ui->baseLineLine->text().toFloat();
+    step_angle = ui->stepAngleLine->text().toFloat()*PI/180;
+    Laser_angle = ui->laserAngleLine->text().toFloat()*PI/180;
+    RGB = ui->rgeLine->text().toInt();
+    Math_angle =0;
 }
 void WorkThread::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数
 {
@@ -337,59 +351,96 @@ void WorkThread::Delay_MSec(unsigned int msec)//--------------------------------
 
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
-int sk=0;
+
 void WorkThread::run()//-----------------------------------------------------------------Qthread单线程摄像帧处理函数
 {
 
+    counttime.start();
     while (count_CloudDataProcess<1)
     {
 
-        counttime.start();
 
-       // if(imageCapture->isReadyForCapture())
-      //  {
            //imageCapture->capture("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg"); enable
-           // imageCapture->capture();
            // Delay_MSec(20);//采用
-           // originalQIimage.save("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg","jpg");
-
-
-            //transformmat = QImage2cvMat(originalQIimage);
-           // cvtColor(transformmat, originalMat_gray,COLOR_BGR2GRAY);
-            uchar* data =originalMat_gray.ptr(0);
-          //  for(int i=0;i<640;i++)
-           // {
-
-               sk = data[0,0];
-           // }
-
+             cloudDataProcessing();
              count_CloudDataProcess++;
-            // emit sendMessage2Main(count_CloudDataProcess);
-             qDebug()<<counttime.elapsed()<< "++"<<sk;
+             emit sendMessage2Main(count_CloudDataProcess);
+
 
        //  }
 
     }
 
-
+    qDebug()<<counttime.elapsed()<< "++"<<sk;
     qDebug()<<"结束循环";
     count_CloudDataProcess=0;
-  // emit setTabWidgt2Camera(1);
-}
-void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
-{
-    PixelSize = ui->pixelSizeLine->text().toDouble();
-    f = ui->focalLine->text().toDouble();
-    baseline=ui->baseLineLine->text().toDouble();
-    step_angle = ui->stepAngleLine->text().toDouble();
-    Laser_angle = ui->laserAngleLine->text().toDouble();
-    RGB = ui->rgeLine->text().toDouble();
-    Math_angle =0;
+  //emit setTabWidgt2Camera(1);
 }
 void WorkThread::cloudDataProcessing()//-------------------------------------------------点云数据处理函数
 {
 
-          originalQIimage.save("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg");
+     Math_angle=Math_angle+step_angle;
+     uchar* data =originalMat_gray.ptr(0);
+     uchar* dataSum =originalMat_gray.ptr(0);
+      for(int i=0;i<pic_height;i++)
+     {
+       Maxindex_n = 0 ;
+       MaxRGB =*data;
+       sumXRGB = 0;
+       sumX = 0;
+       for (int j = 0; j < pic_wight; j++)
+      {
+         if (*data > MaxRGB)
+         {
+            MaxRGB = *data;
+            Maxindex_n = j;
+         }
+            data++;
+      }
+       for(int k = 0; k < 640; k++)
+       {
+         if (MaxRGB > RGB)
+         {
+            if (*dataSum == MaxRGB)
+            {
+                sumXRGB += k * (*dataSum);
+                sumX += *dataSum;
+            }
+         }
+         dataSum++;
+
+       }
+       if(sumX!=0)
+       {
+           Maxindex_n = sumXRGB / sumX;
+           Pic_x =((pic_wight/2) - Maxindex_n) * PixelSize;
+           Pic_y =(i -(pic_height/2)) * PixelSize;
+           center_distance = (f * baseline)/(Pic_x+(f/tan(Laser_angle)));
+           pitch_angle =atan(Pic_y / f);
+           pitch_distance = center_distance/cos(pitch_angle);
+           laser_to_dist_pt = center_distance * tan(Laser_angle);
+           laser_to_current_pt =sqrt(pitch_distance * pitch_distance + laser_to_dist_pt * laser_to_dist_pt);
+           laser_to_center_pt = sqrt(center_distance * center_distance + laser_to_dist_pt * laser_to_dist_pt);
+           real_center_distance = sqrt((laser_to_dist_pt - rotation_r) * (laser_to_dist_pt - rotation_r) + center_distance * center_distance);
+           yaw_angle = (PI/2)-acos((rotation_r * rotation_r + real_center_distance * real_center_distance - laser_to_center_pt * laser_to_center_pt)/2.0f/rotation_r/real_center_distance);
+           real_distance = sqrt((laser_to_dist_pt - rotation_r) * (laser_to_dist_pt - rotation_r) + pitch_distance * pitch_distance);
+           center2target = real_distance * cos(pitch_angle);
+           if(turnleft)
+           {
+                 World_x = center2target * sin(yaw_angle + Math_angle);
+                 World_z = center2target * cos(yaw_angle + Math_angle);
+           }
+           else
+           {
+                World_x = center2target * sin(yaw_angle - Math_angle);
+                World_z = center2target * cos(yaw_angle - Math_angle);
+           }
+                World_y = real_distance *sin(-pitch_angle);
+
+       }
+     }
+
+
 
 }
 void WorkThread::cloudDataRecord()//-----------------------------------------------------点云数据存储函数

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>988</width>
-    <height>432</height>
+    <width>1118</width>
+    <height>544</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>380</y>
-      <width>981</width>
-      <height>23</height>
+      <y>520</y>
+      <width>1111</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="value">
@@ -32,8 +32,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>631</width>
-      <height>381</height>
+      <width>771</width>
+      <height>511</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -48,8 +48,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>621</width>
-        <height>361</height>
+        <width>771</width>
+        <height>491</height>
        </rect>
       </property>
      </widget>
@@ -63,8 +63,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>621</width>
-        <height>351</height>
+        <width>761</width>
+        <height>481</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="cameraLayout">
@@ -82,8 +82,8 @@
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>10</y>
+      <x>770</x>
+      <y>0</y>
       <width>341</width>
       <height>291</height>
      </rect>
@@ -480,23 +480,13 @@
    <widget class="QTextEdit" name="textEdit">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>310</y>
-      <width>341</width>
+      <x>780</x>
+      <y>300</y>
+      <width>311</width>
       <height>71</height>
      </rect>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>988</width>
-     <height>23</height>
-    </rect>
-   </property>
   </widget>
  </widget>
  <resources/>
