@@ -30,6 +30,8 @@ Mat originalMat_gray(640,400,CV_8UC1,Scalar(0));
 //Mat originalMat_gray;
 QImage originalQIimage;
 QMediaPlayer *mediaPlayer = new QMediaPlayer;
+bool watching=false;
+bool processing=false;
 //QtVideoSurface = new QtVideoCapture;
 //---------------------------------------------------------------------------------------激光测距参数
 double PixelSize, f, baseline,step_angle,Laser_angle,RGB,Math_angle;
@@ -45,23 +47,22 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     searchPort();
     searchCamera();
    //------------------------------------------------Qt摄像参数载入
-    //Qtthread-> viewfinder =new QCameraViewfinder(this);
+     //Qtthread-> viewfinder =new QCameraViewfinder(this);
      //ui->cameraLayout->addWidget( Qtthread-> viewfinder);
-     camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
+     Qtthread->  camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
      QCameraViewfinderSettings set;
-     set.setResolution(640,400);
-     camera->setCaptureMode(QCamera::CaptureStillImage);
-     camera->setViewfinderSettings(set);
+     set.setResolution(1280,720);
+     Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
+     Qtthread-> camera->setViewfinderSettings(set);
      surface_ =new QtVideoCapture();
-     camera->setViewfinder(surface_);
-     camera->start();
+     Qtthread->  camera->setViewfinder(surface_);
    //Qtthread-> imageCapture =new QCameraImageCapture(Qtthread-> camera);
     //------------------------------------------------Qt摄像参数载入   
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
-    connect(surface_, SIGNAL(frameAvailable(QImage)), this, SLOT(receivedCapture2QImage(QImage)));
-  //  connect(QtVideoSurface, SIGNAL(onImageOutput(QImage)), this, SLOT(showImage(QImage)));
+    connect(surface_, SIGNAL(frameAvailable(QImage)), this, SLOT(showImage(QImage)));
+   //connect(QtVideoSurface, SIGNAL(onImageOutput(QImage)), this, SLOT(showImage(QImage)));
    //connect(Qtthread->imageCapture,SIGNAL(imageCaptured(int,QImage)),this,SLOT (receivedCapture2QImage(int,QImage)));//QImage数据传递
 
 
@@ -163,36 +164,26 @@ void MainWindow::searchCamera()//-----------------------------------------------
     }
 
 }
-void MainWindow::on_intCamera_clicked()//------------------------------------------------摄像头加载按钮
-{
-    // viewfinder =new QCameraViewfinder(this);
-    // ui->cameraLayout->addWidget( viewfinder);
-    // ui->capturelable->setScaledContents(true);
-    //  imageCapture =new QCameraImageCapture( camera);
-    //  camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
-    //  camera->setViewfinder(viewfinder);
-    //  camera->start();
-
-    // QList<QCameraViewfinderSettings > ViewSets =  camera->supportedViewfinderSettings();
-
-    //  foreach (QCameraViewfinderSettings ViewSet, ViewSets)
-    //  {
-    //        Cameraresolution=QString::number(ViewSet.resolution().width())+"x"+QString::number(ViewSet.resolution().height());
-    //         ui->cameraResolution->addItem(Cameraresolution);
-    //   }
-
-}
 void MainWindow::on_closeCamera_clicked()//----------------------------------------------关闭Qt摄像头按钮
 {
+    watching=true;
+    processing=false;
+    Qtthread->camera->stop();
 
-    Do = false;
-    Qtthread->quit();
-    Qtthread->wait();
 }
-void MainWindow::on_captureimage_clicked() //--------------------------------------------捕捉图片按钮
+void MainWindow::on_openCamera_clicked()//----------------------------------------------打开Qt摄像头按钮
+ {
+     watching=true;
+     processing=true;
+     Qtthread->camera->start();
+
+ }
+void MainWindow::on_Scanningbutton_clicked() //------------------------------------------开启扫描按钮
 {
 
     ui->tabWidget->setCurrentIndex(0);
+    watching=false;
+    processing=true;
     Qtthread->start();
 
 
@@ -282,9 +273,17 @@ bool QtVideoCapture::present(const QVideoFrame &frame)//------------------------
         const QImage image(cloneFrame.bits(),
                            cloneFrame.width(),
                            cloneFrame.height(),
-                           QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat()));
-       // qDebug() <<  "image" << image;
+                           QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat()));       
+        if(processing)
+       {
+        originalQIimage =image;
+        transformmat = Qtthread->QImage2cvMat(originalQIimage);
+        cvtColor(transformmat, originalMat_gray,COLOR_BGR2GRAY);
+       }
+        if(watching)
+       {
         emit frameAvailable(image);
+       }// qDebug()<<originalQIimage;
         cloneFrame.unmap();
         return true;
     }
@@ -300,7 +299,7 @@ QList<QVideoFrame::PixelFormat> QtVideoCapture::supportedPixelFormats(QAbstractV
     }
 
 }
-void MainWindow:: opencvreadimage()//----------------------------------------------------读取cv摄像帧函数
+void MainWindow::opencvreadimage()//----------------------------------------------------读取cv摄像帧函数
 {
 
     // cvVideocapture->read(matframe);
@@ -316,13 +315,13 @@ void MainWindow::receivedFromThread(int ID)//-----------------------------------
 {
    ui->progressBar->setValue(ID);
 }
-void MainWindow:: receivedSetTabWidgt2Camera(int K)//------------------------------------窗体切换传递函数
+void MainWindow::receivedSetTabWidgt2Camera(int K)//------------------------------------窗体切换传递函数
 {
     ui->tabWidget->setCurrentIndex(K);
 }
 void MainWindow::receivedCapture2QImage(QImage ak47)
  {
-         originalQIimage =ak47;
+         originalQIimage =ak47;        
 
  }
 void MainWindow::showImage(QImage image)
@@ -341,11 +340,11 @@ void WorkThread::Delay_MSec(unsigned int msec)//--------------------------------
 int sk=0;
 void WorkThread::run()//-----------------------------------------------------------------Qthread单线程摄像帧处理函数
 {
-    counttime.start();
 
-   // while (count_CloudDataProcess<1)
-   // {
+    while (count_CloudDataProcess<1)
+    {
 
+        counttime.start();
 
        // if(imageCapture->isReadyForCapture())
       //  {
@@ -353,23 +352,26 @@ void WorkThread::run()//--------------------------------------------------------
            // imageCapture->capture();
            // Delay_MSec(20);//采用
            // originalQIimage.save("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg","jpg");
-            transformmat = QImage2cvMat(originalQIimage);
-            cvtColor(transformmat, originalMat_gray,COLOR_BGR2GRAY);
+
+
+            //transformmat = QImage2cvMat(originalQIimage);
+           // cvtColor(transformmat, originalMat_gray,COLOR_BGR2GRAY);
             uchar* data =originalMat_gray.ptr(0);
           //  for(int i=0;i<640;i++)
            // {
 
                sk = data[0,0];
            // }
-           // cv::imwrite("C:/Users/NING MEI/Desktop/QT/1.jpg",transformmat);
-          // transformmat.save("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg","jpg");
-            count_CloudDataProcess++;
-           emit sendMessage2Main(count_CloudDataProcess);
-      //  }
 
-   // }
+             count_CloudDataProcess++;
+            // emit sendMessage2Main(count_CloudDataProcess);
+             qDebug()<<counttime.elapsed()<< "++"<<sk;
 
-    qDebug()<<counttime.elapsed()<< "++"<<sk;
+       //  }
+
+    }
+
+
     qDebug()<<"结束循环";
     count_CloudDataProcess=0;
   // emit setTabWidgt2Camera(1);

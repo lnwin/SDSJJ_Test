@@ -38,6 +38,7 @@ class WorkThread:public QThread
     WorkThread();
 
     QCameraViewfinder *viewfinder;//取景器
+    QCamera *camera;//相机
     QCameraImageCapture *imageCapture;//图片捕捉器
     QtVideoCapture *QtVIDEO;
     cv::Mat matframe;//opencv 图片暂存
@@ -73,16 +74,15 @@ public:
     void searchCamera();
 
     QtVideoCapture* surface_;
-    QCamera *camera;//相机
 
 private slots:
     void on_PortButton_clicked();
     void on_senddatabutton_clicked();
-    void on_pointfilepushButton_clicked();
-    void on_intCamera_clicked();
-    void on_captureimage_clicked();
+    void on_pointfilepushButton_clicked();   
+    void on_Scanningbutton_clicked();
     void on_closeCamera_clicked();
     void on_loadseting_clicked();
+    void on_openCamera_clicked();
     void receivedFromThread(int);
     void receivedSetTabWidgt2Camera(int);
     void receivedCapture2QImage(QImage);

@@ -424,36 +424,13 @@
       </rect>
      </property>
     </widget>
-    <widget class="QPushButton" name="intCamera">
+    <widget class="QPushButton" name="Scanningbutton">
      <property name="geometry">
       <rect>
        <x>250</x>
        <y>200</y>
        <width>71</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>加载摄像头</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="cameraResolution">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>230</y>
-       <width>231</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="captureimage">
-     <property name="geometry">
-      <rect>
-       <x>250</x>
-       <y>260</y>
-       <width>71</width>
-       <height>23</height>
+       <height>91</height>
       </rect>
      </property>
      <property name="text">
@@ -463,14 +440,14 @@
     <widget class="QPushButton" name="closeCamera">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>140</x>
        <y>230</y>
-       <width>71</width>
-       <height>23</height>
+       <width>101</width>
+       <height>61</height>
       </rect>
      </property>
      <property name="text">
-      <string>关闭摄像头</string>
+      <string>关闭相机</string>
      </property>
     </widget>
     <widget class="QPushButton" name="loadseting">
@@ -484,6 +461,19 @@
      </property>
      <property name="text">
       <string>载入参数</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="openCamera">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>111</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string> 开启相机</string>
      </property>
     </widget>
    </widget>
