@@ -14,6 +14,7 @@
 #include <QAbstractVideoSurface>
 #include <qvideosurfaceformat.h>
 #include <QVideoSurfaceFormat>
+
 using namespace std;
 using namespace cv;
 
@@ -28,9 +29,7 @@ int count_CloudDataProcess =0;
 QTime counttime;
 Mat transformmat;
 Mat originalMat_gray(640,400,CV_8UC1,Scalar(0));
-//Mat originalMat_gray;
 QImage originalQIimage;
-QMediaPlayer *mediaPlayer = new QMediaPlayer;
 bool watching=false;
 bool processing=false;
 bool cameraIsStarted=false;
@@ -67,7 +66,6 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
     connect(surface_, SIGNAL(frameAvailable(QImage)), this, SLOT(showImage(QImage)));//QtVideo显示信号链接
-
 
 
 }
@@ -330,8 +328,14 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 }
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示函数
 {
-    QImage tempImage = image.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
-    ui->label_2 ->setPixmap(QPixmap::fromImage(tempImage));
+   // QImage tempImage = image.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
+   // ui->label_2 ->setPixmap(QPixmap::fromImage(tempImage));
+      QImage rgba = image.rgbSwapped(); //qimage加载的颜色通道顺序和opengl显示的颜色通道顺序不一致,调换R通道和B通道
+      glImage->setImageData(rgba.bits(), rgba.width(), rgba.height());
+      glImage->repaint();
+
+
+
 }
 void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
 {
@@ -371,7 +375,7 @@ void WorkThread::run()//--------------------------------------------------------
 
     }
 
-    qDebug()<<counttime.elapsed()<< "++"<<sk;
+    qDebug()<<counttime.elapsed();
     qDebug()<<"结束循环";
     count_CloudDataProcess=0;
   //emit setTabWidgt2Camera(1);

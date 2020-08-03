@@ -23,7 +23,7 @@
 #include <QTime>
 #include <QBuffer>
 #include <QtVideoCapture.h>
-#include <common.h>
+#include <glVideoImage.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -91,7 +91,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
-
+    GL_Image *glImage;
 
     void opencvreadimage();
 

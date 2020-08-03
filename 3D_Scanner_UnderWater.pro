@@ -1,7 +1,7 @@
 QT += core gui
 QT +=multimedia
 QT +=multimediawidgets
-
+QT +=opengl
 greaterThan(QT_MAJOR_VERSION, 4):
 
 QT += widgets
@@ -22,11 +22,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    glVideoImage.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     QtVideoCapture.h \
+    glVideoImage.h \
     mainwindow.h
 
 FORMS += \

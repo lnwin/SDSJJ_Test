@@ -58,24 +58,15 @@
      <attribute name="title">
       <string>摄像视窗</string>
      </attribute>
-     <widget class="QWidget" name="verticalLayoutWidget">
+     <widget class="QOpenGLWidget" name="openGLWidget_2">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>761</width>
-        <height>481</height>
+        <width>771</width>
+        <height>491</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="cameraLayout">
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </widget>
     </widget>
    </widget>
