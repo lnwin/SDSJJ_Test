@@ -22,11 +22,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    DaVinci.cpp \
     glVideoImage.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    DaVinci.h \
     QtVideoCapture.h \
     glVideoImage.h \
     mainwindow.h

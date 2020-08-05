@@ -24,6 +24,7 @@
 #include <QBuffer>
 #include <QtVideoCapture.h>
 #include <glVideoImage.h>
+#include <DaVinci.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -92,10 +93,10 @@ private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
     GL_Image *glImage;
-
+    Davinci *Davinci;
     void opencvreadimage();
 
-
+    QImage *Picture;
 
 
 static QString getOpenFileName(   //定义点云文件路径属性

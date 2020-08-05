@@ -60,12 +60,13 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
      Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
      Qtthread-> camera->setViewfinderSettings(set);
      surface_ =new QtVideoCapture();
-     Qtthread->  camera->setViewfinder(surface_);   
+     glImage = new GL_Image();
+     Qtthread-> camera->setViewfinder(surface_);
     //------------------------------------------------Qt摄像参数载入   
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
-    connect(surface_, SIGNAL(frameAvailable(QImage)), this, SLOT(showImage(QImage)));//QtVideo显示信号链接
+    connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
 
 
 }
@@ -78,6 +79,10 @@ WorkThread::WorkThread()
 
 };
 QtVideoCapture::QtVideoCapture(QObject *parent) : QAbstractVideoSurface(parent)
+{
+
+}
+GL_Image::GL_Image()
 {
 
 }
@@ -168,30 +173,36 @@ void MainWindow::searchCamera()//-----------------------------------------------
 }
 void MainWindow::on_closeCamera_clicked()//----------------------------------------------关闭Qt摄像头按钮
 {
-    watching=false;
-    processing=true;
-    //Qtthread->camera->stop();
+   // watching=false;
+    //processing=true;
+   Qtthread->camera->stop();
+   // QImage aa;
+   // aa.load("C:/Users/Administrator/Desktop/1.jpg");
 
 }
 void MainWindow::on_openCamera_clicked()//-----------------------------------------------打开Qt摄像头按钮
  {
      watching=true;
      processing=false;
-     if(!cameraIsStarted)
-     {
+    // if(!cameraIsStarted)
+    // {
          Qtthread->camera->start();
-         cameraIsStarted=true;
-     }
+       //  cameraIsStarted=true;
+    // }
 
 
  }
 void MainWindow::on_Scanningbutton_clicked() //------------------------------------------开启扫描按钮
 {
 
-    ui->tabWidget->setCurrentIndex(0);
-    watching=false;
-    processing=true;
-    Qtthread->start();
+  //  ui->tabWidget->setCurrentIndex(0);
+   // watching=false;
+   // processing=true;
+   // Qtthread->start();
+   // QImage aa;
+   // aa.load("C:/Users/Administrator/Desktop/1.jpg");
+  //  glImage->pictureFromcamera(aa);
+    ui->openGLWidget_2->update();
 
 
 }
@@ -328,11 +339,20 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 }
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示函数
 {
-     // QImage tempImage = image.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
-     // ui->label_2 ->setPixmap(QPixmap::fromImage(tempImage));
-     // QImage rgba = image.rgbSwapped(); //qimage加载的颜色通道顺序和opengl显示的颜色通道顺序不一致,调换R通道和B通道
+      QImage tempImage = image.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
+      ui->label_2 ->setPixmap(QPixmap::fromImage(tempImage));
+     //QImage rgba = image.rgbSwapped(); //qimage加载的颜色通道顺序和opengl显示的颜色通道顺序不一致,调换R通道和B通道
      //glImage->setImageData(rgba.bits(), rgba.width(), rgba.height());
-     // glImage->repaint();
+     //glImage->repaint();
+     //glImage->pictureFromcamera(image);
+     //glImage->update();
+     //originalQIimage =image;
+
+     //aa.load("C:/Users/Administrator/Desktop/1.jpg");
+     glImage->pictureFromcamera(image);
+     //ui->openGLWidget_2->update();
+
+
 
 
 
