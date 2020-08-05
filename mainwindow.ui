@@ -58,7 +58,7 @@
      <attribute name="title">
       <string>摄像视窗</string>
      </attribute>
-     <widget class="QOpenGLWidget" name="openGLWidget_2">
+     <widget class="GL_Image" name="openGLWidget_2">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -480,6 +480,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GL_Image</class>
+   <extends>QOpenGLWidget</extends>
+   <header location="global">gl_image.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

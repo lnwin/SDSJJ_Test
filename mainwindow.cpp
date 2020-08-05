@@ -328,11 +328,11 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 }
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示函数
 {
-   // QImage tempImage = image.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
-   // ui->label_2 ->setPixmap(QPixmap::fromImage(tempImage));
-      QImage rgba = image.rgbSwapped(); //qimage加载的颜色通道顺序和opengl显示的颜色通道顺序不一致,调换R通道和B通道
-      glImage->setImageData(rgba.bits(), rgba.width(), rgba.height());
-      glImage->repaint();
+     // QImage tempImage = image.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
+     // ui->label_2 ->setPixmap(QPixmap::fromImage(tempImage));
+     // QImage rgba = image.rgbSwapped(); //qimage加载的颜色通道顺序和opengl显示的颜色通道顺序不一致,调换R通道和B通道
+     //glImage->setImageData(rgba.bits(), rgba.width(), rgba.height());
+     // glImage->repaint();
 
 
 
