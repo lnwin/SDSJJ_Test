@@ -5,7 +5,8 @@
 #include <QOpenGLWidget>
 #include <QTimer>
 #include <QPainter>
-#include <DaVinci.h>
+#include <WorkThread.h>
+
 
 class GL_Image : public QOpenGLWidget
 {
@@ -16,10 +17,12 @@ public:
     GL_Image(QWidget* parent );
     ~GL_Image();
 
+    WorkThread *workThreadGl;
+
+
  protected:
     void paintEvent(QPaintEvent *e);
- private:
-    Davinci *Davinci;
+
 public slots:
 
     void pictureFromcamera(QImage);

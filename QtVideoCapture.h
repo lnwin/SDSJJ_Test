@@ -66,9 +66,7 @@ public:
     bool isFormatSupported(const QVideoSurfaceFormat &format) const override;
     bool start(const QVideoSurfaceFormat &format) override;
     void stop() override;
-    bool present(const QVideoFrame &frame) ;
-   // bool isFormatSupported(const QVideoSurfaceFormat &) const Q_DECL_OVERRIDE;
-   // void stop() Q_DECL_OVERRIDE;
+    bool present(const QVideoFrame &frame) ;   
      public:
 
 signals:

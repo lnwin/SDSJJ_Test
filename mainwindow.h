@@ -5,7 +5,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QMessageBox>
 #include <QFileDialog>
-#include<optional>
+#include <optional>
 #include <QCamera>
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
@@ -24,7 +24,7 @@
 #include <QBuffer>
 #include <QtVideoCapture.h>
 #include <glVideoImage.h>
-#include <DaVinci.h>
+#include <WorkThread.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,29 +33,7 @@ class QCamera;
 class QCameraViewfinder;
 class QCameraImageCapture;
 //----------------------------------------------------------------------
-class WorkThread:public QThread
-{
-    Q_OBJECT
-  public:
-    WorkThread();
 
-    QCameraViewfinder *viewfinder;//取景器
-    QCamera *camera;//相机
-    QCameraImageCapture *imageCapture;//图片捕捉器
-    QtVideoCapture *QtVIDEO;
-    cv::Mat matframe;//opencv 图片暂存
-    cv::VideoCapture *cvVideocapture; //opencv 视频类
-    cv::Mat QImage2cvMat(QImage);
-    QImage cvMat2QImage(cv::Mat & mat);
-    void run();
-    void cloudDataProcessing();
-    void cloudDataRecord();
-    void Delay_MSec(unsigned int );
-    signals:
-    void sendMessage2Main(int);
-    void setTabWidgt2Camera(int);
-
-};
 //---------------------------------------------------------------------- Qt视频类
 
 //----------------------------------------------------------------------
@@ -93,7 +71,7 @@ private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
     GL_Image *glImage;
-    Davinci *Davinci;
+
     void opencvreadimage();
 
     QImage *Picture;
