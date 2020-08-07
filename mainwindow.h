@@ -47,13 +47,12 @@ public:
 
     void searchPort();
     void ReadData();
-    void SendData();
-    //void captureImage();
-   // void displayImage(int,QImage);
-   // void saveImage();
+    void SendData();   
     void searchCamera();
 
     QtVideoCapture* surface_;
+
+
 
 private slots:
     void on_PortButton_clicked();
@@ -84,6 +83,7 @@ static QString getOpenFileName(   //定义点云文件路径属性
          const QString &filter = QString(),
           QString *selectedFilter = Q_NULLPTR);
 
-
+signals:
+    void sendfilename2Thread(QString);
 };
 #endif // MAINWINDOW_H

@@ -6,8 +6,6 @@
 #include <QTimer>
 #include <QPainter>
 #include <WorkThread.h>
-
-
 class GL_Image : public QOpenGLWidget
 {
     Q_OBJECT

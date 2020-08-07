@@ -4,9 +4,6 @@
 #include <QObject>
 #include <QAbstractVideoSurface>
 #include <QDebug>
-
-
-
 class QtVideoCapture : public QAbstractVideoSurface
 {
     Q_OBJECT
@@ -67,8 +64,7 @@ public:
     bool start(const QVideoSurfaceFormat &format) override;
     void stop() override;
     bool present(const QVideoFrame &frame) ;   
-     public:
-
+public :
 signals:
 
     void frameAvailable(QImage frame);

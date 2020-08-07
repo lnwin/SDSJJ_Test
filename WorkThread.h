@@ -8,6 +8,7 @@
 #include <QCamera>
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
+
 class WorkThread:public QThread
 {
     Q_OBJECT
@@ -23,12 +24,15 @@ class WorkThread:public QThread
     cv::Mat QImage2cvMat(QImage);
     QImage cvMat2QImage(cv::Mat & mat);
     void run();
-    void cloudDataProcessing();
+    void cloudDataProcessing(cv::Mat & mat,float x,float y,float z);
     void cloudDataRecord();
     void Delay_MSec(unsigned int );
     signals:
     void sendMessage2Main(int);
     void setTabWidgt2Camera(int);
+
+ public slots:
+     void receivefilename(QString);
 
 };
 #endif // WORKTHREAD_H

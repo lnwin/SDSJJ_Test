@@ -6,27 +6,41 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <QTime>
 #include <QCoreApplication>
-
+#include <QFile>
+#include <QDateTime>
+#include <QList>
+#include<QTextStream>
 
 QTime counttime;
 int count_CloudDataProcess =0;
-cv::Mat originalMat_gray(640,400,CV_8UC1,cvScalar(0));
-bool turnleft;
+cv::Mat originalMat_gray(640,480,CV_8UC1,cvScalar(0));
+bool turnleft;//左转向开关
+QString filename;
+QList <QString> cloudpointlist;
 //---------------------------------------------------------------------------------------激光测距参数
-float PixelSize, f, baseline,step_angle,Laser_angle,Math_angle,sumXRGB,sumX,Pic_x,Pic_y;
-float yaw_angle,laser_to_dist_pt,laser_to_current_pt,laser_to_center_pt,center_distance,real_center_distance,real_distance,pitch_angle,pitch_distance,center2target,World_x,World_y,World_z;
+const float PixelSize =0.004;
+const float f = 3.6;
+const float baseline = 640;
+const float step_angle = 0.02;
+const float Laser_angle = 45;
 const float pic_wight = 640;
 const float pic_height = 400;
 const float rotation_r = 430;
 const float PI = 3.14159265;
-int Maxindex_n,MaxRGB,RGB;
-//---------------------------------------------------------------------------------------激光测距参数
+const int RGB = 170;
+float Math_angle;
+float sumXRGB;
+float sumX;
+float Pic_x;
+float Pic_y;
+float yaw_angle,laser_to_dist_pt,laser_to_current_pt,laser_to_center_pt,center_distance,real_center_distance,real_distance,pitch_angle,pitch_distance,center2target;
+int Maxindex_n,MaxRGB;
 
+//---------------------------------------------------------------------------------------激光测距参数
 WorkThread::WorkThread()
 {
 
 };
-
 //---------------------------------------------------------------------------------------Mat和QImage转换函数
 cv::Mat WorkThread::QImage2cvMat(QImage image)// ----------------------------------------QImage转Mat
 {
@@ -87,6 +101,11 @@ QImage WorkThread::cvMat2QImage(cv::Mat& mat)//---------------------------------
     }
 }
 //---------------------------------------------------------------------------------------Mat和QImage转换函数
+void WorkThread::receivefilename(QString DK)//-------------------------------------------接收文件路径函数
+{
+    filename =DK;
+
+}
 void WorkThread::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数
 {
     QTime _Timer = QTime::currentTime().addMSecs(msec);
@@ -99,13 +118,13 @@ void WorkThread::run()//--------------------------------------------------------
 {
 
     counttime.start();
-    while (count_CloudDataProcess<1)
+    while (count_CloudDataProcess<100)
     {
 
 
-           //imageCapture->capture("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg"); enable
-           // Delay_MSec(20);//采用
-             cloudDataProcessing();
+             //imageCapture->capture("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg"); enable
+             //Delay_MSec(20);//采用
+             //cloudDataProcessing(mat);
              count_CloudDataProcess++;
              emit sendMessage2Main(count_CloudDataProcess);
 
@@ -119,12 +138,12 @@ void WorkThread::run()//--------------------------------------------------------
     count_CloudDataProcess=0;
   //emit setTabWidgt2Camera(1);
 }
-void WorkThread::cloudDataProcessing()//-------------------------------------------------点云数据处理函数
+void WorkThread::cloudDataProcessing(cv::Mat & mat,float x,float y,float z)//-------------------------------------------------点云数据处理函数
 {
 
      Math_angle=Math_angle+step_angle;
-     uchar* data =originalMat_gray.ptr(0);
-     uchar* dataSum =originalMat_gray.ptr(0);
+     uchar* data =mat.ptr(0);
+     uchar* dataSum =mat.ptr(0);
       for(int i=0;i<pic_height;i++)
      {
        Maxindex_n = 0 ;
@@ -170,23 +189,53 @@ void WorkThread::cloudDataProcessing()//----------------------------------------
            center2target = real_distance * cos(pitch_angle);
            if(turnleft)
            {
-                 World_x = center2target * sin(yaw_angle + Math_angle);
-                 World_z = center2target * cos(yaw_angle + Math_angle);
+                 x = center2target * sin(yaw_angle + Math_angle);
+                 z = center2target * cos(yaw_angle + Math_angle);
            }
            else
            {
-                World_x = center2target * sin(yaw_angle - Math_angle);
-                World_z = center2target * cos(yaw_angle - Math_angle);
+                x = center2target * sin(yaw_angle - Math_angle);
+                z = center2target * cos(yaw_angle - Math_angle);
            }
-                World_y = real_distance *sin(-pitch_angle);
+                y = real_distance * sin(-pitch_angle);
 
+            cloudpointlist.append( QString::number(x)+","+QString::number(y)+","+QString::number(z));
        }
      }
 
 
 
 }
+
 void WorkThread::cloudDataRecord()//-----------------------------------------------------点云数据存储函数
 {
 
+
+    QDateTime filedate;
+    filename=filename+"/"+filedate.currentDateTime().toString("yyyy.MM.dd&hh_mm_ss")+".txt";
+    QFile cloudfile(filename);
+    QTextStream stream(&cloudfile);
+    if(!cloudfile.exists())
+             {
+                 cloudfile.open(QIODevice::WriteOnly | QIODevice::Text );
+                 foreach( QString DKk , cloudpointlist)
+                 {
+                      stream<<DKk<<"\n";
+                 }
+
+             }
+    else
+    {
+        cloudfile.open(QIODevice::WriteOnly | QIODevice::Text|QIODevice::Append);
+
+        foreach( QString DKk , cloudpointlist)
+        {
+             stream<<DKk<<"\n";
+
+         }
+
+    }
+
+    cloudpointlist.clear();
+    qDebug() << "写入成功!";
 }

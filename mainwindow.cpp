@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
-
+    connect(this, SIGNAL(sendfilename2Thread(QString)),Qtthread, SLOT(receivefilename(QString)));//QtVideo显示信号链接
 
 }
 MainWindow::~MainWindow()
@@ -101,7 +101,7 @@ void MainWindow::on_pointfilepushButton_clicked()//-----------------------------
     else
     {
         ui->pointfilelineEdit->setText(srcDirPath) ;
-
+        sendfilename2Thread(srcDirPath);
     }
 }
 void MainWindow::ReadData()//------------------------------------------------------------串口读取函数
@@ -171,25 +171,20 @@ void MainWindow::on_openCamera_clicked()//--------------------------------------
  {
      watching=true;
      processing=true;
-    // if(!cameraIsStarted)
-    // {
+     if(!cameraIsStarted)
+    {
          Qtthread->camera->start();
-       //  cameraIsStarted=true;
-    // }
+         cameraIsStarted=true;
+     }
 
 
  }
 void MainWindow::on_Scanningbutton_clicked() //------------------------------------------开启扫描按钮
 {
 
-  //  ui->tabWidget->setCurrentIndex(0);
-   // watching=false;
-   // processing=true;
-   // Qtthread->start();
-   // QImage aa;
-   // aa.load("C:/Users/Administrator/Desktop/1.jpg");
-  //  glImage->pictureFromcamera(aa);
-    ui->openGLWidget_2->update();
+
+   Qtthread->start();
+
 
 
 }
@@ -279,6 +274,7 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
 //    Laser_angle = ui->laserAngleLine->text().toFloat()*PI/180;
 //    RGB = ui->rgeLine->text().toInt();
 //    Math_angle =0;
+     //
 }
 
 
