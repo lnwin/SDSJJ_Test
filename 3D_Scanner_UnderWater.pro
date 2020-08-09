@@ -29,6 +29,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    Pcl_progress.h \
     QtVideoCapture.h \
     WorkThread.h \
     glVideoImage.h \
