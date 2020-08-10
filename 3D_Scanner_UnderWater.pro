@@ -23,6 +23,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    Pcl_progress.cpp \
     WorkThread.cpp \
     glVideoImage.cpp \
     main.cpp \
@@ -729,11 +730,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/l
 INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
 DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
 
-win32:CONFIG(release, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportMFC-8.2
-else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportMFC-8.2d
 
-INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
-DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
 
 win32:CONFIG(release, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkhdf5_hl-8.2
 else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkhdf5_hl-8.2d
@@ -1216,3 +1213,31 @@ else:unix: LIBS += -L'D:/PCL 1.11.0/3rdParty/OpenNI2/Lib/' -lOpenNI2
 
 INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/OpenNI2/Lib'
 DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/OpenNI2/Lib'
+
+win32:CONFIG(release, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQt-8.2
+else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQt-8.2d
+else:unix: LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQt-8.2
+
+INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+
+win32:CONFIG(release, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQtSQL-8.2
+else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQtSQL-8.2d
+else:unix: LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQtSQL-8.2
+
+INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+
+win32:CONFIG(release, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkRenderingQt-8.2
+else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkRenderingQt-8.2d
+else:unix: LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkRenderingQt-8.2
+
+INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+
+win32:CONFIG(release, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkViewsQt-8.2
+else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkViewsQt-8.2d
+else:unix: LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkViewsQt-8.2
+
+INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'

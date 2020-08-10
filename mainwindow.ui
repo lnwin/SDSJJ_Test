@@ -43,6 +43,16 @@
      <attribute name="title">
       <string>三维视窗</string>
      </attribute>
+     <widget class="PCL" name="openGLWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>771</width>
+        <height>491</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -475,6 +485,11 @@
    <class>GL_Image</class>
    <extends>QOpenGLWidget</extends>
    <header location="global">gl_image.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PCL</class>
+   <extends>QOpenGLWidget</extends>
+   <header location="global">Pcl_progress.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

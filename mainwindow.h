@@ -25,6 +25,7 @@
 #include <QtVideoCapture.h>
 #include <glVideoImage.h>
 #include <WorkThread.h>
+#include <Pcl_progress.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -51,6 +52,7 @@ public:
     void searchCamera();
 
     QtVideoCapture* surface_;
+    PCL* qvtkWidget;
 
 
 
@@ -70,11 +72,8 @@ private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
     GL_Image *glImage;
-
     void opencvreadimage();
-
     QImage *Picture;
-
 
 static QString getOpenFileName(   //定义点云文件路径属性
          QWidget *parent = Q_NULLPTR,
@@ -85,5 +84,8 @@ static QString getOpenFileName(   //定义点云文件路径属性
 
 signals:
     void sendfilename2Thread(QString);
+
 };
+
+
 #endif // MAINWINDOW_H

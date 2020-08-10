@@ -53,7 +53,11 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
      surface_ =new QtVideoCapture();
      glImage = new GL_Image();
      Qtthread-> camera->setViewfinder(surface_);
-    //------------------------------------------------Qt摄像参数载入   
+    //------------------------------------------------Qt摄像参数载入
+    //------------------------------------------------PCL显示创建
+    // qvtkWidget->initialVtkWidget();
+    // qvtkWidget->showPCDcloud();
+    //------------------------------------------------PCL显示创建
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
