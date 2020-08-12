@@ -43,7 +43,7 @@
      <attribute name="title">
       <string>三维视窗</string>
      </attribute>
-     <widget class="OpenGLshow" name="openGLWidget">
+     <widget class="QOpenGLWidget" name="openGLWidget">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -485,11 +485,6 @@
    <class>GL_Image</class>
    <extends>QOpenGLWidget</extends>
    <header location="global">gl_image.h</header>
-  </customwidget>
-  <customwidget>
-   <class>OpenGLshow</class>
-   <extends>QOpenGLWidget</extends>
-   <header location="global">OpenGLShow.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

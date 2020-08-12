@@ -6,6 +6,7 @@ greaterThan(QT_MAJOR_VERSION, 4):
 
 QT += widgets
 QT += serialport
+
 CONFIG += c++11
 
 
@@ -25,7 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     OpenGLShow.cpp \
     WorkThread.cpp \
-    glVideoImage.cpp \
+    gl_image.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -33,7 +34,7 @@ HEADERS += \
     OpenGLShow.h \
     QtVideoCapture.h \
     WorkThread.h \
-    glVideoImage.h \
+    gl_image.h \
     mainwindow.h
 
 FORMS += \
@@ -1222,6 +1223,26 @@ INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
 DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
 
 win32:CONFIG(release, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQtSQL-8.2
+else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQtSQL-8.2d
+else:unix: LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQtSQL-8.2
+
+INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+
+win32:CONFIG(release, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkRenderingQt-8.2
+else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkRenderingQt-8.2d
+else:unix: LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkRenderingQt-8.2
+
+INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+
+win32:CONFIG(release, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkViewsQt-8.2
+else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkViewsQt-8.2d
+else:unix: LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkViewsQt-8.2
+
+INCLUDEPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
+.2
 else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQtSQL-8.2d
 else:unix: LIBS += -L'D:/PCL 1.11.0/3rdParty/VTK/lib/' -lvtkGUISupportQtSQL-8.2
 

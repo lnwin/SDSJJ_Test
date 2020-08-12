@@ -23,7 +23,7 @@
 #include <QTime>
 #include <QBuffer>
 #include <QtVideoCapture.h>
-#include <glVideoImage.h>
+#include <gl_image.h>
 #include <WorkThread.h>
 
 

@@ -1,4 +1,4 @@
-#include "glVideoImage.h"
+#include "gl_image.h"
 #include "QPainter"
 #include <QDebug>
 #include <opencv2/opencv.hpp>
