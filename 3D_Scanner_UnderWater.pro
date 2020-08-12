@@ -23,14 +23,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-    Pcl_progress.cpp \
+    OpenGLShow.cpp \
     WorkThread.cpp \
     glVideoImage.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    Pcl_progress.h \
+    OpenGLShow.h \
     QtVideoCapture.h \
     WorkThread.h \
     glVideoImage.h \
