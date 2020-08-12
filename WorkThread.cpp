@@ -9,7 +9,7 @@
 #include <QFile>
 #include <QDateTime>
 #include <QList>
-#include<QTextStream>
+#include <QTextStream>
 
 QTime counttime;
 int count_CloudDataProcess =0;

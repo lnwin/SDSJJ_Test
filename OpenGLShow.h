@@ -1,8 +1,11 @@
 #ifndef OPENGLSHOW_H
 #define OPENGLSHOW_H
-#include<QOpenGLExtraFunctions>
+#include <QOpenGLExtraFunctions>
 #include <QOpenGLFunctions_4_5_Core>
-#include<QOpenGLWidget>
+#include <QOpenGLWidget>
+#include <QOpenGLShader>
+#include <QOpenGLShaderProgram>
+
 
 class OpenGLshow :public QOpenGLWidget,protected QOpenGLFunctions_4_5_Core
 {
@@ -11,16 +14,16 @@ class OpenGLshow :public QOpenGLWidget,protected QOpenGLFunctions_4_5_Core
 
 
 public:
-    OpenGLshow(QWidget *parent = 0);
+    OpenGLshow(QWidget *parent );
     ~OpenGLshow();
 protected:
 
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
+   // void mousePressEvent(QMouseEvent *event);
+   // void mouseMoveEvent(QMouseEvent *event);
+  //  void mouseDoubleClickEvent(QMouseEvent *event);
 private:
    // qopengl
 

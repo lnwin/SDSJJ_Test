@@ -43,7 +43,7 @@
      <attribute name="title">
       <string>三维视窗</string>
      </attribute>
-     <widget class="PCL" name="openGLWidget">
+     <widget class="OpenGLshow" name="openGLWidget">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -487,9 +487,9 @@
    <header location="global">gl_image.h</header>
   </customwidget>
   <customwidget>
-   <class>PCL</class>
+   <class>OpenGLshow</class>
    <extends>QOpenGLWidget</extends>
-   <header location="global">Pcl_progress.h</header>
+   <header location="global">OpenGLShow.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

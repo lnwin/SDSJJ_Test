@@ -25,7 +25,7 @@
 #include <QtVideoCapture.h>
 #include <glVideoImage.h>
 #include <WorkThread.h>
-#include <Pcl_progress.h>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -52,7 +52,7 @@ public:
     void searchCamera();
 
     QtVideoCapture* surface_;
-    PCL* qvtkWidget;
+    //PCL* qvtkWidget;
 
 
 
