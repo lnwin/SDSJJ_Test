@@ -25,6 +25,7 @@
 #include <QtVideoCapture.h>
 #include <gl_image.h>
 #include <WorkThread.h>
+#include<OpenGLShow.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -52,7 +53,7 @@ public:
     void searchCamera();
 
     QtVideoCapture* surface_;
-    //PCL* qvtkWidget;
+    OpenGLshow * w;
 
 
 
