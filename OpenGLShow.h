@@ -1,10 +1,13 @@
 #ifndef OPENGLSHOW_H
 #define OPENGLSHOW_H
+
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLFunctions_4_5_Core>
 #include <QOpenGLWidget>
 #include <QOpenGLShader>
 #include <QOpenGLShaderProgram>
+
+
 
 
 class OpenGLshow :public QOpenGLWidget,protected QOpenGLFunctions_4_5_Core

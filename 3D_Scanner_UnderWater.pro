@@ -35,7 +35,8 @@ HEADERS += \
     QtVideoCapture.h \
     WorkThread.h \
     gl_image.h \
-    mainwindow.h
+    mainwindow.h \
+    stb_image.h
 
 FORMS += \
     mainwindow.ui

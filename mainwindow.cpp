@@ -49,14 +49,14 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
 
 
    //------------------------------------------------Qt摄像参数载入
-     Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
-     QCameraViewfinderSettings set;
-     set.setResolution(640,480);
-     Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
-     Qtthread-> camera->setViewfinderSettings(set);
-     surface_ =new QtVideoCapture();
-     glImage = new GL_Image();
-     Qtthread-> camera->setViewfinder(surface_);
+//     Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
+//     QCameraViewfinderSettings set;
+//     set.setResolution(640,480);
+//     Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
+//     Qtthread-> camera->setViewfinderSettings(set);
+//     surface_ =new QtVideoCapture();
+//     glImage = new GL_Image();
+//     Qtthread-> camera->setViewfinder(surface_);
     //------------------------------------------------Qt摄像参数载入
     //------------------------------------------------PCL显示创建
     // qvtkWidget->initialVtkWidget();
@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
-    connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
+    //connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilename2Thread(QString)),Qtthread, SLOT(receivefilename(QString)));//QtVideo显示信号链接
 
 }
