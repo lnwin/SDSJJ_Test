@@ -25,10 +25,10 @@ protected:
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();
-   // void mousePressEvent(QMouseEvent *event);
-   // void mouseReleaseEvent(QMouseEvent *event);
-    //void mouseMoveEvent(QMouseEvent *event);
-   // void mouseDoubleClickEvent(QMouseEvent *event);
+   void mousePressEvent(QMouseEvent *event);
+   void mouseReleaseEvent(QMouseEvent *event);
+   void mouseMoveEvent(QMouseEvent *event);
+   //void mouseDoubleClickEvent(QMouseEvent *event);
 
 
 private:
