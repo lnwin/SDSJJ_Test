@@ -30,7 +30,7 @@ const float PI = 3.14159265;
 const int RGB = 170;
 float Math_angle;
 float sumXRGB;
-float sumX;
+float sumXX;
 float Pic_x;
 float Pic_y;
 float yaw_angle,laser_to_dist_pt,laser_to_current_pt,laser_to_center_pt,center_distance,real_center_distance,real_distance,pitch_angle,pitch_distance,center2target;
@@ -101,7 +101,7 @@ QImage WorkThread::cvMat2QImage(cv::Mat& mat)//---------------------------------
     }
 }
 //---------------------------------------------------------------------------------------Mat和QImage转换函数
-void WorkThread::receivefilename(QString DK)//-------------------------------------------接收文件路径函数
+void WorkThread::receivefilepath(QString DK)//-------------------------------------------接收文件路径函数
 {
     filename =DK;
 
@@ -149,7 +149,7 @@ void WorkThread::cloudDataProcessing(cv::Mat & mat,float x,float y,float z)//---
        Maxindex_n = 0 ;
        MaxRGB =*data;
        sumXRGB = 0;
-       sumX = 0;
+       sumXX = 0;
        for (int j = 0; j < pic_wight; j++)
       {
          if (*data > MaxRGB)
@@ -166,15 +166,15 @@ void WorkThread::cloudDataProcessing(cv::Mat & mat,float x,float y,float z)//---
             if (*dataSum == MaxRGB)
             {
                 sumXRGB += k * (*dataSum);
-                sumX += *dataSum;
+                sumXX += *dataSum;
             }
          }
          dataSum++;
 
        }
-       if(sumX!=0)
+       if(sumXX!=0)
        {
-           Maxindex_n = sumXRGB / sumX;
+           Maxindex_n = sumXRGB / sumXX;
            Pic_x =((pic_wight/2) - Maxindex_n) * PixelSize;
            Pic_y =(i -(pic_height/2)) * PixelSize;
            center_distance = (f * baseline)/(Pic_x+(f/tan(Laser_angle)));

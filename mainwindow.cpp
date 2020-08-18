@@ -22,7 +22,6 @@ using namespace cv;
 WorkThread *Qtthread =new WorkThread ();
 //QtVideoCapture * QtVideo =new QtVideoCapture;
 QtVideoCapture *Qtvideo ;
-OpenGLshow  *sk;
 QList <QCameraInfo>Cameralist;
 QString Cameraresolution;
 bool Do=true; //线程标志位
@@ -56,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
      Qtthread-> camera->setViewfinderSettings(set);
      surface_ =new QtVideoCapture();
      glImage = new GL_Image();
+     OpenGL = new OpenGLshow();
      Qtthread-> camera->setViewfinder(surface_);
     //------------------------------------------------Qt摄像参数载入
     //------------------------------------------------PCL显示创建
@@ -66,7 +66,8 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
-    connect(this, SIGNAL(sendfilename2Thread(QString)),Qtthread, SLOT(receivefilename(QString)));//QtVideo显示信号链接
+    connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
+    connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输
 
 }
 MainWindow::~MainWindow()
@@ -109,7 +110,7 @@ void MainWindow::on_pointfilepushButton_clicked()//-----------------------------
     else
     {
         ui->pointfilelineEdit->setText(srcDirPath) ;
-        sendfilename2Thread(srcDirPath);
+        sendfilepath2Thread(srcDirPath);
     }
 }
 void MainWindow::ReadData()//------------------------------------------------------------串口读取函数
@@ -196,6 +197,19 @@ void MainWindow::on_Scanningbutton_clicked() //---------------------------------
 
 
 }
+void MainWindow::on_show3D_clicked()
+{
+
+    QString  srcDirPath = QFileDialog::getOpenFileName( this, "请选择点云文件", "/");
+    if (srcDirPath.isEmpty())
+    {
+        return;
+    }
+    else
+    {
+      sendfilename2opengl(srcDirPath);
+    }
+};
 bool QtVideoCapture::isFormatSupported(const QVideoSurfaceFormat & format) const
 {
     return QVideoFrame::imageFormatFromPixelFormat(format.pixelFormat()) != QImage::Format_Invalid && !format.frameSize().isEmpty() && format.handleType() == QAbstractVideoBuffer::NoHandle;

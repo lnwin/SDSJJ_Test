@@ -65,6 +65,7 @@ private slots:
     void on_closeCamera_clicked();
     void on_loadseting_clicked();
     void on_openCamera_clicked();
+    void on_show3D_clicked();
     void receivedFromThread(int);
     void receivedSetTabWidgt2Camera(int);   
     void showImage(QImage );
@@ -75,16 +76,17 @@ private:
     GL_Image *glImage;
     void opencvreadimage();
     QImage *Picture;
-
+    OpenGLshow *OpenGL;
 static QString getOpenFileName(   //定义点云文件路径属性
          QWidget *parent = Q_NULLPTR,
          const QString &caption = QString(),
          const QString &dir = QString(),
          const QString &filter = QString(),
-          QString *selectedFilter = Q_NULLPTR);
+         QString *selectedFilter = Q_NULLPTR);
 
 signals:
-    void sendfilename2Thread(QString);
+    void sendfilepath2Thread(QString);
+    void sendfilename2opengl(QString);
 
 };
 

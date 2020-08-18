@@ -27,13 +27,13 @@ protected:
     void paintGL();
    void mousePressEvent(QMouseEvent *event);
    void mouseReleaseEvent(QMouseEvent *event);
-   void mouseMoveEvent(QMouseEvent *event);
-   //void mouseDoubleClickEvent(QMouseEvent *event);
+   void mouseMoveEvent(QMouseEvent *event);  
    void wheelEvent(QWheelEvent*event);
+   void readclouddata();
 
 
-private:
-   // qopengl
+public slots:
+   void receivecloudfilename(QString);
 
 
 };

@@ -32,7 +32,7 @@ class WorkThread:public QThread
     void setTabWidgt2Camera(int);
 
  public slots:
-     void receivefilename(QString);
+     void receivefilepath(QString);
 
 };
 #endif // WORKTHREAD_H
