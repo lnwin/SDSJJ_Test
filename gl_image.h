@@ -24,7 +24,7 @@ public:
 public slots:
 
     void pictureFromcamera(QImage);
-
+    void receivescanningsignal(bool);
 
 };
 

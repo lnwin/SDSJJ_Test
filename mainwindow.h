@@ -87,7 +87,7 @@ static QString getOpenFileName(   //定义点云文件路径属性
 signals:
     void sendfilepath2Thread(QString);
     void sendfilename2opengl(QString);
-
+    void sendscanningsignal(bool);
 };
 
 

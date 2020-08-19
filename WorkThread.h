@@ -24,7 +24,7 @@ class WorkThread:public QThread
     cv::Mat QImage2cvMat(QImage);
     QImage cvMat2QImage(cv::Mat & mat);
     void run();
-    void cloudDataProcessing(cv::Mat & mat,float x,float y,float z);
+    void cloudDataProcessing(cv::Mat & mat);
     void cloudDataRecord();
     void Delay_MSec(unsigned int );
     signals:

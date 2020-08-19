@@ -1,4 +1,4 @@
-/*
+﻿/*
 ******************************************************
 **   项目:水下3D扫描                                  **
 **   工程创建时间:2020.7.26                           **
@@ -29,8 +29,7 @@ bool Do=true; //线程标志位
 Mat transformmat;
 
 QImage originalQIimage;
-bool watching=false;
-bool processing=false;
+bool startscan=false;
 bool cameraIsStarted=false;
 
 //QtVideoSurface = new QtVideoCapture;
@@ -68,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输
+    connect(this, SIGNAL(sendscanningsignal(bool)),glImage, SLOT(receivescanningsignal(bool)));//开启扫描状态信号传输
 
 }
 MainWindow::~MainWindow()
@@ -169,17 +169,17 @@ void MainWindow::searchCamera()//-----------------------------------------------
 }
 void MainWindow::on_closeCamera_clicked()//----------------------------------------------关闭Qt摄像头按钮
 {
-   watching=false;
-    //processing=true;
+
+    //processing=true;   
    Qtthread->camera->stop();
-   // QImage aa;
-   // aa.load("C:/Users/Administrator/Desktop/1.jpg");
+   cameraIsStarted=false;
+   Qtthread->cloudDataRecord();
 
 }
 void MainWindow::on_openCamera_clicked()//-----------------------------------------------打开Qt摄像头按钮
  {
-     watching=true;
-     processing=true;
+
+
      if(!cameraIsStarted)
     {
          Qtthread->camera->start();
@@ -191,10 +191,19 @@ void MainWindow::on_openCamera_clicked()//--------------------------------------
 void MainWindow::on_Scanningbutton_clicked() //------------------------------------------开启扫描按钮
 {
 
-
-   Qtthread->start();
-
-
+    if(!startscan)
+    {
+          sendscanningsignal(true);
+          ui->Scanningbutton->setText("Stop Scan");
+          startscan=true;
+    }
+    else
+    {
+          sendscanningsignal(false);
+          ui->Scanningbutton->setText("Start Scan");
+          startscan=false;
+          Qtthread->cloudDataRecord();
+    }
 
 }
 void MainWindow::on_show3D_clicked()
@@ -237,10 +246,8 @@ bool QtVideoCapture::present(const QVideoFrame &frame)//------------------------
                            cloneFrame.width(),
                            cloneFrame.height(),
                            QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat()));
-        if(watching)
-       {
         emit frameAvailable(image);
-       }
+
 
         cloneFrame.unmap();
         return true;
@@ -279,8 +286,7 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 }
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示函数
 {
-     // QImage tempImage = image.scaled(ui->label_2->size(), Qt::KeepAspectRatio);
-     // ui->label_2 ->setPixmap(QPixmap::fromImage(tempImage));
+
       QImage rgba =image.mirrored();
       glImage->pictureFromcamera(rgba);
       ui->openGLWidget_2->update();

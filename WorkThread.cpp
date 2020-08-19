@@ -35,7 +35,7 @@ float Pic_x;
 float Pic_y;
 float yaw_angle,laser_to_dist_pt,laser_to_current_pt,laser_to_center_pt,center_distance,real_center_distance,real_distance,pitch_angle,pitch_distance,center2target;
 int Maxindex_n,MaxRGB;
-
+int x,y,z;
 //---------------------------------------------------------------------------------------激光测距参数
 WorkThread::WorkThread()
 {
@@ -138,7 +138,7 @@ void WorkThread::run()//--------------------------------------------------------
     count_CloudDataProcess=0;
   //emit setTabWidgt2Camera(1);
 }
-void WorkThread::cloudDataProcessing(cv::Mat & mat,float x,float y,float z)//-------------------------------------------------点云数据处理函数
+void WorkThread::cloudDataProcessing(cv::Mat & mat)//-------------------------------------------------点云数据处理函数
 {
 
      Math_angle=Math_angle+step_angle;
@@ -202,6 +202,8 @@ void WorkThread::cloudDataProcessing(cv::Mat & mat,float x,float y,float z)//---
             cloudpointlist.append( QString::number(x)+","+QString::number(y)+","+QString::number(z));
        }
      }
+
+
 
 
 
