@@ -230,9 +230,11 @@ void MainWindow::on_show3D_clicked()
       sendfilename2opengl(srcDirPath);
     }
 };
-void MainWindow:: on_MaxGLView_clicked()
+void MainWindow:: on_MaxGLView_clicked()//-------------------------------------------------OpenGL窗口最大化
 {
-    OpenGL->show();
+
+       OpenGL->showMaximized();
+
 
 };
 bool QtVideoCapture::isFormatSupported(const QVideoSurfaceFormat & format) const
@@ -309,7 +311,7 @@ void MainWindow::showImage(QImage image)//--------------------------------------
       glImage->pictureFromcamera(rgba);
     if(startscan)
     {
-      XXIMAGE =Qtthread->QImage2cvMat(rgba);
+      XXIMAGE = Qtthread->QImage2cvMat(rgba);
       if(!XXIMAGE.empty())
     {
 
@@ -319,7 +321,7 @@ void MainWindow::showImage(QImage image)//--------------------------------------
 
     }
     }
-   ui->openGLWidget_2->update();
+    ui->openGLWidget_2->update();
 
 
 }
