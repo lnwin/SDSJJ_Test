@@ -43,19 +43,19 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     ui->progressBar->setRange(0,1000);
     searchPort();
     searchCamera();
-
+    serial = new QSerialPort;
 
 
    //------------------------------------------------Qt摄像参数载入
      Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
-     QCameraViewfinderSettings set;
-     set.setResolution(640,480);
+    // QCameraViewfinderSettings set;
+     //set.setResolution(640,480);
      Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
-     Qtthread-> camera->setViewfinderSettings(set);
+   //  Qtthread-> camera->setViewfinderSettings(set);
      surface_ =new QtVideoCapture();
      glImage = new GL_Image();
      OpenGL = new OpenGLshow();
-     OpenGL->setGeometry(300,300,1280,720);
+     OpenGL->setGeometry(300,300,1080,720);
      Qtthread-> camera->setViewfinder(surface_);
     //------------------------------------------------Qt摄像参数载入
     //------------------------------------------------PCL显示创建
@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     //------------------------------------------------PCL显示创建
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
-    connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接    
+    //connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输
@@ -86,7 +86,8 @@ GL_Image::GL_Image()
 void MainWindow::on_PortButton_clicked()//-----------------------------------------------串口开启函数
 {
 
-    serial = new QSerialPort;
+    if(!serial->isOpen())
+    {
     serial->setPortName(ui->portcomboBox->currentText());//设置串口名
     serial->open(QIODevice::ReadWrite);//以读写方式打开串口
     serial->setBaudRate(QSerialPort::Baud115200);//波特率
@@ -94,7 +95,17 @@ void MainWindow::on_PortButton_clicked()//--------------------------------------
     serial->setParity(QSerialPort::NoParity);//校验位
     serial->setStopBits(QSerialPort::OneStop);//停止位
     QObject::connect(serial,&QSerialPort::readyRead,this,&MainWindow::ReadData);
-    ui->textEdit->append("串口开启成功！");
+    ui->textEdit->append("SerialPort Opened");
+    ui->PortButton->setText("Close Port");
+    }
+    else
+    {
+       serial->close();
+       ui->PortButton->setText("Open Port");
+       ui->textEdit->append("SerialPort Closed");
+    }
+
+
 }
 void MainWindow::on_senddatabutton_clicked()//-------------------------------------------串口发送按钮
 {
@@ -219,6 +230,11 @@ void MainWindow::on_show3D_clicked()
       sendfilename2opengl(srcDirPath);
     }
 };
+void MainWindow:: on_MaxGLView_clicked()
+{
+    OpenGL->show();
+
+};
 bool QtVideoCapture::isFormatSupported(const QVideoSurfaceFormat & format) const
 {
     return QVideoFrame::imageFormatFromPixelFormat(format.pixelFormat()) != QImage::Format_Invalid && !format.frameSize().isEmpty() && format.handleType() == QAbstractVideoBuffer::NoHandle;
@@ -282,7 +298,7 @@ void MainWindow::receivedFromThread(int ID)//-----------------------------------
 }
 void MainWindow::receivedSetTabWidgt2Camera(int K)//------------------------------------窗体切换传递函数
 {
-    ui->tabWidget->setCurrentIndex(K);
+    //ui->tabWidget->setCurrentIndex(K);
 }
 cv::Mat XXIMAGE;
 cv::Mat XXgray(640,480,CV_8UC1,cvScalar(0));
@@ -299,12 +315,12 @@ void MainWindow::showImage(QImage image)//--------------------------------------
 
         cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
         OpenGL->GLclouddataprocess(XXgray);
-        OpenGL->show();
-        OpenGL->update();
+        ui->openGLWidget->update();
 
     }
     }
-        ui->openGLWidget_2->update();
+   ui->openGLWidget_2->update();
+
 
 }
 void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮

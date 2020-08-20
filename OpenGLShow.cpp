@@ -16,7 +16,7 @@ QList<float>cloud_x;
 QList<float>cloud_y;
 QList<float>cloud_z;
 int mousedond_x,mousedond_y;
-float yaw,pitch,roll;//中心位置
+float yaw=-75,pitch,roll;//中心位置
 float xoffset, yoffset,zoffset;
 float viewDistance;
 bool mousebutton_left;
@@ -75,7 +75,7 @@ void OpenGLshow::resizeGL(int width, int height)
         glViewport(0,0,width,height);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluPerspective(60.0,760/490,0.1,100000);
+        gluPerspective(60.0,760/490,0.1,100000);//设置观察视窗
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
@@ -168,8 +168,8 @@ void OpenGLshow::paintGL()
 //           }
 //            else  if(viewDistance >= 18)
 //            {
- glColor3f (0.1f, 1.0f, 0.0f);
- glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+            glColor3f (0.1f, 1.0f, 0.0f);
+            glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
 //            }
 
         }
@@ -211,6 +211,7 @@ void OpenGLshow:: mouseMoveEvent(QMouseEvent *event)
        yaw+=xoffset;
        yoffset = (event->y()-mousedond_y)/40;
        pitch-=yoffset;
+
     }
     else
     {
@@ -235,7 +236,7 @@ void OpenGLshow:: wheelEvent(QWheelEvent*event)
 
      this->update();
  }
-void OpenGLshow:: receivecloudfilename(QString filename)
+void OpenGLshow:: receivecloudfilename(QString filename)//----------------接受点云文件名
 {
 
     cloudfilename = filename;
@@ -243,7 +244,7 @@ void OpenGLshow:: receivecloudfilename(QString filename)
     this->update();
 
 };
-void OpenGLshow:: readclouddata()
+void OpenGLshow:: readclouddata()//---------------------------------------读取点云数据文件
 {
      QFile file(cloudfilename);
      if (!file.open(QIODevice::ReadOnly | QIODevice::Text))

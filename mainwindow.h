@@ -65,6 +65,7 @@ private slots:
     void on_loadseting_clicked();
     void on_openCamera_clicked();
     void on_show3D_clicked();
+    void on_MaxGLView_clicked();
     void receivedFromThread(int);
     void receivedSetTabWidgt2Camera(int);   
     void showImage(QImage );
