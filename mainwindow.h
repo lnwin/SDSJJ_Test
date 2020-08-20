@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QMainWindow>
 #include <QtSerialPort/QSerialPort>
@@ -61,8 +61,7 @@ private slots:
     void on_PortButton_clicked();
     void on_senddatabutton_clicked();
     void on_pointfilepushButton_clicked();   
-    void on_Scanningbutton_clicked();
-    void on_closeCamera_clicked();
+    void on_Scanningbutton_clicked();   
     void on_loadseting_clicked();
     void on_openCamera_clicked();
     void on_show3D_clicked();
@@ -77,12 +76,7 @@ private:
     void opencvreadimage();
     QImage *Picture;
     OpenGLshow *OpenGL;
-static QString getOpenFileName(   //定义点云文件路径属性
-         QWidget *parent = Q_NULLPTR,
-         const QString &caption = QString(),
-         const QString &dir = QString(),
-         const QString &filter = QString(),
-         QString *selectedFilter = Q_NULLPTR);
+
 
 signals:
     void sendfilepath2Thread(QString);

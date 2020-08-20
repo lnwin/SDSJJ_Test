@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
      surface_ =new QtVideoCapture();
      glImage = new GL_Image();
      OpenGL = new OpenGLshow();
+     OpenGL->setGeometry(300,300,1280,720);
      Qtthread-> camera->setViewfinder(surface_);
     //------------------------------------------------Qt摄像参数载入
     //------------------------------------------------PCL显示创建
@@ -63,11 +64,11 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     //------------------------------------------------PCL显示创建
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
-    connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
+    connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接    
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输
-    connect(this, SIGNAL(sendscanningsignal(bool)),glImage, SLOT(receivescanningsignal(bool)));//开启扫描状态信号传输
+
 
 }
 MainWindow::~MainWindow()
@@ -167,16 +168,7 @@ void MainWindow::searchCamera()//-----------------------------------------------
     }
 
 }
-void MainWindow::on_closeCamera_clicked()//----------------------------------------------关闭Qt摄像头按钮
-{
-
-    //processing=true;   
-   Qtthread->camera->stop();
-   cameraIsStarted=false;
-   Qtthread->cloudDataRecord();
-
-}
-void MainWindow::on_openCamera_clicked()//-----------------------------------------------打开Qt摄像头按钮
+void MainWindow::on_openCamera_clicked()//-----------------------------------------------打开关闭Qt摄像头按钮
  {
 
 
@@ -184,7 +176,15 @@ void MainWindow::on_openCamera_clicked()//--------------------------------------
     {
          Qtthread->camera->start();
          cameraIsStarted=true;
+         ui->openCamera->setText("Close Camera");
+    }
+    else
+     {
+         Qtthread->camera->stop();
+         cameraIsStarted=false;
+         ui->openCamera->setText("Open Camera");
      }
+
 
 
  }
@@ -193,13 +193,13 @@ void MainWindow::on_Scanningbutton_clicked() //---------------------------------
 
     if(!startscan)
     {
-          sendscanningsignal(true);
+
           ui->Scanningbutton->setText("Stop Scan");
           startscan=true;
     }
     else
     {
-          sendscanningsignal(false);
+
           ui->Scanningbutton->setText("Start Scan");
           startscan=false;
           Qtthread->cloudDataRecord();
@@ -284,18 +284,32 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 {
     ui->tabWidget->setCurrentIndex(K);
 }
+cv::Mat XXIMAGE;
+cv::Mat XXgray(640,480,CV_8UC1,cvScalar(0));
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示函数
 {
 
       QImage rgba =image.mirrored();
       glImage->pictureFromcamera(rgba);
-      ui->openGLWidget_2->update();
+    if(startscan)
+    {
+      XXIMAGE =Qtthread->QImage2cvMat(rgba);
+      if(!XXIMAGE.empty())
+    {
 
+        cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
+        OpenGL->GLclouddataprocess(XXgray);
+        OpenGL->show();
+        OpenGL->update();
+
+    }
+    }
+        ui->openGLWidget_2->update();
 
 }
 void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
 {
-//    PixelSize = ui->pixelSizeLine->text().toFloat();
+//    PixelSize = ui->pixelSizeLine->text().toFloat();------------------建议使用结构体传递参数
 //    f = ui->focalLine->text().toFloat();
 //    baseline=ui->baseLineLine->text().toFloat();
 //    step_angle = ui->stepAngleLine->text().toFloat()*PI/180;

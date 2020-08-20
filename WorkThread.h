@@ -23,8 +23,7 @@ class WorkThread:public QThread
     cv::VideoCapture *cvVideocapture; //opencv 视频类
     cv::Mat QImage2cvMat(QImage);
     QImage cvMat2QImage(cv::Mat & mat);
-    void run();
-    void cloudDataProcessing(cv::Mat & mat);
+    void run();    
     void cloudDataRecord();
     void Delay_MSec(unsigned int );
     signals:

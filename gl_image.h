@@ -16,15 +16,16 @@ public:
     ~GL_Image();
 
     WorkThread *workThreadGl;
-
-
+signals:
+    void sendcloudlist2GLshow(QList <float>);
  protected:
     void paintEvent(QPaintEvent *e);
 
 public slots:
 
     void pictureFromcamera(QImage);
-    void receivescanningsignal(bool);
+
+
 
 };
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1180</width>
-    <height>651</height>
+    <width>1100</width>
+    <height>645</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>630</y>
-      <width>1181</width>
+      <y>620</y>
+      <width>1091</width>
       <height>21</height>
      </rect>
     </property>
@@ -37,26 +37,11 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string>三维视窗</string>
-     </attribute>
-     <widget class="OpenGLshow" name="openGLWidget">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>831</width>
-        <height>591</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>摄像视窗</string>
+      <string>Camera View</string>
      </attribute>
      <widget class="GL_Image" name="openGLWidget_2">
       <property name="geometry">
@@ -75,8 +60,8 @@
      <rect>
       <x>840</x>
       <y>20</y>
-      <width>331</width>
-      <height>501</height>
+      <width>251</width>
+      <height>591</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -253,14 +238,14 @@
     <widget class="QPushButton" name="PortButton">
      <property name="geometry">
       <rect>
-       <x>250</x>
-       <y>20</y>
-       <width>71</width>
-       <height>23</height>
+       <x>150</x>
+       <y>50</y>
+       <width>91</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>开启串口</string>
+      <string>Open Port</string>
      </property>
     </widget>
     <widget class="QComboBox" name="portcomboBox">
@@ -272,7 +257,7 @@
        <x>150</x>
        <y>20</y>
        <width>91</width>
-       <height>22</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="contextMenuPolicy">
@@ -288,60 +273,24 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>150</x>
-       <y>50</y>
-       <width>91</width>
-       <height>20</height>
+       <x>10</x>
+       <y>480</y>
+       <width>151</width>
+       <height>21</height>
       </rect>
      </property>
     </widget>
     <widget class="QPushButton" name="pointfilepushButton">
      <property name="geometry">
       <rect>
-       <x>250</x>
-       <y>50</y>
+       <x>170</x>
+       <y>480</y>
        <width>71</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
-      <string>点云路径</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="comboBox">
-     <property name="geometry">
-      <rect>
-       <x>250</x>
-       <y>80</y>
-       <width>71</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>80</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>点云文件格式</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="readpotinpushButton">
-     <property name="geometry">
-      <rect>
-       <x>250</x>
-       <y>110</y>
-       <width>71</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>读取点云</string>
+      <string>Cloud Path</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="checkBox">
@@ -349,7 +298,7 @@
       <rect>
        <x>10</x>
        <y>180</y>
-       <width>71</width>
+       <width>81</width>
        <height>16</height>
       </rect>
      </property>
@@ -360,7 +309,7 @@
       <number>-1</number>
      </property>
      <property name="text">
-      <string>左转</string>
+      <string>Turn Left</string>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -369,27 +318,27 @@
     <widget class="QCheckBox" name="checkBox_2">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>100</x>
        <y>180</y>
-       <width>71</width>
+       <width>81</width>
        <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>右转</string>
+      <string>Turn Right</string>
      </property>
     </widget>
     <widget class="QPushButton" name="senddatabutton">
      <property name="geometry">
       <rect>
-       <x>250</x>
-       <y>140</y>
-       <width>71</width>
-       <height>23</height>
+       <x>150</x>
+       <y>90</y>
+       <width>91</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>发送数据</string>
+      <string>Send Message</string>
      </property>
     </widget>
     <widget class="QComboBox" name="cameralist">
@@ -397,7 +346,7 @@
       <rect>
        <x>10</x>
        <y>200</y>
-       <width>131</width>
+       <width>231</width>
        <height>22</height>
       </rect>
      </property>
@@ -405,9 +354,9 @@
     <widget class="QPushButton" name="Scanningbutton">
      <property name="geometry">
       <rect>
-       <x>190</x>
+       <x>140</x>
        <y>230</y>
-       <width>71</width>
+       <width>101</width>
        <height>61</height>
       </rect>
      </property>
@@ -415,30 +364,17 @@
       <string>Start Scan</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="closeCamera">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>230</y>
-       <width>81</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>关闭相机</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="loadseting">
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>110</y>
+       <y>130</y>
        <width>91</width>
-       <height>23</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>载入参数</string>
+      <string>LoadSeting</string>
      </property>
     </widget>
     <widget class="QPushButton" name="openCamera">
@@ -446,25 +382,25 @@
       <rect>
        <x>10</x>
        <y>230</y>
-       <width>81</width>
+       <width>111</width>
        <height>61</height>
       </rect>
      </property>
      <property name="text">
-      <string> 开启相机</string>
+      <string>Open Camera</string>
      </property>
     </widget>
     <widget class="QPushButton" name="show3D">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>390</y>
+       <y>530</y>
        <width>91</width>
        <height>51</height>
       </rect>
      </property>
      <property name="text">
-      <string>模型显示</string>
+      <string>Show 3D Model</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="textEdit">
@@ -472,8 +408,8 @@
       <rect>
        <x>10</x>
        <y>310</y>
-       <width>311</width>
-       <height>71</height>
+       <width>231</width>
+       <height>161</height>
       </rect>
      </property>
     </widget>
@@ -485,11 +421,6 @@
    <class>GL_Image</class>
    <extends>QOpenGLWidget</extends>
    <header location="global">gl_image.h</header>
-  </customwidget>
-  <customwidget>
-   <class>OpenGLshow</class>
-   <extends>QOpenGLWidget</extends>
-   <header location="global">OpenGLShow.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
