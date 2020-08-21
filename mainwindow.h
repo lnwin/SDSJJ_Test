@@ -25,8 +25,8 @@
 #include <QtVideoCapture.h>
 #include <gl_image.h>
 #include <WorkThread.h>
-#include<OpenGLShow.h>
-
+#include <OpenGLShow.h>
+#include <CameraParameter.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -51,9 +51,8 @@ public:
     void ReadData();
     void SendData();   
     void searchCamera();
-
     QtVideoCapture* surface_;
-    OpenGLshow * w;
+
 
 
 
@@ -66,6 +65,8 @@ private slots:
     void on_openCamera_clicked();
     void on_show3D_clicked();
     void on_MaxGLView_clicked();
+    void on_ProduceMatrix_clicked();
+    void on_ParameterContrast_clicked();
     void receivedFromThread(int);
     void receivedSetTabWidgt2Camera(int);   
     void showImage(QImage );
@@ -74,15 +75,15 @@ private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
     GL_Image *glImage;
-    void opencvreadimage();
     QImage *Picture;
     OpenGLshow *OpenGL;
-
+    CameraParameter *Camera_Parameter;
 
 signals:
     void sendfilepath2Thread(QString);
     void sendfilename2opengl(QString);
-    void sendscanningsignal(bool);
+    void sendseting2opengl(QList<float>);
+
 };
 
 

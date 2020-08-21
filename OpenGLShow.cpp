@@ -22,16 +22,16 @@ float viewDistance;
 bool mousebutton_left;
 float Addclouddata_x=0,Addclouddata_y=0,Addclouddata_z=0;
 //---------------------------------------------------------------------------------------激光测距参数
-const float PixelSize =0.004;
-const float f = 3.6;
-const float baseline = 640;
-const float step_angle = 0.02;
-const float Laser_angle = 45;
+float PixelSize =0.004;
+float f = 3.6;
+float baseline = 640;
+float step_angle = 0.02;
+float Laser_angle = 45;
 const float pic_wight = 640;
 const float pic_height = 400;
 const float rotation_r = 430;
 const float PI = 3.14159265;
-const int RGB = 170;
+float RGB = 170;
 float Math_angle;
 float sumXRGB;
 float sumXX;
@@ -266,7 +266,18 @@ void OpenGLshow:: readclouddata()//---------------------------------------读取
 
 
 };
-float Lx=0,Ly=0,Lz=0;
+void OpenGLshow:: receiveseting(QList<float> setinglist)
+{
+
+    PixelSize = setinglist[0];
+    f         = setinglist[1];
+    baseline  = setinglist[2];
+    step_angle= setinglist[3];
+    Laser_angle=setinglist[4];
+    RGB        =setinglist[5];
+
+}
+float Lx=0,Ly=0,Lz=0;//------------------测试数据
 void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//-------------------------------实时帧处理函数
 {
 

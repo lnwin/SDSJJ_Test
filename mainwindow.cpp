@@ -20,20 +20,17 @@ using namespace cv;
 
 //---------------------------------------------------------------------------------------参数配置
 WorkThread *Qtthread =new WorkThread ();
-//QtVideoCapture * QtVideo =new QtVideoCapture;
 QtVideoCapture *Qtvideo ;
 QList <QCameraInfo>Cameralist;
+QList<float>setinglist;
+QList<float>parametersetinglist;
 QString Cameraresolution;
 bool Do=true; //线程标志位
-
 Mat transformmat;
-
 QImage originalQIimage;
 bool startscan=false;
 bool cameraIsStarted=false;
-
-//QtVideoSurface = new QtVideoCapture;
-
+const float PI =3.1415926;
 //---------------------------------------------------------------------------------------参数配置
 MainWindow::MainWindow(QWidget *parent)// -----------------------------------------------载入函数
     : QMainWindow(parent)
@@ -51,11 +48,12 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     // QCameraViewfinderSettings set;
      //set.setResolution(640,480);
      Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
-   //  Qtthread-> camera->setViewfinderSettings(set);
+   // Qtthread-> camera->setViewfinderSettings(set);
      surface_ =new QtVideoCapture();
      glImage = new GL_Image();
      OpenGL = new OpenGLshow();
-     OpenGL->setGeometry(300,300,1080,720);
+     Camera_Parameter =new CameraParameter();
+    // OpenGL->setGeometry(300,300,1080,720);
      Qtthread-> camera->setViewfinder(surface_);
     //------------------------------------------------Qt摄像参数载入
     //------------------------------------------------PCL显示创建
@@ -68,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输
-
+    connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
 
 }
 MainWindow::~MainWindow()
@@ -230,11 +228,27 @@ void MainWindow::on_show3D_clicked()
       sendfilename2opengl(srcDirPath);
     }
 };
-void MainWindow:: on_MaxGLView_clicked()//-------------------------------------------------OpenGL窗口最大化
+void MainWindow::on_MaxGLView_clicked()//------------------------------------------------OpenGL窗口最大化
 {
 
        OpenGL->showMaximized();
 
+
+};
+void MainWindow::on_ProduceMatrix_clicked()//--------------------------------------------生成校准矩阵按钮
+{
+     parametersetinglist.append(ui->Picture_N->text().toFloat());
+     parametersetinglist.append(ui->P_CornerNumber_row->text().toFloat());
+     parametersetinglist.append(ui->P_CornerNumber_col->text().toFloat());
+     parametersetinglist.append(ui->CellSize_width->text().toFloat());
+     parametersetinglist.append(ui->CellSize_height->text().toFloat());
+     parametersetinglist.append(ui->Iteration_N->text().toFloat());
+     parametersetinglist.append(ui->Accuracy->text().toFloat());
+     Camera_Parameter->CameraParameter_ProduceMatrix(parametersetinglist);
+     parametersetinglist.clear();
+}
+void MainWindow::on_ParameterContrast_clicked()//----------------------------------------校准对比测试按钮
+{
 
 };
 bool QtVideoCapture::isFormatSupported(const QVideoSurfaceFormat & format) const
@@ -282,18 +296,6 @@ QList<QVideoFrame::PixelFormat> QtVideoCapture::supportedPixelFormats(QAbstractV
     }
 
 }
-void MainWindow::opencvreadimage()//----------------------------------------------------读取cv摄像帧函数
-{
-
-    // cvVideocapture->read(matframe);
-
-    // QImage Qimage = cvMat2QImage(matframe) ;
-
-    //  ui->capturelable->setPixmap(QPixmap::fromImage(Qimage));
-
-
-
-}
 void MainWindow::receivedFromThread(int ID)//--------------------------------------------进度条传递函数
 {
    ui->progressBar->setValue(ID);
@@ -327,14 +329,15 @@ void MainWindow::showImage(QImage image)//--------------------------------------
 }
 void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
 {
-//    PixelSize = ui->pixelSizeLine->text().toFloat();------------------建议使用结构体传递参数
-//    f = ui->focalLine->text().toFloat();
-//    baseline=ui->baseLineLine->text().toFloat();
-//    step_angle = ui->stepAngleLine->text().toFloat()*PI/180;
-//    Laser_angle = ui->laserAngleLine->text().toFloat()*PI/180;
-//    RGB = ui->rgeLine->text().toInt();
-//    Math_angle =0;
-     //
+    setinglist.append( ui->pixelSizeLine->text().toFloat());
+    setinglist.append(ui->focalLine->text().toFloat());
+    setinglist.append(ui->baseLineLine->text().toFloat());
+    setinglist.append(ui->stepAngleLine->text().toFloat()*PI/180);
+    setinglist.append( ui->laserAngleLine->text().toFloat()*PI/180);
+    setinglist.append( ui->rgeLine->text().toInt());
+    emit sendseting2opengl(setinglist);
+    setinglist.clear();
+    ui->textEdit->append("seting successful");
 }
 
 

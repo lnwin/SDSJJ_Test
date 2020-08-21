@@ -24,6 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    CameraParameter.cpp \
     OpenGLShow.cpp \
     WorkThread.cpp \
     gl_image.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    CameraParameter.h \
     OpenGLShow.h \
     QtVideoCapture.h \
     WorkThread.h \

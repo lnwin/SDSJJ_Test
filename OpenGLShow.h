@@ -27,9 +27,9 @@ public:
    void  GLclouddataprocess(cv::Mat frame);
 protected:
 
-    void initializeGL();
-    void resizeGL(int width, int height);
-    void paintGL();
+   void  initializeGL();
+   void  resizeGL(int width, int height);
+   void  paintGL();
    void  mousePressEvent(QMouseEvent *event);
    void  mouseReleaseEvent(QMouseEvent *event);
    void  mouseMoveEvent(QMouseEvent *event);
@@ -40,7 +40,7 @@ protected:
 
 public slots:
    void receivecloudfilename(QString);
-   //void receivedframe(cv::Mat);
+   void receiveseting(QList<float>);
 
 
 };
