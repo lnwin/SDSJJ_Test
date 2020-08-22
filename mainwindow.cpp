@@ -249,7 +249,7 @@ void MainWindow::on_ProduceMatrix_clicked()//-----------------------------------
 }
 void MainWindow::on_ParameterContrast_clicked()//----------------------------------------校准对比测试按钮
 {
-
+     Camera_Parameter->CameraParameter_Constrast();
 };
 bool QtVideoCapture::isFormatSupported(const QVideoSurfaceFormat & format) const
 {

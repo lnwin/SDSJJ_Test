@@ -16,7 +16,8 @@ public:
       void CameraParameter_LoadMatrix();
       void CameraParameter_ProduceMatrix(QList<float>);
       void CameraParameter_Constrast();
-      void writeMatToFile(cv::Mat& m, std::string filename);
+      void writeMatToFile(cv::Mat& m, QString filename);
+      void writeFileToMat(cv::Mat& m, QString filename,QString type);
       //void CameraParameter_Run();
 public slots:
 
