@@ -155,8 +155,14 @@ void CameraParameter::CameraParameter_Constrast()//-------------------------ç»“æ
         imagename =dirpath;
         img_source = cv::imread(imagename);
         cv::undistort(img_source,img_target,NcameraMatrix,NdistCoeffs);
+        cv::namedWindow("source",0);
+        cv::resizeWindow("source", 640,360);
         cv::imshow("source",img_source);
+        cv::moveWindow("source",320,300);
+        cv::namedWindow("target",0);
+        cv::resizeWindow("target", 640,360);
         cv::imshow("target",img_target);
+        cv::moveWindow("target",960,300);
 
     }
 
