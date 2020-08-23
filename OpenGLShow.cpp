@@ -175,6 +175,11 @@ void OpenGLshow::paintGL()
         }
 
     glEnd();
+//    glBegin(GL_LINES);    //--------------------------------------------------实时扫描线的绘制
+//    glColor3f (0.1f, 1.0f, 1.0f);
+//    glVertex3f(cloud_x[777]/20,  cloud_y[777]/20, cloud_z[777]/20);
+//    glVertex3f(0,  0, 0);
+//    glEnd();
     glFlush();
 
 
