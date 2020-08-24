@@ -36,10 +36,12 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
-    ui->progressBar->setRange(0,1000);
+    ui->progressBar->setRange(0,1000);  
     searchPort();
     searchCamera();
+
     serial = new QSerialPort;
 
 
@@ -186,12 +188,15 @@ void MainWindow::on_openCamera_clicked()//--------------------------------------
          Qtthread->camera->start();
          cameraIsStarted=true;
          ui->openCamera->setText("Close Camera");
+         // ui->openCamera->setStyleSheet("QPushButton{background-color:lightgreen;border-style: inherit ;}");
+
     }
     else
      {
          Qtthread->camera->stop();
          cameraIsStarted=false;
-         ui->openCamera->setText("Open Camera");
+         ui->openCamera->setText("Open Camera");        
+         //ui->openCamera->setStyleSheet("QPushButton{background-color:red;border-style: double ;}");
      }
 
 

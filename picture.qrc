@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/new/icon">
+        <file>picture/gray.png</file>
+        <file>picture/green.png</file>
+        <file>picture/laser.jpg</file>
+        <file>picture/camera.jpg</file>
+        <file>picture/scan.jpg</file>
+        <file>picture/shadian.jpg</file>
+    </qresource>
+</RCC>

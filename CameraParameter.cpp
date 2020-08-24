@@ -22,7 +22,6 @@ CameraParameter::CameraParameter(QWidget *parent) : QOpenGLWidget(parent)
 {}
 CameraParameter::~CameraParameter()
 {}
-
 void CameraParameter::CameraParameter_LoadMatrix()//------------------------矩阵载入函数
 {
     Matrixfilepath = QApplication::applicationDirPath();
@@ -75,7 +74,7 @@ void CameraParameter::CameraParameter_ProduceMatrix(QList<float> setingliset)//-
              success_n++;
 //--------------------------------------------------------------将识别的角点画出来
              cv::Mat cb_corner;
-             cb_corner = img_target.clone();
+             cb_corner = img_source.clone();
              drawChessboardCorners(cb_corner, cv::Size(C_W,C_H), image_points, true);
              cv::imshow("Results",cb_corner);
              waitKey();
@@ -90,7 +89,6 @@ void CameraParameter::CameraParameter_ProduceMatrix(QList<float> setingliset)//-
 
          cv::Size square_size = cv::Size(cellSize_width, cellSize_height);
          std::vector<std::vector<cv::Point3f>> object_points; /* 保存标定板上角点的三维坐标 */
-
          std::vector<cv::Mat> tvecsMat;  /* 每幅图像的旋转向量 */
          std::vector<cv::Mat> rvecsMat;  /* 每幅图像的平移向量 */
          std::vector<cv::Point3f> realPoint;

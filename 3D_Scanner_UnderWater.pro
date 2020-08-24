@@ -1524,4 +1524,8 @@ DEPENDPATH += D:/opencv/build/include
 #DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
 
 DISTFILES += \
-    glm/CMakeLists.txt
+    glm/CMakeLists.txt \
+    picture/green.png
+
+RESOURCES += \
+    picture.qrc
