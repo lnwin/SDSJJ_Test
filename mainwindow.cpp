@@ -15,6 +15,7 @@
 #include <qvideosurfaceformat.h>
 #include <QVideoSurfaceFormat>
 #include <OpenGLShow.h>
+#include <QTime>
 using namespace std;
 using namespace cv;
 
@@ -67,8 +68,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     //connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
-    connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输
-    connect(this, SIGNAL(sendfilepath2opengl(QString)),OpenGL, SLOT(readpicturelist(QString)));//照片库文件传输
+    connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输   
     connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
 
 }
@@ -124,7 +124,7 @@ void MainWindow::on_pointfilepushButton_clicked()//-----------------------------
     {
         ui->pointfilelineEdit->setText(srcDirPath) ;
         sendfilepath2Thread(srcDirPath);
-        sendfilepath2opengl(srcDirPath);
+       // sendfilepath2opengl(srcDirPath);
     }
 }
 void MainWindow::ReadData()//------------------------------------------------------------串口读取函数
@@ -218,6 +218,7 @@ void MainWindow::on_Scanningbutton_clicked() //---------------------------------
           ui->Scanningbutton->setText("Stop Scan");
           startscan=true;
           ui->scan_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
+
         }
         else
         {
@@ -302,7 +303,6 @@ bool QtVideoCapture::present(const QVideoFrame &frame)//------------------------
                            QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat()));
         emit frameAvailable(image);
 
-
         cloneFrame.unmap();
         return true;
     }
@@ -328,25 +328,26 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 }
 cv::Mat XXIMAGE;
 cv::Mat XXgray(640,480,CV_8UC1,cvScalar(0));
-void MainWindow::showImage(QImage image)//----------------------------------------------图像显示函数
+void MainWindow::showImage(QImage image)//----------------------------------------------图像显示与扫描开启函数
 {
-
+     //QTime counttime_1;
+     // counttime_1.start();
       QImage rgba =image.mirrored();
-      glImage->pictureFromcamera(rgba);
+      glImage->pictureFromcamera(rgba);   
+      ui->openGLWidget_2->update();
+     // qDebug()<<counttime_1.elapsed();
+    //  qDebug()<<"process sucess";
     if(startscan)
     {
+
       XXIMAGE = Qtthread->QImage2cvMat(rgba);
       if(!XXIMAGE.empty())
      {
-
         cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
         OpenGL->GLclouddataprocess(XXgray);
-       // ui->openGLWidget->update();
 
       }
     }
-    ui->openGLWidget_2->update();
-
 
 }
 void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
@@ -361,10 +362,18 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     setinglist.clear();
     ui->textEdit->append("seting successful");
     //-------------------------------------------------------------------
-    OpenGL->show3Dframe();
+    OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
+
 
 }
+void MainWindow::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数
+{
+    QTime _Timer = QTime::currentTime().addMSecs(msec);
 
+    while( QTime::currentTime() < _Timer )
+
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
+}
 
 
 

@@ -8,13 +8,14 @@
 #include <QCamera>
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
+#include <OpenGLShow.h>
 
 class WorkThread:public QThread
 {
     Q_OBJECT
   public:
     WorkThread();
-
+    OpenGLshow *openglthread;//opengl显示线程
     QCameraViewfinder *viewfinder;//取景器
     QCamera *camera;//相机
     QCameraImageCapture *imageCapture;//图片捕捉器

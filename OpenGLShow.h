@@ -25,7 +25,7 @@ public:
     ~OpenGLshow();
      OpenGLshow();
    void  GLclouddataprocess(cv::Mat frame);
-    void  show3Dframe();
+   void  show3Dframefrompicturepath(QString picturepath);
 protected:
 
    void  initializeGL();
@@ -36,13 +36,12 @@ protected:
    void  mouseMoveEvent(QMouseEvent *event);
    void  wheelEvent(QWheelEvent*event);
    void  readclouddata();
-   void Delay_MSec(unsigned int );
+   void  Delay_MSec(unsigned int );
 
 
 public slots:
    void receivecloudfilename(QString);
    void receiveseting(QList<float>);
-   void readpicturelist(QString);
 
 
 };

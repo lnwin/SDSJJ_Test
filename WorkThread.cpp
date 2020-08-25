@@ -23,10 +23,12 @@ WorkThread::WorkThread()
 {
 
 };
+
 //---------------------------------------------------------------------------------------Mat和QImage转换函数
 cv::Mat WorkThread::QImage2cvMat(QImage image)// ----------------------------------------QImage转Mat
 {
-   cv::Mat mat;
+
+    cv::Mat mat;
    switch (image.format())
     {
     case QImage::Format_ARGB32:
@@ -100,20 +102,23 @@ void WorkThread::Delay_MSec(unsigned int msec)//--------------------------------
 void WorkThread::run()//-----------------------------------------------------------------Qthread单线程摄像帧处理函数
 {
 
-    counttime.start();
-    while (count_CloudDataProcess<100)
-    {
+    openglthread =new OpenGLshow();
 
-             //imageCapture->capture("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg"); enable
-             //Delay_MSec(20);//采用
-             //cloudDataProcessing(mat);
-             count_CloudDataProcess++;
-             emit sendMessage2Main(count_CloudDataProcess);
 
-    }
-    qDebug()<<counttime.elapsed();
-    qDebug()<<"结束循环";
-    count_CloudDataProcess=0;
+//    counttime.start();
+//    while (count_CloudDataProcess<100)
+//    {
+
+//             //imageCapture->capture("C:/Users/NING MEI/Desktop/QT/"+QString::number(count_CloudDataProcess)+".jpg"); enable
+//             //Delay_MSec(20);//采用
+//             //cloudDataProcessing(mat);
+//             count_CloudDataProcess++;
+//             emit sendMessage2Main(count_CloudDataProcess);
+
+//    }
+//    qDebug()<<counttime.elapsed();
+//    qDebug()<<"结束循环";
+//    count_CloudDataProcess=0;
   //emit setTabWidgt2Camera(1);
 }
 void WorkThread::cloudDataRecord()//-----------------------------------------------------点云数据存储函数

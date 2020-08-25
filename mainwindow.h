@@ -78,10 +78,10 @@ private:
     QImage *Picture;
     OpenGLshow *OpenGL;
     CameraParameter *Camera_Parameter;
-
+    void  Delay_MSec(unsigned int );
 signals:
     void sendfilepath2Thread(QString);
-    void sendfilepath2opengl(QString);
+    //void sendfilepath2opengl(QString);
     void sendfilename2opengl(QString);
     void sendseting2opengl(QList<float>);
 

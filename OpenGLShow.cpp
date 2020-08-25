@@ -357,27 +357,22 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                cloud_x.append(real_x);
                cloud_y.append(real_y);
                cloud_z.append(real_z);
-
+               this->update();
 
         }
      }
 
 }
- QString DK;
- void OpenGLshow:: readpicturelist(QString sk)
- {
-       DK = sk;
- };
 
- void OpenGLshow::show3Dframe()
+ void OpenGLshow::show3Dframefrompicturepath(QString picturepath)//------------------------------------读取历史照片数据
  {
-     QDir dir(DK);
+     QDir dir(picturepath);
      QStringList imagelist;
      std::string imagename;
      imagelist<<"*.jpg"<<"*.bmp"<<"*.png";
      dir.setNameFilters(imagelist);
      int imagecuont =dir.count();
-     std::string dirpath =DK.toStdString();
+     std::string dirpath =picturepath.toStdString();
      this->showMaximized();
          for(int i=0;i<imagecuont;i++)
          {
@@ -386,9 +381,8 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                  imagename =dirpath+"/"+dir[i].toStdString();
                  cv::Mat SK = cv::imread(imagename,CV_BGR2GRAY);
                  GLclouddataprocess(SK);
-
-                 this->update();
-                 Delay_MSec(5);
+                 //this->update();
+                // Delay_MSec(1);
 
              }
              catch (exception& e)
@@ -406,7 +400,7 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
 
      while( QTime::currentTime() < _Timer )
 
-     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+     QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
  }
 
 
