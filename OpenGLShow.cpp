@@ -378,6 +378,7 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
      dir.setNameFilters(imagelist);
      int imagecuont =dir.count();
      std::string dirpath =DK.toStdString();
+     this->showMaximized();
          for(int i=0;i<imagecuont;i++)
          {
              try
@@ -385,9 +386,9 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                  imagename =dirpath+"/"+dir[i].toStdString();
                  cv::Mat SK = cv::imread(imagename,CV_BGR2GRAY);
                  GLclouddataprocess(SK);
-                 this->showMaximized();
+
                  this->update();
-                 Delay_MSec(20);
+                 Delay_MSec(5);
 
              }
              catch (exception& e)

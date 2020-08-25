@@ -362,6 +362,7 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     ui->textEdit->append("seting successful");
     //-------------------------------------------------------------------
     OpenGL->show3Dframe();
+
 }
 
 
