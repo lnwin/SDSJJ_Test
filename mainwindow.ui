@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Laser Scanner</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="picture.qrc">
+    <normaloff>:/new/icon/picture/camera.jpg</normaloff>:/new/icon/picture/camera.jpg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QProgressBar" name="progressBar">
@@ -162,7 +166,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>650</string>
+      <string>650.0</string>
      </property>
     </widget>
     <widget class="QLabel" name="PixelSizelable">
@@ -188,7 +192,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>3.6</string>
+      <string>3.60</string>
      </property>
     </widget>
     <widget class="QLabel" name="RGBlabel">
@@ -227,7 +231,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>75</string>
+      <string>75.0</string>
      </property>
     </widget>
     <widget class="QPushButton" name="show3D">
@@ -666,13 +670,13 @@
      <property name="geometry">
       <rect>
        <x>460</x>
-       <y>50</y>
-       <width>41</width>
-       <height>41</height>
+       <y>47</y>
+       <width>35</width>
+       <height>35</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/new/icon/picture/camera.jpg);</string>
+      <string notr="true">border-image: url(:/new/icon/picture/camera_01.jpg);</string>
      </property>
      <property name="text">
       <string/>
@@ -687,12 +691,12 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_10">
+    <widget class="QLabel" name="camera_light">
      <property name="geometry">
       <rect>
-       <x>510</x>
+       <x>503</x>
        <y>50</y>
-       <width>54</width>
+       <width>68</width>
        <height>31</height>
       </rect>
      </property>
@@ -706,12 +710,12 @@
       <pixmap>picture/gray.png</pixmap>
      </property>
     </widget>
-    <widget class="QLabel" name="label_11">
+    <widget class="QLabel" name="scan_light">
      <property name="geometry">
       <rect>
-       <x>510</x>
+       <x>503</x>
        <y>90</y>
-       <width>54</width>
+       <width>68</width>
        <height>31</height>
       </rect>
      </property>
@@ -729,13 +733,13 @@
      <property name="geometry">
       <rect>
        <x>460</x>
-       <y>90</y>
-       <width>41</width>
-       <height>31</height>
+       <y>87</y>
+       <width>35</width>
+       <height>35</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/new/icon/picture/shadian.jpg);</string>
+      <string notr="true">border-image: url(:/new/icon/picture/Scaneye.jpg);</string>
      </property>
      <property name="text">
       <string/>
@@ -756,6 +760,8 @@
    <header location="global">OpenGLShow.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="picture.qrc"/>
+ </resources>
  <connections/>
 </ui>

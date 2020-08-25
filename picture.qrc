@@ -6,5 +6,8 @@
         <file>picture/camera.jpg</file>
         <file>picture/scan.jpg</file>
         <file>picture/shadian.jpg</file>
+        <file>picture/Scaneye.jpg</file>
+        <file>picture/camera_01.jpg</file>
+        <file>picture/camera_02.jpg</file>
     </qresource>
 </RCC>

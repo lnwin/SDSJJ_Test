@@ -68,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输
+    connect(this, SIGNAL(sendfilepath2opengl(QString)),OpenGL, SLOT(readpicturelist(QString)));//照片库文件传输
     connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
 
 }
@@ -123,6 +124,7 @@ void MainWindow::on_pointfilepushButton_clicked()//-----------------------------
     {
         ui->pointfilelineEdit->setText(srcDirPath) ;
         sendfilepath2Thread(srcDirPath);
+        sendfilepath2opengl(srcDirPath);
     }
 }
 void MainWindow::ReadData()//------------------------------------------------------------串口读取函数
@@ -189,6 +191,7 @@ void MainWindow::on_openCamera_clicked()//--------------------------------------
          cameraIsStarted=true;
          ui->openCamera->setText("Close Camera");
          // ui->openCamera->setStyleSheet("QPushButton{background-color:lightgreen;border-style: inherit ;}");
+         ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
 
     }
     else
@@ -197,6 +200,8 @@ void MainWindow::on_openCamera_clicked()//--------------------------------------
          cameraIsStarted=false;
          ui->openCamera->setText("Open Camera");        
          //ui->openCamera->setStyleSheet("QPushButton{background-color:red;border-style: double ;}");
+         ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/gray.png);");
+
      }
 
 
@@ -208,14 +213,26 @@ void MainWindow::on_Scanningbutton_clicked() //---------------------------------
     if(!startscan)
     {
 
+        if(cameraIsStarted)
+        {
           ui->Scanningbutton->setText("Stop Scan");
           startscan=true;
+          ui->scan_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
+        }
+        else
+        {
+            QMessageBox mesbox;
+            mesbox.setText("please open the camera");
+            mesbox.exec();
+            return;
+        }
     }
     else
     {
 
           ui->Scanningbutton->setText("Start Scan");
           startscan=false;
+          ui->scan_light->setStyleSheet("border-image: url(:/new/icon/picture/gray.png);");
           Qtthread->cloudDataRecord();
     }
 
@@ -320,13 +337,13 @@ void MainWindow::showImage(QImage image)//--------------------------------------
     {
       XXIMAGE = Qtthread->QImage2cvMat(rgba);
       if(!XXIMAGE.empty())
-    {
+     {
 
         cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
         OpenGL->GLclouddataprocess(XXgray);
-        ui->openGLWidget->update();
+       // ui->openGLWidget->update();
 
-    }
+      }
     }
     ui->openGLWidget_2->update();
 
@@ -343,7 +360,10 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     emit sendseting2opengl(setinglist);
     setinglist.clear();
     ui->textEdit->append("seting successful");
+    //-------------------------------------------------------------------
+    OpenGL->show3Dframe();
 }
+
 
 
 

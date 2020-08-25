@@ -81,6 +81,7 @@ private:
 
 signals:
     void sendfilepath2Thread(QString);
+    void sendfilepath2opengl(QString);
     void sendfilename2opengl(QString);
     void sendseting2opengl(QList<float>);
 
