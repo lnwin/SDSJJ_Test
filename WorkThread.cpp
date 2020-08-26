@@ -101,10 +101,12 @@ void WorkThread::Delay_MSec(unsigned int msec)//--------------------------------
 }
 void WorkThread::run()//-----------------------------------------------------------------Qthread单线程摄像帧处理函数
 {
-
-    openglthread =new OpenGLshow();
-
-
+    int i=0;
+     while(i<10)
+    {
+        qDebug()<<"qtthread is ok";
+        i++;
+    }
 //    counttime.start();
 //    while (count_CloudDataProcess<100)
 //    {

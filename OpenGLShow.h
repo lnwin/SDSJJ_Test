@@ -26,6 +26,7 @@ public:
      OpenGLshow();
    void  GLclouddataprocess(cv::Mat frame);
    void  show3Dframefrompicturepath(QString picturepath);
+   void  doingfreshen();
 protected:
 
    void  initializeGL();

@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     CameraParameter.cpp \
     OpenGLShow.cpp \
+    QtVideoCapture.cpp \
     WorkThread.cpp \
     gl_image.cpp \
     glm/detail/dummy.cpp \

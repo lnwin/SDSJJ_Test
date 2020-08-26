@@ -8,7 +8,6 @@ using namespace std;
 QString Matrixfilepath ;
 string imagename;
 float picture_N,p_CornerNumber_row,p_CornerNumber_col,cellSize_width,cellSize_height,iteration_N,accuracy;
-
 cv::Mat img_source;
 cv::Mat img_target;
 cv::Mat cameraMatrix = cv::Mat(3, 3, CV_32FC1, cv::Scalar::all(0)); /* 摄像机内参数矩阵 */

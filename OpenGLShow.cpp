@@ -357,12 +357,24 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                cloud_x.append(real_x);
                cloud_y.append(real_y);
                cloud_z.append(real_z);
-               this->update();
+
 
         }
      }
 
 }
+
+void OpenGLshow:: doingfreshen()
+{
+   int i=0;
+    while(i<10)
+    {
+        // this->update();
+         qDebug()<<"FRESHEN OK";
+         i++;
+    }
+
+};
 
  void OpenGLshow::show3Dframefrompicturepath(QString picturepath)//------------------------------------读取历史照片数据
  {
@@ -374,6 +386,7 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
      int imagecuont =dir.count();
      std::string dirpath =picturepath.toStdString();
      this->showMaximized();
+     this->update();
          for(int i=0;i<imagecuont;i++)
          {
              try
@@ -381,8 +394,9 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                  imagename =dirpath+"/"+dir[i].toStdString();
                  cv::Mat SK = cv::imread(imagename,CV_BGR2GRAY);
                  GLclouddataprocess(SK);
-                 //this->update();
-                // Delay_MSec(1);
+                 this->update();
+                 Delay_MSec(1);
+
 
              }
              catch (exception& e)

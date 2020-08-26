@@ -55,7 +55,7 @@ public:
 
     Q_ENUM(PixelFormat)
 
-    explicit QtVideoCapture(QObject *parent = 0);
+
 
     QList<QVideoFrame::PixelFormat> supportedPixelFormats(
             QAbstractVideoBuffer::HandleType handleType = QAbstractVideoBuffer::NoHandle) const;
@@ -65,6 +65,10 @@ public:
     void stop() override;
     bool present(const QVideoFrame &frame) ;   
 public :
+   // QtVideoCapture();
+   // QtVideoCapture(QWidget* parent );
+    ~QtVideoCapture();
+    explicit QtVideoCapture(QObject *parent = 0);
 signals:
 
     void frameAvailable(QImage frame);

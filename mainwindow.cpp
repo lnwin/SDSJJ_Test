@@ -13,7 +13,7 @@
 #include <QtVideoCapture.h>
 #include <QAbstractVideoSurface>
 #include <qvideosurfaceformat.h>
-#include <QVideoSurfaceFormat>
+
 #include <OpenGLShow.h>
 #include <QTime>
 using namespace std;
@@ -75,10 +75,6 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-QtVideoCapture::QtVideoCapture(QObject *parent) : QAbstractVideoSurface(parent)
-{
-
 }
 GL_Image::GL_Image()
 {
@@ -274,50 +270,6 @@ void MainWindow::on_ParameterContrast_clicked()//-------------------------------
 {
      Camera_Parameter->CameraParameter_Constrast();
 };
-bool QtVideoCapture::isFormatSupported(const QVideoSurfaceFormat & format) const
-{
-    return QVideoFrame::imageFormatFromPixelFormat(format.pixelFormat()) != QImage::Format_Invalid && !format.frameSize().isEmpty() && format.handleType() == QAbstractVideoBuffer::NoHandle;
-}
-bool QtVideoCapture::start(const QVideoSurfaceFormat &videoformat)
-{
-    //qDebug() << QVideoFrame::imageFormatFromPixelFormat(videoformat.pixelFormat());              //格式是RGB32
-    if(QVideoFrame::imageFormatFromPixelFormat(videoformat.pixelFormat()) != QImage::Format_Invalid && !videoformat.frameSize().isEmpty()){
-        QAbstractVideoSurface::start(videoformat);
-        return true;
-    }
-    return false;
-}
-void QtVideoCapture::stop()
-{
-    QAbstractVideoSurface::stop();
-}
-bool QtVideoCapture::present(const QVideoFrame &frame)//-----------------------------------自动捕获帧函数
-{
-    if (frame.isValid())
-    {
-        QVideoFrame cloneFrame(frame);
-        cloneFrame.map(QAbstractVideoBuffer::ReadOnly);
-        const QImage image(cloneFrame.bits(),
-                           cloneFrame.width(),
-                           cloneFrame.height(),
-                           QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat()));
-        emit frameAvailable(image);
-
-        cloneFrame.unmap();
-        return true;
-    }
-
-    return false;
-}
-QList<QVideoFrame::PixelFormat> QtVideoCapture::supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const//-----格式设置
-{
-    if (handleType == QAbstractVideoBuffer::NoHandle) {
-        return QList<QVideoFrame::PixelFormat>()<< QVideoFrame::Format_RGB32<< QVideoFrame::Format_ARGB32<< QVideoFrame::Format_ARGB32_Premultiplied<< QVideoFrame::Format_RGB565<< QVideoFrame::Format_RGB555;
-    } else {
-        return QList<QVideoFrame::PixelFormat>();
-    }
-
-}
 void MainWindow::receivedFromThread(int ID)//--------------------------------------------进度条传递函数
 {
    ui->progressBar->setValue(ID);
@@ -327,15 +279,15 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
     //ui->tabWidget->setCurrentIndex(K);
 }
 cv::Mat XXIMAGE;
-cv::Mat XXgray(640,480,CV_8UC1,cvScalar(0));
+cv::Mat XXgray;
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示与扫描开启函数
 {
-     //QTime counttime_1;
+     // QTime counttime_1;
      // counttime_1.start();
       QImage rgba =image.mirrored();
       glImage->pictureFromcamera(rgba);   
       ui->openGLWidget_2->update();
-     // qDebug()<<counttime_1.elapsed();
+    //  qDebug()<<counttime_1.elapsed();
     //  qDebug()<<"process sucess";
     if(startscan)
     {
@@ -363,6 +315,8 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     ui->textEdit->append("seting successful");
     //-------------------------------------------------------------------
     OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
+    OpenGL->doingfreshen();
+    Qtthread->run();
 
 
 }
