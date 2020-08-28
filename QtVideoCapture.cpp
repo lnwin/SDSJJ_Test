@@ -1,4 +1,4 @@
-#include<QtVideoCapture.h>
+#include <QtVideoCapture.h>
 #include <QVideoSurfaceFormat>
 
 
@@ -42,9 +42,9 @@ bool QtVideoCapture::present(const QVideoFrame &frame)//------------------------
                            cloneFrame.height(),
                            QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat()));
         emit frameAvailable(image);
-
         cloneFrame.unmap();
         return true;
+
     }
 
     return false;

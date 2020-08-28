@@ -13,7 +13,7 @@
 #include <QCoreApplication>
 //---------------------------------------------------------------着色器配置
 using namespace std;
-float received_x,received_y,received_z,clickX,clickY,ddx,ddy,fov=-150,translate_x=0,translate_y=0,sumX,sumY,sumZ,meanX,meanY,meanZ;
+float received_x,received_y,received_z,clickX,clickY,ddx,ddy,fov=-75,translate_x=0,translate_y=0,sumX,sumY,sumZ,meanX,meanY,meanZ;
 bool clicKtf=false,mouseposition;
 QString cloudfilename;
 QList<QString>cloudata;
@@ -291,12 +291,9 @@ float Lx=0,Ly=0,Lz=0;//------------------测试数据
 void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//-------------------------------实时帧处理函数
 {
 
-    Math_angle=Math_angle+step_angle;
-   // uchar* data =frame.ptr<uchar>(0);
-  //  uchar* dataSum =frame.ptr<uchar>(0);
+    Math_angle=Math_angle+step_angle;  
     int data = frame.ptr<cv::Vec3b>(0)[0][0];
     int dataSum = frame.ptr<cv::Vec3b>(0)[0][0];
-
     for(int i=0;i<pic_height;i++)
     {
       Maxindex_n = 0 ;
@@ -353,10 +350,12 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                real_z = center2target * cos(yaw_angle - Math_angle);
          // }
                real_y = real_distance * sin(-pitch_angle);
-             //  Lx+=0.1;Ly+=0.1;Lz+=0.1;
-               cloud_x.append(real_x);
-               cloud_y.append(real_y);
-               cloud_z.append(real_z);
+               Lx+=0.1;Ly+=0.1;Lz+=0.1;
+               cloud_x.append(Lx);
+               cloud_y.append(Ly);
+               cloud_z.append(Lz);
+
+
 
 
         }
@@ -364,20 +363,21 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
 
 }
 
-void OpenGLshow:: doingfreshen()
+void OpenGLshow:: doingfreshen(cv::Mat frame)
 {
-   int i=0;
-    while(i<10)
-    {
-        // this->update();
-         qDebug()<<"FRESHEN OK";
-         i++;
-    }
+
+   GLclouddataprocess(frame);
+   this->update();
+   Delay_MSec(1);
+
 
 };
 
  void OpenGLshow::show3Dframefrompicturepath(QString picturepath)//------------------------------------读取历史照片数据
  {
+     cloud_x.clear();
+     cloud_y.clear();
+     cloud_z.clear();
      QDir dir(picturepath);
      QStringList imagelist;
      std::string imagename;
@@ -385,7 +385,7 @@ void OpenGLshow:: doingfreshen()
      dir.setNameFilters(imagelist);
      int imagecuont =dir.count();
      std::string dirpath =picturepath.toStdString();
-     this->showMaximized();
+   //  this->showMaximized();
      this->update();
          for(int i=0;i<imagecuont;i++)
          {
@@ -405,7 +405,7 @@ void OpenGLshow:: doingfreshen()
 
              }
 
-          }
+         }
  }
 
  void OpenGLshow::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数

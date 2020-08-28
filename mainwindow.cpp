@@ -58,6 +58,8 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
      Camera_Parameter =new CameraParameter();
     // OpenGL->setGeometry(300,300,1080,720);
      Qtthread-> camera->setViewfinder(surface_);
+
+
     //------------------------------------------------Qt摄像参数载入
     //------------------------------------------------PCL显示创建
     // qvtkWidget->initialVtkWidget();
@@ -69,8 +71,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输   
-    connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
-
+    connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输   
 }
 MainWindow::~MainWindow()
 {
@@ -296,7 +297,9 @@ void MainWindow::showImage(QImage image)//--------------------------------------
       if(!XXIMAGE.empty())
      {
         cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
-        OpenGL->GLclouddataprocess(XXgray);
+        OpenGL->show();
+        OpenGL->doingfreshen(XXgray);
+       // ui->openGLWidget->update();
 
       }
     }
@@ -314,9 +317,10 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     setinglist.clear();
     ui->textEdit->append("seting successful");
     //-------------------------------------------------------------------
+    OpenGL->show();
     OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
-    OpenGL->doingfreshen();
-    Qtthread->run();
+   //OpenGL->doingfreshen();
+   // Qtthread->run();
 
 
 }
