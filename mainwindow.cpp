@@ -42,12 +42,9 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     ui->progressBar->setRange(0,1000);  
     searchPort();
     searchCamera();
-
     serial = new QSerialPort;
-
-
    //------------------------------------------------Qt摄像参数载入
-     Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
+     Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));    
     // QCameraViewfinderSettings set;
      //set.setResolution(640,480);
      Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
@@ -58,6 +55,8 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
      Camera_Parameter =new CameraParameter();
     // OpenGL->setGeometry(300,300,1080,720);
      Qtthread-> camera->setViewfinder(surface_);
+
+
 
 
     //------------------------------------------------Qt摄像参数载入
@@ -170,12 +169,28 @@ void MainWindow::searchCamera()//-----------------------------------------------
 {
 
     Cameralist = QCameraInfo::availableCameras();
+    QList<QSize>Cameresollution =Qtthread->camera->supportedViewfinderResolutions();
+    QList<QCamera::FrameRateRange>Cameframrate =Qtthread->camera->supportedViewfinderFrameRateRanges();
     for (int i = 0; i < Cameralist.size(); i++)
     {
 
         ui->cameralist->addItem( Cameralist.at(i).description());  //获取设备名
 
     }
+    for (int i = 0; i < Cameresollution.size(); i++)
+    {
+
+       ui->Cameraresolution->addItem( QString("%1x%2").arg(Cameresollution.at(i).width()).arg(Cameresollution.at(i).height()));  //获取分辨率
+
+    }
+    for (int i = 0; i < Cameframrate.size(); i++)
+    {
+
+      //  ui->Cameraframerate->addItem(Cameframrate.at(i).maximumFrameRate);  //获取设备名
+
+    }
+
+
 
 }
 void MainWindow::on_openCamera_clicked()//-----------------------------------------------打开关闭Qt摄像头按钮
@@ -300,6 +315,7 @@ void MainWindow::showImage(QImage image)//--------------------------------------
         OpenGL->show();
         OpenGL->doingfreshen(XXgray);
        // ui->openGLWidget->update();
+
 
       }
     }
