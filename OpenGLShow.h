@@ -27,6 +27,7 @@ public:
    void  GLclouddataprocess(cv::Mat frame);
    void  show3Dframefrompicturepath(QString picturepath);
    void  doingfreshen(cv::Mat frame);
+   void  clearcloud();
 protected:
 
    void  initializeGL();
@@ -38,6 +39,7 @@ protected:
    void  wheelEvent(QWheelEvent*event);
    void  readclouddata();
    void  Delay_MSec(unsigned int );
+
 
 
 public slots:

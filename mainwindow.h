@@ -54,7 +54,9 @@ public:
     QtVideoCapture* surface_;
 
 
+protected:
 
+    void readcamerainformation();
 
 private slots:
     void on_PortButton_clicked();

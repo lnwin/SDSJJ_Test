@@ -13,7 +13,7 @@
 #include <QtVideoCapture.h>
 #include <QAbstractVideoSurface>
 #include <qvideosurfaceformat.h>
-
+#include<QVariant>
 #include <OpenGLShow.h>
 #include <QTime>
 using namespace std;
@@ -42,20 +42,22 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     ui->progressBar->setRange(0,1000);  
     searchPort();
     searchCamera();
+
     serial = new QSerialPort;
    //------------------------------------------------Qt摄像参数载入
      Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));    
-    // QCameraViewfinderSettings set;
-     //set.setResolution(640,480);
+     QCameraViewfinderSettings set;
+     set.setResolution(640,480);
+     set.setMinimumFrameRate(30);
      Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
-   // Qtthread-> camera->setViewfinderSettings(set);
-     surface_ =new QtVideoCapture();
+     Qtthread-> camera->setViewfinderSettings(set);
+     surface_= new QtVideoCapture();
      glImage = new GL_Image();
-     OpenGL = new OpenGLshow();
+     OpenGL  = new OpenGLshow();
      Camera_Parameter =new CameraParameter();
     // OpenGL->setGeometry(300,300,1080,720);
-     Qtthread-> camera->setViewfinder(surface_);
 
+     Qtthread-> camera->setViewfinder(surface_);
 
 
 
@@ -169,29 +171,33 @@ void MainWindow::searchCamera()//-----------------------------------------------
 {
 
     Cameralist = QCameraInfo::availableCameras();
-    QList<QSize>Cameresollution =Qtthread->camera->supportedViewfinderResolutions();
-    QList<QCamera::FrameRateRange>Cameframrate =Qtthread->camera->supportedViewfinderFrameRateRanges();
+
     for (int i = 0; i < Cameralist.size(); i++)
     {
 
         ui->cameralist->addItem( Cameralist.at(i).description());  //获取设备名
 
     }
-    for (int i = 0; i < Cameresollution.size(); i++)
+
+
+
+
+}
+void MainWindow::readcamerainformation()
+{
+    QList<QSize>Cameresollution =Qtthread->camera->supportedViewfinderResolutions();
+
+    for (const QSize &resolution : Cameresollution)
     {
-
-       ui->Cameraresolution->addItem( QString("%1x%2").arg(Cameresollution.at(i).width()).arg(Cameresollution.at(i).height()));  //获取分辨率
-
+        ui->Cameraresolution->addItem(QString("%1x%2").arg(resolution.width()).arg(resolution.height()));
     }
-    for (int i = 0; i < Cameframrate.size(); i++)
+
+    QList<QCamera::FrameRateRange>Cameframrate =Qtthread->camera->supportedViewfinderFrameRateRanges();
+
+    for (const QCamera::FrameRateRange & camerarate : Cameframrate)
     {
-
-      //  ui->Cameraframerate->addItem(Cameframrate.at(i).maximumFrameRate);  //获取设备名
-
+        ui->Cameraframerate->addItem(QString::number( camerarate.maximumFrameRate) );
     }
-
-
-
 }
 void MainWindow::on_openCamera_clicked()//-----------------------------------------------打开关闭Qt摄像头按钮
  {
@@ -204,7 +210,7 @@ void MainWindow::on_openCamera_clicked()//--------------------------------------
          ui->openCamera->setText("Close Camera");
          // ui->openCamera->setStyleSheet("QPushButton{background-color:lightgreen;border-style: inherit ;}");
          ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
-
+         readcamerainformation();
     }
     else
      {
@@ -246,7 +252,7 @@ void MainWindow::on_Scanningbutton_clicked() //---------------------------------
           ui->Scanningbutton->setText("Start Scan");
           startscan=false;
           ui->scan_light->setStyleSheet("border-image: url(:/new/icon/picture/gray.png);");
-          Qtthread->cloudDataRecord();
+         // Qtthread->cloudDataRecord();
     }
 
 }
@@ -301,6 +307,7 @@ void MainWindow::showImage(QImage image)//--------------------------------------
      // QTime counttime_1;
      // counttime_1.start();
       QImage rgba =image.mirrored();
+
       glImage->pictureFromcamera(rgba);   
       ui->openGLWidget_2->update();
     //  qDebug()<<counttime_1.elapsed();
@@ -313,12 +320,13 @@ void MainWindow::showImage(QImage image)//--------------------------------------
      {
         cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
         OpenGL->show();
-        OpenGL->doingfreshen(XXgray);
+        OpenGL->doingfreshen(XXIMAGE);
        // ui->openGLWidget->update();
 
 
       }
     }
+
 
 }
 void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
@@ -331,7 +339,7 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     setinglist.append( ui->rgeLine->text().toInt());
     emit sendseting2opengl(setinglist);
     setinglist.clear();
-    ui->textEdit->append("seting successful");
+    ui->textEdit->append("setting successful");
     //-------------------------------------------------------------------
     OpenGL->show();
     OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());

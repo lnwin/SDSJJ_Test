@@ -27,14 +27,14 @@ float viewDistance;
 bool mousebutton_left;
 float Addclouddata_x=0,Addclouddata_y=0,Addclouddata_z=0;
 //---------------------------------------------------------------------------------------激光测距参数
-float PixelSize =0.004;
+float PixelSize =0.004;//0.009
 float f = 3.6;
-float baseline = 640;
+float baseline = 100;//100
 float step_angle;
 float Laser_angle;
-const float pic_wight = 1280;
-const float pic_height = 720;
-const float rotation_r = 430;
+const float pic_wight = 640;//640
+const float pic_height = 480;//480
+const float rotation_r = 50;//50//420
 const float PI = 3.14159265;
 float RGB = 170;
 float Math_angle;
@@ -57,7 +57,10 @@ OpenGLshow::OpenGLshow(QWidget *parent) : QOpenGLWidget(parent)
 }
 OpenGLshow::~OpenGLshow()
 {
-
+    cloud_x.clear();
+    cloud_y.clear();
+    cloud_z.clear();
+    this->destroy();
 }
 
 
@@ -100,82 +103,82 @@ void OpenGLshow::paintGL()
         for (int i = 0; i < cloud_x.count(); i++)
         {
 
-            viewDistance = sqrt(cloud_x[i]*cloud_x[i]+cloud_z[i]*cloud_z[i])/1000.0f;
-            if(viewDistance >= 4 && viewDistance < 5)
-           {
-                glColor3f (1.0f, 0.5f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-            else if(viewDistance >= 5 && viewDistance < 6)
-           {
-                glColor3f (1.0f, 0.6f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-            else if(viewDistance >= 6 && viewDistance < 7)
-           {
-                glColor3f (1.0f, 0.7f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-            else if(viewDistance >= 7 && viewDistance < 8)
-           {
-                glColor3f (1.0f, 0.8f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 8 && viewDistance < 9)
-           {
-                glColor3f (1.0F, 0.9f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 9 && viewDistance < 10)
-           {
-                glColor3f (1.0f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 10 && viewDistance < 11)
-           {
-                glColor3f (0.9f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 11 && viewDistance < 12)
-           {
-                glColor3f (0.8f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-          else   if(viewDistance >= 12 && viewDistance < 13)
-           {
-                glColor3f (0.7f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 13 && viewDistance < 14)
-           {
-                glColor3f (0.6f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 14 && viewDistance < 15)
-           {
-                glColor3f (0.5f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 15 && viewDistance <16)
-           {
-                glColor3f (0.4f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 16 && viewDistance < 17)
-           {
-                glColor3f (0.3f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 17 && viewDistance < 18)
-           {
-                glColor3f (0.2f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-            else  if(viewDistance >= 18)
-            {
+//            viewDistance = sqrt(cloud_x[i]*cloud_x[i]+cloud_z[i]*cloud_z[i])/1000.0f;
+//            if(viewDistance >= 4 && viewDistance < 5)
+//           {
+//                glColor3f (1.0f, 0.5f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//            else if(viewDistance >= 5 && viewDistance < 6)
+//           {
+//                glColor3f (1.0f, 0.6f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//            else if(viewDistance >= 6 && viewDistance < 7)
+//           {
+//                glColor3f (1.0f, 0.7f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//            else if(viewDistance >= 7 && viewDistance < 8)
+//           {
+//                glColor3f (1.0f, 0.8f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 8 && viewDistance < 9)
+//           {
+//                glColor3f (1.0F, 0.9f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 9 && viewDistance < 10)
+//           {
+//                glColor3f (1.0f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 10 && viewDistance < 11)
+//           {
+//                glColor3f (0.9f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 11 && viewDistance < 12)
+//           {
+//                glColor3f (0.8f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//          else   if(viewDistance >= 12 && viewDistance < 13)
+//           {
+//                glColor3f (0.7f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 13 && viewDistance < 14)
+//           {
+//                glColor3f (0.6f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 14 && viewDistance < 15)
+//           {
+//                glColor3f (0.5f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 15 && viewDistance <16)
+//           {
+//                glColor3f (0.4f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 16 && viewDistance < 17)
+//           {
+//                glColor3f (0.3f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 17 && viewDistance < 18)
+//           {
+//                glColor3f (0.2f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//            else  if(viewDistance >= 18)
+//            {
             glColor3f (0.1f, 1.0f, 0.0f);
             glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-            }
+ //           }
 
         }
 
@@ -288,9 +291,12 @@ void OpenGLshow:: receiveseting(QList<float> setinglist)
 
 }
 float Lx=0,Ly=0,Lz=0;//------------------测试数据
+int mi=0;
 void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//-------------------------------实时帧处理函数
 {
-
+  // mi++;//https://zhidao.baidu.com/question/225669970.html   进行数字的格式化输出
+   //QString b=QString("%1").arg(mi, 4, 10, QChar('0'));
+  // cv::imwrite("C:/Users/Administrator/Desktop/imwrite/"+b.toStdString()+ ".jpg",frame);
     Math_angle=Math_angle+step_angle;  
     int data = frame.ptr<cv::Vec3b>(0)[0][0];
     int dataSum = frame.ptr<cv::Vec3b>(0)[0][0];
@@ -341,8 +347,8 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
           center2target = real_distance * cos(pitch_angle);
          // if(turnleft)
          // {
-               // real_x = center2target * sin(yaw_angle + Math_angle);
-               // real_z = center2target * cos(yaw_angle + Math_angle);
+//                real_x = center2target * sin(yaw_angle + Math_angle);
+//                real_z = center2target * cos(yaw_angle + Math_angle);
          // }
          // else
          // {
@@ -350,10 +356,11 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                real_z = center2target * cos(yaw_angle - Math_angle);
          // }
                real_y = real_distance * sin(-pitch_angle);
-               Lx+=0.1;Ly+=0.1;Lz+=0.1;
-               cloud_x.append(Lx);
-               cloud_y.append(Ly);
-               cloud_z.append(Lz);
+              // Lx+=0.1;Ly+=0.1;Lz+=0.1;
+               cloud_x.append(real_x);
+               cloud_y.append(real_y);
+               cloud_z.append(real_z);
+              qDebug()<< real_x<<real_y<<real_z;
 
 
 
@@ -372,6 +379,16 @@ void OpenGLshow:: doingfreshen(cv::Mat frame)
 
 
 };
+void OpenGLshow::clearcloud()
+{
+    cloud_x.clear();
+    cloud_y.clear();
+    cloud_z.clear();
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+}
 
  void OpenGLshow::show3Dframefrompicturepath(QString picturepath)//------------------------------------读取历史照片数据
  {
@@ -385,14 +402,15 @@ void OpenGLshow:: doingfreshen(cv::Mat frame)
      dir.setNameFilters(imagelist);
      int imagecuont =dir.count();
      std::string dirpath =picturepath.toStdString();
-   //  this->showMaximized();
+    this->showMaximized();
      this->update();
          for(int i=0;i<imagecuont;i++)
          {
              try
              {
                  imagename =dirpath+"/"+dir[i].toStdString();
-                 cv::Mat SK = cv::imread(imagename,CV_BGR2GRAY);
+                 cv::Mat SK = cv::imread(imagename);//灰度图像再度以灰度形式读取，像素值会出错
+                 //qDebug()<<dir[i];
                  GLclouddataprocess(SK);
                  this->update();
                  Delay_MSec(1);
