@@ -11,6 +11,7 @@
 #include<QMessageBox>
 #include <QTime>
 #include <QCoreApplication>
+
 //---------------------------------------------------------------着色器配置
 using namespace std;
 float received_x,received_y,received_z,clickX,clickY,ddx,ddy,fov=-75,translate_x=0,translate_y=0,sumX,sumY,sumZ,meanX,meanY,meanZ;
@@ -46,7 +47,7 @@ float yaw_angle,laser_to_dist_pt,laser_to_current_pt,laser_to_center_pt,center_d
 int Maxindex_n,MaxRGB;
 float real_x=0,real_y=0,real_z=0;
 //---------------------------------------------------------------------------------------激光测距参数
-cv::Mat mat;
+cv::Mat copymat;
 OpenGLshow::OpenGLshow()
 {
 
@@ -103,82 +104,82 @@ void OpenGLshow::paintGL()
         for (int i = 0; i < cloud_x.count(); i++)
         {
 
-//            viewDistance = sqrt(cloud_x[i]*cloud_x[i]+cloud_z[i]*cloud_z[i])/1000.0f;
-//            if(viewDistance >= 4 && viewDistance < 5)
-//           {
-//                glColor3f (1.0f, 0.5f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//            else if(viewDistance >= 5 && viewDistance < 6)
-//           {
-//                glColor3f (1.0f, 0.6f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//            else if(viewDistance >= 6 && viewDistance < 7)
-//           {
-//                glColor3f (1.0f, 0.7f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//            else if(viewDistance >= 7 && viewDistance < 8)
-//           {
-//                glColor3f (1.0f, 0.8f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//           else  if(viewDistance >= 8 && viewDistance < 9)
-//           {
-//                glColor3f (1.0F, 0.9f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//           else  if(viewDistance >= 9 && viewDistance < 10)
-//           {
-//                glColor3f (1.0f, 1.0f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//           else  if(viewDistance >= 10 && viewDistance < 11)
-//           {
-//                glColor3f (0.9f, 1.0f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//           else  if(viewDistance >= 11 && viewDistance < 12)
-//           {
-//                glColor3f (0.8f, 1.0f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//          else   if(viewDistance >= 12 && viewDistance < 13)
-//           {
-//                glColor3f (0.7f, 1.0f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//           else  if(viewDistance >= 13 && viewDistance < 14)
-//           {
-//                glColor3f (0.6f, 1.0f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//           else  if(viewDistance >= 14 && viewDistance < 15)
-//           {
-//                glColor3f (0.5f, 1.0f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//           else  if(viewDistance >= 15 && viewDistance <16)
-//           {
-//                glColor3f (0.4f, 1.0f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//           else  if(viewDistance >= 16 && viewDistance < 17)
-//           {
-//                glColor3f (0.3f, 1.0f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//           else  if(viewDistance >= 17 && viewDistance < 18)
-//           {
-//                glColor3f (0.2f, 1.0f, 0.0f);
-//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-//           }
-//            else  if(viewDistance >= 18)
-//            {
+            viewDistance = sqrt(cloud_x[i]*cloud_x[i]+cloud_z[i]*cloud_z[i])/1000.0f;
+            if(viewDistance < 5)
+           {
+                glColor3f (1.0f, 0.5f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+            else if(viewDistance >= 5 && viewDistance < 6)
+           {
+                glColor3f (1.0f, 0.6f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+            else if(viewDistance >= 6 && viewDistance < 7)
+           {
+                glColor3f (1.0f, 0.7f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+            else if(viewDistance >= 7 && viewDistance < 8)
+           {
+                glColor3f (1.0f, 0.8f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+           else  if(viewDistance >= 8 && viewDistance < 9)
+           {
+                glColor3f (1.0F, 0.9f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+           else  if(viewDistance >= 9 && viewDistance < 10)
+           {
+                glColor3f (1.0f, 1.0f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+           else  if(viewDistance >= 10 && viewDistance < 11)
+           {
+                glColor3f (0.9f, 1.0f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+           else  if(viewDistance >= 11 && viewDistance < 12)
+           {
+                glColor3f (0.8f, 1.0f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+          else   if(viewDistance >= 12 && viewDistance < 13)
+           {
+                glColor3f (0.7f, 1.0f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+           else  if(viewDistance >= 13 && viewDistance < 14)
+           {
+                glColor3f (0.6f, 1.0f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+           else  if(viewDistance >= 14 && viewDistance < 15)
+           {
+                glColor3f (0.5f, 1.0f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+           else  if(viewDistance >= 15 && viewDistance <16)
+           {
+                glColor3f (0.4f, 1.0f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+           else  if(viewDistance >= 16 && viewDistance < 17)
+           {
+                glColor3f (0.3f, 1.0f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+           else  if(viewDistance >= 17 && viewDistance < 18)
+           {
+                glColor3f (0.2f, 1.0f, 0.0f);
+                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+           }
+            else  if(viewDistance >= 18)
+            {
             glColor3f (0.1f, 1.0f, 0.0f);
             glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
- //           }
+           }
 
         }
 
@@ -294,10 +295,12 @@ float Lx=0,Ly=0,Lz=0;//------------------测试数据
 int mi=0;
 void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//-------------------------------实时帧处理函数
 {
-  // mi++;//https://zhidao.baidu.com/question/225669970.html   进行数字的格式化输出
-   //QString b=QString("%1").arg(mi, 4, 10, QChar('0'));
-  // cv::imwrite("C:/Users/Administrator/Desktop/imwrite/"+b.toStdString()+ ".jpg",frame);
-    Math_angle=Math_angle+step_angle;  
+   mi++;//https://zhidao.baidu.com/question/225669970.html   进行数字的格式化输出
+   QString b=QString("%1").arg(mi, 4, 10, QChar('0'));
+   cv::imwrite("C:/Users/MIC/Desktop/imwrite/"+b.toStdString()+ ".jpg",frame);
+     // cv::subtract(copymat,frame);
+
+    Math_angle=Math_angle+step_angle;
     int data = frame.ptr<cv::Vec3b>(0)[0][0];
     int dataSum = frame.ptr<cv::Vec3b>(0)[0][0];
     for(int i=0;i<pic_height;i++)
@@ -360,7 +363,7 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                cloud_x.append(real_x);
                cloud_y.append(real_y);
                cloud_z.append(real_z);
-              qDebug()<< real_x<<real_y<<real_z;
+           //   qDebug()<< real_x<<real_y<<real_z;
 
 
 

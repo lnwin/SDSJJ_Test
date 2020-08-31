@@ -42,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     ui->progressBar->setRange(0,1000);  
     searchPort();
     searchCamera();
-
     serial = new QSerialPort;
    //------------------------------------------------Qt摄像参数载入
      Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));    
@@ -56,7 +55,6 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
      OpenGL  = new OpenGLshow();
      Camera_Parameter =new CameraParameter();
     // OpenGL->setGeometry(300,300,1080,720);
-
      Qtthread-> camera->setViewfinder(surface_);
 
 
@@ -341,8 +339,8 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     setinglist.clear();
     ui->textEdit->append("setting successful");
     //-------------------------------------------------------------------
-    OpenGL->show();
-    OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
+  //  OpenGL->show();
+    //OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
    //OpenGL->doingfreshen();
    // Qtthread->run();
 

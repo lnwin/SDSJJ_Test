@@ -10,10 +10,6 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-
-
-
-
 class OpenGLshow :public QOpenGLWidget,protected QOpenGLFunctions_4_5_Core
 {
 
