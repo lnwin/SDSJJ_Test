@@ -234,6 +234,7 @@ void MainWindow::on_Scanningbutton_clicked() //---------------------------------
           ui->Scanningbutton->setText("Stop Scan");
           startscan=true;
           ui->scan_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
+        // OpenGL->show();  //添加这句后数据处理只执行一次就卡死
 
         }
         else
@@ -300,6 +301,7 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 }
 cv::Mat XXIMAGE;
 cv::Mat XXgray;
+int ddd=0;
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示与扫描开启函数
 {
      // QTime counttime_1;
@@ -316,10 +318,22 @@ void MainWindow::showImage(QImage image)//--------------------------------------
       XXIMAGE = Qtthread->QImage2cvMat(rgba);
       if(!XXIMAGE.empty())
      {
+
+          setinglist.append( ui->pixelSizeLine->text().toFloat());
+          setinglist.append(ui->focalLine->text().toFloat());
+          setinglist.append(ui->baseLineLine->text().toFloat());
+          setinglist.append(ui->stepAngleLine->text().toFloat()*PI/180);
+          setinglist.append(ui->laserAngleLine->text().toFloat()*PI/180);
+          setinglist.append(ui->rgeLine->text().toInt());
+          emit sendseting2opengl(setinglist);
+          setinglist.clear();
+        //OpenGL->show();
         cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
-        OpenGL->show();
-        OpenGL->doingfreshen(XXIMAGE);
-       // ui->openGLWidget->update();
+
+        OpenGL->doingfreshen(XXgray);
+
+        // ui->openGLWidget->update();
+       // Delay_MSec(1);
 
 
       }
@@ -339,8 +353,9 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     setinglist.clear();
     ui->textEdit->append("setting successful");
     //-------------------------------------------------------------------
-  //  OpenGL->show();
-    //OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
+    OpenGL->show();
+    OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
+    //OpenGL->doingfreshen(XXgray);
    //OpenGL->doingfreshen();
    // Qtthread->run();
 

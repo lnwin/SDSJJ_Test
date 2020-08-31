@@ -38,7 +38,7 @@ const float pic_height = 480;//480
 const float rotation_r = 50;//50//420
 const float PI = 3.14159265;
 float RGB = 170;
-float Math_angle;
+float Math_angle=0;
 float sumXRGB;
 float sumXX;
 float Pic_x;
@@ -297,12 +297,13 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
 {
    mi++;//https://zhidao.baidu.com/question/225669970.html   进行数字的格式化输出
    QString b=QString("%1").arg(mi, 4, 10, QChar('0'));
-   cv::imwrite("C:/Users/MIC/Desktop/imwrite/"+b.toStdString()+ ".jpg",frame);
-     // cv::subtract(copymat,frame);
-
+   cv::imwrite("C:/Users/Administrator/Desktop/imwrite/"+b.toStdString()+ ".jpg",frame);
+   cv::Mat SK = cv::imread("C:/Users/Administrator/Desktop/imwrite/"+b.toStdString()+ ".jpg");//对图片进行再读取后数据正确，如果不imread则不正确，不知为何
+   // frame.copyTo(copymat);
+   // cv::imshow("1",frame);
     Math_angle=Math_angle+step_angle;
-    int data = frame.ptr<cv::Vec3b>(0)[0][0];
-    int dataSum = frame.ptr<cv::Vec3b>(0)[0][0];
+    int data = SK.ptr<cv::Vec3b>(0)[0][0];//-------------
+    int dataSum = SK.ptr<cv::Vec3b>(0)[0][0];//--------------
     for(int i=0;i<pic_height;i++)
     {
       Maxindex_n = 0 ;
@@ -316,7 +317,7 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
            MaxRGB = data;
            Maxindex_n = j;
         }
-           data = frame.ptr<cv::Vec3b>(i)[j][0];
+           data = SK.ptr<cv::Vec3b>(i)[j][0];//------------------
      }
       for(int k = 0; k < pic_wight; k++)
       {
@@ -330,7 +331,7 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
            }
         }
 
-        dataSum = frame.ptr<cv::Vec3b>(i)[k][0];
+        dataSum = SK.ptr<cv::Vec3b>(i)[k][0];//-------------------------
 
       }
       if(sumXX!=0)
@@ -355,6 +356,7 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
          // }
          // else
          // {
+
                real_x = center2target * sin(yaw_angle - Math_angle);
                real_z = center2target * cos(yaw_angle - Math_angle);
          // }
@@ -363,22 +365,24 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                cloud_x.append(real_x);
                cloud_y.append(real_y);
                cloud_z.append(real_z);
-           //   qDebug()<< real_x<<real_y<<real_z;
+             // qDebug()<< real_x<<real_y<<real_z;
 
 
 
 
         }
      }
+   // qDebug()<<Math_angle;
 
 }
 
 void OpenGLshow:: doingfreshen(cv::Mat frame)
 {
 
-   GLclouddataprocess(frame);
-   this->update();
-   Delay_MSec(1);
+    GLclouddataprocess(frame);
+    this->update();
+    Delay_MSec(1);
+
 
 
 };
