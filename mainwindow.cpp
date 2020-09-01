@@ -315,7 +315,7 @@ void MainWindow::showImage(QImage image)//--------------------------------------
     if(startscan)
     {
 
-      XXIMAGE = Qtthread->QImage2cvMat(image);
+      XXIMAGE = Qtthread->QImage2cvMat(rgba);
       if(!XXIMAGE.empty())
      {
 
@@ -343,7 +343,7 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     setinglist.clear();
     ui->textEdit->append("setting successful");
     //-------------------------------------------------------------------
-    OpenGL->show();
+   // OpenGL->show();
    // OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
     //OpenGL->doingfreshen(XXgray);
    //OpenGL->doingfreshen();

@@ -305,13 +305,13 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
    int imagetype = frame.type();
    if(imagetype==0)
    {
-       RGBdata = frame.ptr<uchar>(0)[0];//-------------单通道适用。
+       RGBdata = frame.ptr<uchar>(0)[0];//-------------单通道适用。--type=0
        dataSum = frame.ptr<uchar>(0)[0];//--------------
    }
    else
    {
        RGBdata = frame.ptr<cv::Vec3b>(0)[0][0];//-------------
-       dataSum = frame.ptr<cv::Vec3b>(0)[0][0];//--------------三通道适用
+       dataSum = frame.ptr<cv::Vec3b>(0)[0][0];//--------------三通道适用--type=16
    }
 
 
@@ -405,7 +405,7 @@ void OpenGLshow:: doingfreshen(cv::Mat frame)
 {
 
     GLclouddataprocess(frame);
-    //this->update();
+   // this->update();
     Delay_MSec(1);
 
 
