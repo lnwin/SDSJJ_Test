@@ -309,8 +309,9 @@ void MainWindow::showImage(QImage image)//--------------------------------------
       QImage rgba =image.mirrored();
       glImage->pictureFromcamera(rgba);   
       ui->openGLWidget_2->update();
-    //  qDebug()<<counttime_1.elapsed();
-    //  qDebug()<<"process sucess";
+     // glImage->show();
+     // glImage->update();
+
     if(startscan)
     {
 
@@ -318,23 +319,11 @@ void MainWindow::showImage(QImage image)//--------------------------------------
       if(!XXIMAGE.empty())
      {
 
-          setinglist.append( ui->pixelSizeLine->text().toFloat());
-          setinglist.append(ui->focalLine->text().toFloat());
-          setinglist.append(ui->baseLineLine->text().toFloat());
-          setinglist.append(ui->stepAngleLine->text().toFloat()*PI/180);
-          setinglist.append(ui->laserAngleLine->text().toFloat()*PI/180);
-          setinglist.append(ui->rgeLine->text().toInt());
-          emit sendseting2opengl(setinglist);
-          setinglist.clear();
-        //OpenGL->show();
+          //OpenGL->show();
           cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
-      if(ddd<1)
-      {
-        OpenGL->doingfreshen(XXgray);
-      }
-      ddd++;
-        // ui->openGLWidget->update();
-       // Delay_MSec(1);
+          OpenGL->doingfreshen(XXgray);
+          ui->openGLWidget->update();
+         // Delay_MSec(1);
 
 
       }
@@ -355,7 +344,7 @@ void MainWindow::on_loadseting_clicked() //-------------------------------------
     ui->textEdit->append("setting successful");
     //-------------------------------------------------------------------
     OpenGL->show();
-    OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
+   // OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
     //OpenGL->doingfreshen(XXgray);
    //OpenGL->doingfreshen();
    // Qtthread->run();

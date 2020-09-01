@@ -292,39 +292,50 @@ void OpenGLshow:: receiveseting(QList<float> setinglist)
 
 }
 float Lx=0,Ly=0,Lz=0;//------------------测试数据
-int mi=0;
+int RGBdata=0;
+int dataSum=0;
 void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//-------------------------------实时帧处理函数
 {
+     Math_angle=Math_angle+step_angle;
   // cv::Mat AK =frame.clone();
   // mi++;//https://zhidao.baidu.com/question/225669970.html   进行数字的格式化输出
  //  QString b=QString("%1").arg(mi, 4, 10, QChar('0'));
   // cv::imwrite("C:/Users/MIC/Desktop/imwrite/"+b.toStdString()+ ".jpg",AK);
  //  cv::Mat SK = cv::imread("C:/Users/MIC/Desktop/imwrite/"+b.toStdString()+ ".jpg");//对图片进行再读取后数据正确，如果不imread则不正确，不知为何
+   int imagetype = frame.type();
+   if(imagetype==0)
+   {
+       RGBdata = frame.ptr<uchar>(0)[0];//-------------单通道适用。
+       dataSum = frame.ptr<uchar>(0)[0];//--------------
+   }
+   else
+   {
+       RGBdata = frame.ptr<cv::Vec3b>(0)[0][0];//-------------
+       dataSum = frame.ptr<cv::Vec3b>(0)[0][0];//--------------三通道适用
+   }
 
-//     cv::imshow("frame",AK);
-//     cv::imshow("SK",SK);
-  //  qDebug()<<frame.type();//单通道
-  //  qDebug()<<SK.type();//3通道
-    Math_angle=Math_angle+step_angle;
-//    int data = SK.ptr<cv::Vec3b>(0)[0][0];//-------------
-//    int dataSum = SK.ptr<cv::Vec3b>(0)[0][0];//--------------三通道适用
-    int data = frame.ptr<uchar>(0)[0];//-------------单通道适用。
-    int dataSum = frame.ptr<uchar>(0)[0];//--------------
+
     for(int i=0;i<pic_height;i++)
     {
       Maxindex_n = 0 ;
-      MaxRGB =data;
+      MaxRGB =RGBdata;
       sumXRGB = 0;
       sumXX = 0;
       for (int j = 0; j < pic_wight; j++)
      {
-        if (data > MaxRGB)
+        if (RGBdata > MaxRGB)
         {
-           MaxRGB = data;
+           MaxRGB = RGBdata;
            Maxindex_n = j;
         }
-           data = frame.ptr<uchar>(i)[j];//------------------
-
+        if(imagetype==0)
+        {
+           RGBdata = frame.ptr<uchar>(i)[j];//------------------
+        }
+        else
+        {
+            RGBdata = frame.ptr<cv::Vec3b>(i)[j][0];
+        }
      }
 
       for(int k = 0; k < pic_wight; k++)
@@ -338,8 +349,14 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                sumXX += dataSum;
            }
         }
-
-        dataSum = frame.ptr<uchar>(i)[k];//-------------------------
+          if(imagetype==0)
+          {
+                dataSum = frame.ptr<uchar>(i)[k];//-------------------------
+          }
+          else
+          {
+                dataSum = frame.ptr<cv::Vec3b>(i)[k][0];
+          }
 
       }
       if(sumXX!=0)
@@ -359,8 +376,8 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
           center2target = real_distance * cos(pitch_angle);
          // if(turnleft)
          // {
-//                real_x = center2target * sin(yaw_angle + Math_angle);
-//                real_z = center2target * cos(yaw_angle + Math_angle);
+//              real_x = center2target * sin(yaw_angle + Math_angle);
+//              real_z = center2target * cos(yaw_angle + Math_angle);
          // }
          // else
          // {
@@ -388,7 +405,7 @@ void OpenGLshow:: doingfreshen(cv::Mat frame)
 {
 
     GLclouddataprocess(frame);
-    this->update();
+    //this->update();
     Delay_MSec(1);
 
 
