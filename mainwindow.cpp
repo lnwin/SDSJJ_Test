@@ -307,7 +307,6 @@ void MainWindow::showImage(QImage image)//--------------------------------------
      // QTime counttime_1;
      // counttime_1.start();
       QImage rgba =image.mirrored();
-
       glImage->pictureFromcamera(rgba);   
       ui->openGLWidget_2->update();
     //  qDebug()<<counttime_1.elapsed();
@@ -315,7 +314,7 @@ void MainWindow::showImage(QImage image)//--------------------------------------
     if(startscan)
     {
 
-      XXIMAGE = Qtthread->QImage2cvMat(rgba);
+      XXIMAGE = Qtthread->QImage2cvMat(image);
       if(!XXIMAGE.empty())
      {
 
@@ -328,10 +327,12 @@ void MainWindow::showImage(QImage image)//--------------------------------------
           emit sendseting2opengl(setinglist);
           setinglist.clear();
         //OpenGL->show();
-        cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
-
+          cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
+      if(ddd<1)
+      {
         OpenGL->doingfreshen(XXgray);
-
+      }
+      ddd++;
         // ui->openGLWidget->update();
        // Delay_MSec(1);
 

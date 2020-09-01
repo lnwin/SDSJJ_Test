@@ -37,7 +37,7 @@ const float pic_wight = 640;//640
 const float pic_height = 480;//480
 const float rotation_r = 50;//50//420
 const float PI = 3.14159265;
-float RGB = 170;
+float RGB = 50;
 float Math_angle=0;
 float sumXRGB;
 float sumXX;
@@ -47,7 +47,7 @@ float yaw_angle,laser_to_dist_pt,laser_to_current_pt,laser_to_center_pt,center_d
 int Maxindex_n,MaxRGB;
 float real_x=0,real_y=0,real_z=0;
 //---------------------------------------------------------------------------------------激光测距参数
-cv::Mat copymat;
+cv::Mat copymat =cv::Mat(cv::Size(640,480),CV_8UC3);
 OpenGLshow::OpenGLshow()
 {
 
@@ -90,7 +90,7 @@ void OpenGLshow::resizeGL(int width, int height)
 
 }
 
-void OpenGLshow::paintGL()
+void OpenGLshow:: paintGL()
 {
 
     glEnable(GL_DEPTH_TEST);
@@ -295,15 +295,21 @@ float Lx=0,Ly=0,Lz=0;//------------------测试数据
 int mi=0;
 void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//-------------------------------实时帧处理函数
 {
-   mi++;//https://zhidao.baidu.com/question/225669970.html   进行数字的格式化输出
-   QString b=QString("%1").arg(mi, 4, 10, QChar('0'));
-   cv::imwrite("C:/Users/Administrator/Desktop/imwrite/"+b.toStdString()+ ".jpg",frame);
-   cv::Mat SK = cv::imread("C:/Users/Administrator/Desktop/imwrite/"+b.toStdString()+ ".jpg");//对图片进行再读取后数据正确，如果不imread则不正确，不知为何
-   // frame.copyTo(copymat);
-   // cv::imshow("1",frame);
+  // cv::Mat AK =frame.clone();
+  // mi++;//https://zhidao.baidu.com/question/225669970.html   进行数字的格式化输出
+ //  QString b=QString("%1").arg(mi, 4, 10, QChar('0'));
+  // cv::imwrite("C:/Users/MIC/Desktop/imwrite/"+b.toStdString()+ ".jpg",AK);
+ //  cv::Mat SK = cv::imread("C:/Users/MIC/Desktop/imwrite/"+b.toStdString()+ ".jpg");//对图片进行再读取后数据正确，如果不imread则不正确，不知为何
+
+//     cv::imshow("frame",AK);
+//     cv::imshow("SK",SK);
+  //  qDebug()<<frame.type();//单通道
+  //  qDebug()<<SK.type();//3通道
     Math_angle=Math_angle+step_angle;
-    int data = SK.ptr<cv::Vec3b>(0)[0][0];//-------------
-    int dataSum = SK.ptr<cv::Vec3b>(0)[0][0];//--------------
+//    int data = SK.ptr<cv::Vec3b>(0)[0][0];//-------------
+//    int dataSum = SK.ptr<cv::Vec3b>(0)[0][0];//--------------三通道适用
+    int data = frame.ptr<uchar>(0)[0];//-------------单通道适用。
+    int dataSum = frame.ptr<uchar>(0)[0];//--------------
     for(int i=0;i<pic_height;i++)
     {
       Maxindex_n = 0 ;
@@ -317,8 +323,10 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
            MaxRGB = data;
            Maxindex_n = j;
         }
-           data = SK.ptr<cv::Vec3b>(i)[j][0];//------------------
+           data = frame.ptr<uchar>(i)[j];//------------------
+
      }
+
       for(int k = 0; k < pic_wight; k++)
       {
 
@@ -331,7 +339,7 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
            }
         }
 
-        dataSum = SK.ptr<cv::Vec3b>(i)[k][0];//-------------------------
+        dataSum = frame.ptr<uchar>(i)[k];//-------------------------
 
       }
       if(sumXX!=0)
@@ -365,14 +373,14 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
                cloud_x.append(real_x);
                cloud_y.append(real_y);
                cloud_z.append(real_z);
-             // qDebug()<< real_x<<real_y<<real_z;
+
 
 
 
 
         }
      }
-   // qDebug()<<Math_angle;
+
 
 }
 
