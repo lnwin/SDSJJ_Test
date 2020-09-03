@@ -36,6 +36,108 @@ SOURCES += \
 
 HEADERS += \
     CameraParameter.h \
+    Include/GenICam/AcquisitionControl.h \
+    Include/GenICam/AnalogControl.h \
+    Include/GenICam/CAPI/IntTypes.h \
+    Include/GenICam/CAPI/SDK.h \
+    Include/GenICam/Camera.h \
+    Include/GenICam/Defs.h \
+    Include/GenICam/DeviceControl.h \
+    Include/GenICam/DigitalIOControl.h \
+    Include/GenICam/ErrorCode.h \
+    Include/GenICam/EventSubscribe.h \
+    Include/GenICam/Frame.h \
+    Include/GenICam/GigE/GigECamera.h \
+    Include/GenICam/GigE/GigEInterface.h \
+    Include/GenICam/ISPControl.h \
+    Include/GenICam/ImageFormatControl.h \
+    Include/GenICam/ParameterNode.h \
+    Include/GenICam/PixelType.h \
+    Include/GenICam/StreamSource.h \
+    Include/GenICam/System.h \
+    Include/GenICam/TransportLayerControl.h \
+    Include/GenICam/Usb/UsbCamera.h \
+    Include/GenICam/Usb/UsbInterface.h \
+    Include/GenICam/UserSetControl.h \
+    Include/Infra/Allocator.h \
+    Include/Infra/Assert.h \
+    Include/Infra/AtomicCount.h \
+    Include/Infra/CString.h \
+    Include/Infra/Defs.h \
+    Include/Infra/Detail/allocatorstringstorage.h \
+    Include/Infra/Detail/atomic_count.hpp \
+    Include/Infra/Detail/atomic_count_gcc.hpp \
+    Include/Infra/Detail/atomic_count_gcc_x86.hpp \
+    Include/Infra/Detail/atomic_count_pthreads.hpp \
+    Include/Infra/Detail/atomic_count_solaris.hpp \
+    Include/Infra/Detail/atomic_count_sync.hpp \
+    Include/Infra/Detail/atomic_count_win32.hpp \
+    Include/Infra/Detail/atomic_count_win64.hpp \
+    Include/Infra/Detail/construct.h \
+    Include/Infra/Detail/cowstringopt.h \
+    Include/Infra/Detail/flex_string.h \
+    Include/Infra/Detail/flex_string_details.h \
+    Include/Infra/Detail/flex_string_shell.h \
+    Include/Infra/Detail/ministringstorage.h \
+    Include/Infra/Detail/pp.hpp \
+    Include/Infra/Detail/pp_gcc.hpp \
+    Include/Infra/Detail/pp_msvc.hpp \
+    Include/Infra/Detail/simplestringstorage.h \
+    Include/Infra/Detail/smallstringopt.h \
+    Include/Infra/Detail/vectorstringstorage.h \
+    Include/Infra/Error.h \
+    Include/Infra/File.h \
+    Include/Infra/Function.h \
+    Include/Infra/FunctionTemplate.h \
+    Include/Infra/Guard.h \
+    Include/Infra/IntTypes.h \
+    Include/Infra/Mutex.h \
+    Include/Infra/PreProcessor.h \
+    Include/Infra/PrintLog.h \
+    Include/Infra/ReadWriteMutex.h \
+    Include/Infra/RecursiveMutex.h \
+    Include/Infra/Semaphore.h \
+    Include/Infra/Signal.h \
+    Include/Infra/SignalTemplate.h \
+    Include/Infra/StaticAssert.h \
+    Include/Infra/String.h \
+    Include/Infra/System.h \
+    Include/Infra/Thread.h \
+    Include/Infra/ThreadSpecific.h \
+    Include/Infra/Time.h \
+    Include/Infra/Timer.h \
+    Include/Infra/Types.h \
+    Include/Infra/Types/IntTypes.h \
+    Include/Infra/Types/Types.h \
+    Include/Infra/Vector.h \
+    Include/Infra/Version.h \
+    Include/Media/Defs.h \
+    Include/Media/ImageConvert.h \
+    Include/Memory/Block.h \
+    Include/Memory/Buffer.h \
+    Include/Memory/Defs.h \
+    Include/Memory/Detail/MemPool.h \
+    Include/Memory/Detail/checked_delete.hpp \
+    Include/Memory/Detail/shared_count.h \
+    Include/Memory/Detail/singleton.h \
+    Include/Memory/Detail/singleton_pool.h \
+    Include/Memory/Detail/smartptr_detail.h \
+    Include/Memory/Detail/sp_counted_base.hpp \
+    Include/Memory/Detail/sp_counted_base/sp_counted_base.h \
+    Include/Memory/Detail/sp_counted_base/sp_counted_base_gcc_ia64.hpp \
+    Include/Memory/Detail/sp_counted_base/sp_counted_base_gcc_x86.hpp \
+    Include/Memory/Detail/sp_counted_base/sp_counted_base_impl.hpp \
+    Include/Memory/Detail/sp_counted_base/sp_counted_base_w32.hpp \
+    Include/Memory/Detail/sp_counted_impl.hpp \
+    Include/Memory/EnableSharedFromThis.h \
+    Include/Memory/Packet.h \
+    Include/Memory/PoolAllocator.h \
+    Include/Memory/RefCount.h \
+    Include/Memory/ScopedPtr.h \
+    Include/Memory/SharePacketHelper.h \
+    Include/Memory/SharedPtr.h \
+    Include/Memory/SmartObjectPtr.h \
+    Include/Memory/WeakPtr.h \
     OpenGLShow.h \
     QtVideoCapture.h \
     WorkThread.h \
@@ -1553,6 +1655,10 @@ DEPENDPATH += D:/opencv/build/include
 #DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
 
 DISTFILES += \
+    Depends/win32/vs2013shared/ImageConvert.lib \
+    Depends/win32/vs2013shared/MVSDKmd.lib \
+    Depends/x64/vs2013shared/ImageConvert.lib \
+    Depends/x64/vs2013shared/MVSDKmd.lib \
     glm/CMakeLists.txt \
     picture/green.png
 
