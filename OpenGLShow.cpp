@@ -1,11 +1,11 @@
-#include<OpenGLShow.h>
+﻿#include<OpenGLShow.h>
 #include<QDebug>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <QMouseEvent>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+//#include <glm/glm.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/type_ptr.hpp>
 #include <gl/GLU.h>
 #include <QFileDialog>
 #include<QMessageBox>
