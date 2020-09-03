@@ -308,7 +308,35 @@ TRANSLATIONS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+#------------------------------------------------------------------------------------------工业相机引用
+Debug {
+        contains(QMAKE_COMPILER_DEFINES, _WIN64) {
+                LIBS += -L./Depends/x64/vs2013shared				-lMVSDKmd
+        LIBS += -L./Depends/x64/vs2013shared				-lImageConvert
+                DESTDIR = ./Bin/x64
+        }
+        else {
+                LIBS += -L./Depends/win32/vs2013shared				-lMVSDKmd
+        LIBS += -L./Depends/win32/vs2013shared				-lImageConvert
+                DESTDIR = ./Bin/win32
+        }
+}
+else {
+        contains(QMAKE_COMPILER_DEFINES, _WIN64) {
+                LIBS += -L./Depends/x64/vs2013shared				-lMVSDKmd
+                LIBS += -L./Depends/x64/vs2013shared				-lImageConvert
+                DESTDIR = ./Bin/x64
+        }
+        else {
+                LIBS += -L./Depends/win32/vs2013shared				-lMVSDKmd
+                LIBS += -L./Depends/win32/vs2013shared				-lImageConvert
+                DESTDIR = ./Bin/win32
+    }
+}
 
+
+INCLUDEPATH += ./Include
+#------------------------------------------------------------------------------------------
 LIBS+=-lopengl32 -lglu32
 
 win32:CONFIG(release, debug|release): LIBS += -LD:/opencv/build/x64/vc15/lib/ -lopencv_world3411
