@@ -12,6 +12,10 @@ GL_Image::GL_Image(QWidget* parent):
 {
 
 }
+GL_Image::GL_Image()
+{
+
+}
 GL_Image::~GL_Image()
 {
 

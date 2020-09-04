@@ -27,6 +27,7 @@
 #include <WorkThread.h>
 #include <OpenGLShow.h>
 #include <CameraParameter.h>
+#include <HDCamera.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -51,9 +52,11 @@ public:
     void ReadData();
     void SendData();   
     void searchCamera();
+    void HDCameraint();
+    void USBCameraint();
     QtVideoCapture* surface_;
-
-
+    HDCamera *HDcamera;
+    Dahua::Infra::TVector<Dahua::GenICam::ICameraPtr> m_vCameraPtrList;	// 发现的相机列表
 protected:
 
     void readcamerainformation();
@@ -72,7 +75,7 @@ private slots:
     void receivedFromThread(int);
     void receivedSetTabWidgt2Camera(int);   
     void showImage(QImage );
-
+    //void on_HDcameraList_currentIndexChanged(int nIndex);
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
@@ -86,6 +89,7 @@ signals:
     //void sendfilepath2opengl(QString);
     void sendfilename2opengl(QString);
     void sendseting2opengl(QList<float>);
+
 
 };
 

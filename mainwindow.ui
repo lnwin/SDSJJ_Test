@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1290</width>
-    <height>684</height>
+    <height>769</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,9 +21,9 @@
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>800</x>
       <y>660</y>
-      <width>1281</width>
+      <width>331</width>
       <height>21</height>
      </rect>
     </property>
@@ -36,7 +36,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>640</width>
+      <width>651</width>
       <height>480</height>
      </rect>
     </property>
@@ -50,9 +50,9 @@
    <widget class="OpenGLshow" name="openGLWidget">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>649</x>
       <y>0</y>
-      <width>650</width>
+      <width>641</width>
       <height>480</height>
      </rect>
     </property>
@@ -769,6 +769,39 @@
        <width>41</width>
        <height>31</height>
       </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>660</y>
+      <width>571</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <widget class="QComboBox" name="HDcameraList">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>141</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="OpenHDcamera">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>0</y>
+       <width>111</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>OpenHDCamera</string>
      </property>
     </widget>
    </widget>

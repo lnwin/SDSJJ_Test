@@ -13,9 +13,11 @@
 #include <QtVideoCapture.h>
 #include <QAbstractVideoSurface>
 #include <qvideosurfaceformat.h>
-#include<QVariant>
+#include <QVariant>
 #include <OpenGLShow.h>
 #include <QTime>
+#include "GenICam/System.h"
+
 using namespace std;
 using namespace cv;
 
@@ -42,28 +44,12 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     ui->progressBar->setRange(0,1000);  
     searchPort();
     searchCamera();
+    USBCameraint();//载入USB相机
+    HDCameraint();//工业相机搜索。
     serial = new QSerialPort;
-   //------------------------------------------------Qt摄像参数载入
-     Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));    
-     QCameraViewfinderSettings set;
-     set.setResolution(640,480);
-     set.setMinimumFrameRate(30);
-     Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
-     Qtthread-> camera->setViewfinderSettings(set);
-     surface_= new QtVideoCapture();
-     glImage = new GL_Image();
-     OpenGL  = new OpenGLshow();
-     Camera_Parameter =new CameraParameter();
-    // OpenGL->setGeometry(300,300,1080,720);
-     Qtthread-> camera->setViewfinder(surface_);
-
-
-
-    //------------------------------------------------Qt摄像参数载入
-    //------------------------------------------------PCL显示创建
-    // qvtkWidget->initialVtkWidget();
-    // qvtkWidget->showPCDcloud();
-    //------------------------------------------------PCL显示创建
+    glImage = new GL_Image();
+    OpenGL  = new OpenGLshow();
+   // HDcamera = new HDCamera();
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     //connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
@@ -75,10 +61,6 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-GL_Image::GL_Image()
-{
-
 }
 void MainWindow::on_PortButton_clicked()//-----------------------------------------------串口开启函数
 {
@@ -359,8 +341,57 @@ void MainWindow::Delay_MSec(unsigned int msec)//--------------------------------
 
     QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
 }
+void MainWindow::USBCameraint()//USB相机载入
+{
+    Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
+    QCameraViewfinderSettings set;
+    set.setResolution(640,480);
+    set.setMinimumFrameRate(30);
+    Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
+    Qtthread-> camera->setViewfinderSettings(set);
+    surface_= new QtVideoCapture();
+    Camera_Parameter =new CameraParameter();
+   // OpenGL->setGeometry(300,300,1080,720);
+    Qtthread-> camera->setViewfinder(surface_);
+}
+void MainWindow::HDCameraint()//高清相机载入
+{
+    CSystem &systemObj = CSystem::getInstance();
+    if (false == systemObj.discovery(m_vCameraPtrList))
+    {
+        printf("discovery fail.\n");
+        return;
+    }
+    if (m_vCameraPtrList.size() < 1)
+    {
+        ui->HDcameraList ->setEnabled(false);
+        ui->OpenHDcamera->setEnabled(false);
+    }
+    else
+    {
+        ui->HDcameraList->setEnabled(true);
+        ui->OpenHDcamera->setEnabled(true);
+
+        for (int i = 0; i < m_vCameraPtrList.size(); i++)
+        {
+            ui->HDcameraList->addItem(m_vCameraPtrList[i]->getKey());
+        }
+        //  HDcamera->SetCemera(m_vCameraPtrList[0]->getKey());//
+       // qDebug()<<m_vCameraPtrList[0]->getKey();
 
 
+
+    }
+
+   // ui->pushButton_Close->setEnabled(false);
+   // ui->pushButton_Start->setEnabled(false);
+   // ui->pushButton_Stop->setEnabled(false);
+
+};
+//void MainWindow::on_HDcameraList_currentIndexChanged(int nIndex)//选择高清相机
+//{
+//    HDcamera->SetCemera(m_vCameraPtrList[nIndex]->getKey());
+//}
 
 
 

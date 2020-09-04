@@ -6,6 +6,7 @@
 #include "MessageQue.h"
 #include <QElapsedTimer>
 #include <QMutex>
+#include <QWidget>
 
 /* 状态栏统计信息 */
 struct FrameStatInfo
@@ -14,6 +15,7 @@ struct FrameStatInfo
     qint64      m_nPassTime;         // 接收到该帧时经过的纳秒数
     FrameStatInfo(int nSize, qint64 nTime) : m_nFrameSize(nSize), m_nPassTime(nTime)
     {
+
     }
 };
 /* 帧信息 */
@@ -46,11 +48,13 @@ public:
     int			m_nPaddingY;
     uint64_t	m_nTimeStamp;
 };
-class HDCamera:public QOpenGLWidget
+class HDCamera:public QWidget
 {
   Q_OBJECT
 
    public:
+      HDCamera(QWidget *parent );
+      ~HDCamera();
       HDCamera();
       /* 枚举触发方式 */
       enum ETrigType
@@ -64,7 +68,7 @@ class HDCamera:public QOpenGLWidget
       bool CameraOpen(void);
       // 关闭相机
       bool CameraClose(void);
-      // 开始采集
+     //  开始采集
       bool CameraStart(void);
       // 停止采集
       bool CameraStop(void);
@@ -83,32 +87,33 @@ class HDCamera:public QOpenGLWidget
       /* 状态栏统计信息 */
       void resetStatistic();
       QString getStatistic();
+
 private:
 
     // 显示线程
-    void DisplayThreadProc(Dahua::Infra::CThreadLite& lite);
+   void DisplayThreadProc(Dahua::Infra::CThreadLite& lite);
 
-    // 设置显示频率，默认一秒钟显示30帧
+//    // 设置显示频率，默认一秒钟显示30帧
     void setDisplayFPS(int nFPS);
 
-    // 计算该帧是否显示
+//    // 计算该帧是否显示
     bool isTimeToDisplay();
 
     // 窗口关闭响应函数
-   // void closeEvent(QCloseEvent * event);
+    void closeEvent(QCloseEvent * event);
 
-    /* 状态栏统计信息 */
+//    /* 状态栏统计信息 */
     void recvNewFrame(const Dahua::GenICam::CFrame& pBuf);
     void updateStatistic();
 private slots:
     // 显示一帧图像
-    bool ShowImage(uint8_t* pRgbFrameBuf, int nWidth, int nHeight, uint64_t nPixelFormat);
+  bool ShowImage(uint8_t* pRgbFrameBuf, int nWidth, int nHeight, uint64_t nPixelFormat);
 signals:
     // 显示图像的信号，在displayThread中发送该信号，在主线程中显示
     bool signalShowImage(uint8_t* pRgbFrameBuf, int nWidth, int nHeight, uint64_t nPixelFormat);
 private:
 
-    Dahua::GenICam::ICameraPtr m_pCamera;							// 当前相机
+    Dahua::GenICam::ICameraPtr   m_pCamera;							// 当前相机
     Dahua::GenICam::IStreamSourcePtr m_pStreamSource;				// 流对象
 
     Dahua::Infra::CThreadLite           m_thdDisplayThread;			// 显示线程
