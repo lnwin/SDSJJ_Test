@@ -53,9 +53,11 @@ class HDCamera:public QWidget
   Q_OBJECT
 
    public:
-      HDCamera(QWidget *parent );
+     HDCamera();
+    HDCamera(QWidget *parent );
       ~HDCamera();
-      HDCamera();
+
+
       /* 枚举触发方式 */
       enum ETrigType
       {
@@ -116,7 +118,7 @@ private:
     Dahua::GenICam::ICameraPtr   m_pCamera;							// 当前相机
     Dahua::GenICam::IStreamSourcePtr m_pStreamSource;				// 流对象
 
-    Dahua::Infra::CThreadLite           m_thdDisplayThread;			// 显示线程
+//    Dahua::Infra::CThreadLite           m_thdDisplayThread;			// 显示线程
     TMessageQue<CFrameInfo>				m_qDisplayFrameQueue;		// 显示队列
 
     /* 控制显示帧率 */

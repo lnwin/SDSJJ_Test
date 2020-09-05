@@ -49,7 +49,8 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     serial = new QSerialPort;
     glImage = new GL_Image();
     OpenGL  = new OpenGLshow();
-   // HDcamera = new HDCamera();
+    HDcamera = new HDCamera();
+    qDebug()<<HDcamera;
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     //connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接

@@ -12,32 +12,20 @@
 
 HDCamera::HDCamera(QWidget *parent) :
     QWidget(parent)
-  , m_thdDisplayThread(CThreadLite::ThreadProc(&HDCamera::DisplayThreadProc, this), "Display")
-  , m_nDisplayInterval(0)
-  , m_nFirstFrameTime(0)
-  , m_nLastFrameTime(0)
-  , m_bNeedUpdate(true)
-  , m_nTotalFrameCount(0)
+
 {
 
 }
-HDCamera::HDCamera():
-    m_thdDisplayThread(CThreadLite::ThreadProc(&HDCamera::DisplayThreadProc, this), "Display")
-  , m_nDisplayInterval(0)
-  , m_nFirstFrameTime(0)
-  , m_nLastFrameTime(0)
-  , m_bNeedUpdate(true)
-  , m_nTotalFrameCount(0)
+HDCamera::HDCamera()
 {
-
-};
+}
 HDCamera::~HDCamera()
 {
     //关闭显示线程
-    if (!m_thdDisplayThread.isThreadOver())
-    {
-        m_thdDisplayThread.destroyThread();
-    }
+//    if (!m_thdDisplayThread.isThreadOver())
+//    {
+//        m_thdDisplayThread.destroyThread();
+//    }
 
 }
 // 取流回调函数
