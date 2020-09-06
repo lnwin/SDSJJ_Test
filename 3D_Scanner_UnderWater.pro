@@ -62,7 +62,6 @@ SOURCES += \
 HEADERS += \
     CameraParameter.h \
     HDCamera.h \
-    MessageQue.h \
     OpenGLShow.h \
     QtVideoCapture.h \
     WorkThread.h \

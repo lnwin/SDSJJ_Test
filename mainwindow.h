@@ -52,12 +52,10 @@ public:
     void ReadData();
     void SendData();   
     void searchCamera();
-    void HDCameraint();
     void USBCameraint();
-    QtVideoCapture* surface_;
-    HDCamera *HDcamera;
-    Dahua::Infra::TVector<Dahua::GenICam::ICameraPtr> m_vCameraPtrList;	// 发现的相机列表
-protected:
+    void HDCameraParameterInt();
+    QtVideoCapture* surface_;   
+
 
     void readcamerainformation();
 
@@ -82,6 +80,7 @@ private:
     GL_Image *glImage;
     QImage *Picture;
     OpenGLshow *OpenGL;
+    HDCamera *HDCamera;
     CameraParameter *Camera_Parameter;
     void  Delay_MSec(unsigned int );
 signals:

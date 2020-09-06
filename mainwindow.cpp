@@ -44,13 +44,13 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     ui->progressBar->setRange(0,1000);  
     searchPort();
     searchCamera();
-    USBCameraint();//载入USB相机
-    HDCameraint();//工业相机搜索。
+    USBCameraint();//载入USB相机   
     serial = new QSerialPort;
     glImage = new GL_Image();
     OpenGL  = new OpenGLshow();
-    HDcamera = new HDCamera();
-    qDebug()<<HDcamera;
+    HDCamera = new class HDCamera();
+
+    HDCameraParameterInt();
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
     //connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
@@ -354,45 +354,47 @@ void MainWindow::USBCameraint()//USB相机载入
     Camera_Parameter =new CameraParameter();
    // OpenGL->setGeometry(300,300,1080,720);
     Qtthread-> camera->setViewfinder(surface_);
+
 }
-void MainWindow::HDCameraint()//高清相机载入
+void MainWindow::HDCameraParameterInt()
 {
-    CSystem &systemObj = CSystem::getInstance();
-    if (false == systemObj.discovery(m_vCameraPtrList))
-    {
-        printf("discovery fail.\n");
-        return;
-    }
-    if (m_vCameraPtrList.size() < 1)
-    {
-        ui->HDcameraList ->setEnabled(false);
-        ui->OpenHDcamera->setEnabled(false);
-    }
-    else
-    {
-        ui->HDcameraList->setEnabled(true);
-        ui->OpenHDcamera->setEnabled(true);
+        int32_t ret;
+        GENICAM_System *pSystem = NULL;
+        GENICAM_Camera *pCamera = NULL;
+        GENICAM_Camera *pCameraList = NULL;
+        GENICAM_AcquisitionControl *pAcquisitionCtrl = NULL;
+        uint32_t cameraCnt = 0;
+        HANDLE threadHandle;
+        unsigned threadID;
+        int cameraIndex = -1;
+        // discover camera
+            //发现设备
+            ret = GENICAM_getSystemInstance(&pSystem);
+            if (-1 == ret)
+            {
 
-        for (int i = 0; i < m_vCameraPtrList.size(); i++)
-        {
-            ui->HDcameraList->addItem(m_vCameraPtrList[i]->getKey());
-        }
-        //  HDcamera->SetCemera(m_vCameraPtrList[0]->getKey());//
-       // qDebug()<<m_vCameraPtrList[0]->getKey();
+                qDebug()<<"pSystem is null.\r\n";
+                getchar();
+                return ;
+            }
 
+            ret = pSystem->discovery(pSystem, &pCameraList, &cameraCnt, typeAll);
+            if (-1 == ret)
+            {
+                 qDebug()<<"discovery device fail.\r\n";
+                getchar();
+                return ;
+            }
 
+            if(cameraCnt < 1)
+            {
+                qDebug()<<"no camera\r\n";
+                getchar();
+                return;
+            }
+            HDCamera->displayDeviceInfo(pCameraList, cameraCnt);
+}
 
-    }
-
-   // ui->pushButton_Close->setEnabled(false);
-   // ui->pushButton_Start->setEnabled(false);
-   // ui->pushButton_Stop->setEnabled(false);
-
-};
-//void MainWindow::on_HDcameraList_currentIndexChanged(int nIndex)//选择高清相机
-//{
-//    HDcamera->SetCemera(m_vCameraPtrList[nIndex]->getKey());
-//}
 
 
 
