@@ -2,7 +2,6 @@
 #include <string>
 #include <QDebug>
 #include <process.h>
-
 //------------------------------------------------------
 GENICAM_StreamSource *pStreamSource = NULL;
 GENICAM_Camera *Camerainformation;
@@ -61,8 +60,12 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是静态成�
             continue;
         }
 
-        qDebug()<<"get frame id = [%u] successfully!\n"<<pFrame->getBlockId(pFrame);
-
+         qDebug()<<"get frame id = [%u] successfully!\n"<<pFrame->getBlockId(pFrame);
+         cv::Mat image = cv::Mat(pFrame->getImageHeight(pFrame),
+         pFrame->getImageWidth(pFrame),
+         CV_8U,
+         (uint8_t*)((pFrame->getImage(pFrame))));
+         cv::imshow("HDCamera",image);
 
         //Caution：release the frame after using it
         //注意：使用该帧后需要显示释放
@@ -408,7 +411,25 @@ void HDCamera::HD_Connect()
           ResumeThread(threadHandle);
 
 }
+void HDCamera::HD_Disconnect()
+{
+        WaitForSingleObject(threadHandle, INFINITE);
+        CloseHandle(threadHandle);
 
+        // stop grabbing from camera
+        GENICAM_stopGrabbing(pStreamSource);
+
+        //注意：需要释放pStreamSource内部对象内存
+        pStreamSource->release(pStreamSource);
+        //断开设备
+            if(GENICAM_disconnect(pCamera)== 0)
+            {
+               qDebug()<<"disconnect camera successfully!.\n";
+
+            }
+
+
+};
 
 
 

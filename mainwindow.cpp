@@ -285,7 +285,21 @@ void MainWindow::on_ParameterContrast_clicked()//-------------------------------
 };
 void MainWindow::on_OpenHDcamera_clicked()//---------------------------------------------打开工业相机
 {
-     HDCamera_connect();
+
+   if(!HDCamerastarted)
+   {
+       HDCamera->HD_Connect();
+       HDCamerastarted=true;
+       ui->OpenHDcamera ->setText("CloseHDcamera");
+   }
+   else
+   {
+       HDCamera->HD_Disconnect();
+       HDCamerastarted=false;
+       ui->OpenHDcamera ->setText("OpenHDcamera");
+
+   }
+
 }
 void MainWindow::receivedFromThread(int ID)//--------------------------------------------进度条传递函数
 {
@@ -370,17 +384,9 @@ void MainWindow::USBCameraint()//USB相机载入
 
 }
 
-void MainWindow::HDCameraParameterInt()//------------------------------------------------工业相机载入
-{
 
 
-}
 
-void MainWindow::HDCamera_connect()//----------------------------------------------------连接工业相机
-{
-
-     HDCamera->HD_Connect();
-}
 
 
 

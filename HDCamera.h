@@ -3,6 +3,8 @@
 
 #include <QOpenGLWidget>
 #include <SDK.h>
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
 
 class HDCamera:public QOpenGLWidget
 {
@@ -15,6 +17,7 @@ public:
    void displayDeviceInfo(GENICAM_Camera *pCameraList, int cameraCnt);//相机参数显示读取
    void HDCameraParameterInt();
    void HD_Connect();
+   void HD_Disconnect();
    int32_t GENICAM_connect(GENICAM_Camera *pGetCamera);//相机连接
    int32_t modifyCamralExposureTime(GENICAM_Camera *pGetCamera);//修改曝光时间
    int32_t GENICAM_CreateStreamSource(GENICAM_Camera *pGetCamera, GENICAM_StreamSource **ppStreamSource);//创建流对象

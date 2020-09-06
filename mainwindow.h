@@ -52,9 +52,7 @@ public:
     void ReadData();
     void SendData();   
     void searchCamera();
-    void USBCameraint();
-    void HDCameraParameterInt();
-    void HDCamera_connect();
+    void USBCameraint();   
     QtVideoCapture* surface_;
     void readcamerainformation();
 public slots:
