@@ -55,10 +55,11 @@ public:
     void USBCameraint();
     void HDCameraParameterInt();
     void HDCamera_connect();
-    QtVideoCapture* surface_;   
-
-
+    QtVideoCapture* surface_;
     void readcamerainformation();
+public slots:
+    void showImage(QImage );
+
 
 private slots:
     void on_PortButton_clicked();
@@ -72,8 +73,7 @@ private slots:
     void on_ProduceMatrix_clicked();
     void on_ParameterContrast_clicked();
     void receivedFromThread(int);
-    void receivedSetTabWidgt2Camera(int);   
-    void showImage(QImage );
+    void receivedSetTabWidgt2Camera(int);
     void on_OpenHDcamera_clicked();
 private:
     Ui::MainWindow *ui;

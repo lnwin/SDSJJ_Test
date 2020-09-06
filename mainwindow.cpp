@@ -37,6 +37,7 @@ Mat transformmat;
 QImage originalQIimage;
 bool startscan=false;
 bool cameraIsStarted=false;
+bool HDCamerastarted=false;
 const float PI =3.1415926;
 
 GENICAM_StreamSource *pStreamSource = NULL;
@@ -378,14 +379,14 @@ void MainWindow::USBCameraint()//USB相机载入
     Qtthread-> camera->setViewfinder(surface_);
 
 }
-unsigned __stdcall frameGrabbingProc(void)//@@@@@@@@@线程函数需要是静态成员函数@@@@@@@@@@   弄清楚这一点！
+unsigned __stdcall frameGrabbingProc(MainWindow AK)//@@@@@@@@@线程函数需要是静态成员函数@@@@@@@@@@   弄清楚这一点！
 {
     int i;
     int32_t ret = -1;
     uint64_t blockId = 0;
     GENICAM_Frame* pFrame;
 
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < 1000; i++)
     {
         if(NULL == pStreamSource)
         {
@@ -412,8 +413,14 @@ unsigned __stdcall frameGrabbingProc(void)//@@@@@@@@@线程函数需要是静态
             continue;
         }
 
-       qDebug()<<"get frame id = [%u] successfully!\n"<<pFrame->getBlockId(pFrame);
+        qDebug()<<"get frame id = [%u] successfully!\n"<<pFrame->getBlockId(pFrame);
 
+//         cv::Mat image = cv::Mat(pFrame->getImageHeight(pFrame),
+//         pFrame->getImageWidth(pFrame),
+//         CV_8U,
+//         (uint8_t*)((pFrame->getImage(pFrame))));
+
+        // waitKey();
         //Caution：release the frame after using it
         //注意：使用该帧后需要显示释放
         pFrame->release(pFrame);
@@ -454,9 +461,12 @@ void MainWindow::HDCameraParameterInt()//---------------------------------------
              ui->textEdit->append("HDCamera init success! ");
 
 }
+
 void MainWindow::HDCamera_connect()//----------------------------------------------------连接工业相机
 {
 
+   if(!HDCamerastarted)
+   {
     pCamera = &pCameraList[0];
     if(HDCamera->GENICAM_connect(pCamera)==0)
     {
@@ -494,7 +504,7 @@ void MainWindow::HDCamera_connect()//-------------------------------------------
                                            &threadID);
     if ( threadHandle == 0 )
         {
-              qDebug()<<"Failed to create getFrame thread!\n";
+            qDebug()<<"Failed to create getFrame thread!\n";
             //注意：需要释放pStreamSource内部对象内存
             pStreamSource->release(pStreamSource);
             return;
@@ -509,7 +519,25 @@ void MainWindow::HDCamera_connect()//-------------------------------------------
          ui->textEdit->append("**HDCamera StartGrabbing failed!**");
          pStreamSource->release(pStreamSource);
     }
-    ResumeThread(threadHandle);
+    //--------------------------------------开启线程
+         ResumeThread(threadHandle);
+
+         ui->OpenHDcamera->setText("CloseHDcamera");
+         HDCamerastarted=true;
+    }
+
+   else
+   {
+        ui->OpenHDcamera->setText("OpenHDcamera");
+        HDCamerastarted=false;
+        WaitForSingleObject(threadHandle, INFINITE);
+        CloseHandle(threadHandle);
+        // stop grabbing from camera
+        HDCamera->GENICAM_stopGrabbing(pStreamSource);
+       //注意：需要释放pStreamSource内部对象内存
+        pStreamSource->release(pStreamSource);
+        HDCamera->GENICAM_disconnect(pCamera);
+   }
 
 }
 

@@ -227,3 +227,29 @@ int32_t HDCamera::GENICAM_startGrabbing(GENICAM_StreamSource *pStreamSource)
 
     return 0;
 }
+int32_t HDCamera::GENICAM_stopGrabbing(GENICAM_StreamSource *pStreamSource)
+{
+   int32_t isStopGrabbingSuccess;
+
+   isStopGrabbingSuccess = pStreamSource->stopGrabbing(pStreamSource);
+   if( isStopGrabbingSuccess != 0)
+   {
+      qDebug()<<"StopGrabbing  fail.\n";
+       return -1;
+   }
+
+   return 0;
+}
+int32_t HDCamera::GENICAM_disconnect(GENICAM_Camera *pGetCamera)
+{
+    int32_t isDisconnectSuccess;
+
+    isDisconnectSuccess = pGetCamera->disConnect(pGetCamera);
+    if( isDisconnectSuccess != 0)
+    {
+       qDebug()<<"disconnect fail.\n";
+        return -1;
+    }
+
+    return 0;
+}
