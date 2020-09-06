@@ -54,6 +54,7 @@ public:
     void searchCamera();
     void USBCameraint();
     void HDCameraParameterInt();
+    void HDCamera_connect();
     QtVideoCapture* surface_;   
 
 
@@ -73,7 +74,7 @@ private slots:
     void receivedFromThread(int);
     void receivedSetTabWidgt2Camera(int);   
     void showImage(QImage );
-    //void on_HDcameraList_currentIndexChanged(int nIndex);
+    void on_OpenHDcamera_clicked();
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
@@ -83,6 +84,7 @@ private:
     HDCamera *HDCamera;
     CameraParameter *Camera_Parameter;
     void  Delay_MSec(unsigned int );
+   // unsigned __stdcall frameGrabbingProc(void);
 signals:
     void sendfilepath2Thread(QString);
     //void sendfilepath2opengl(QString);

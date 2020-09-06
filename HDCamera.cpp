@@ -114,3 +114,116 @@ void HDCamera:: displayDeviceInfo(GENICAM_Camera *pCameraList, int cameraCnt)
         }
         return;
 }
+int32_t HDCamera::GENICAM_connect(GENICAM_Camera *pGetCamera)
+{
+    int32_t isConnectSuccess;
+
+    isConnectSuccess = pGetCamera->connect(pGetCamera, accessPermissionControl);
+
+    if( isConnectSuccess != 0)
+    {
+        //printf("connect camera failed.\n");
+        return -1;
+    }
+
+    return 0;
+}
+int32_t HDCamera::modifyCamralExposureTime(GENICAM_Camera *pGetCamera)
+{
+   int32_t isExposureTimeSuccess;
+   GENICAM_DoubleNode doubleNode;
+   double exposureTimeValue;
+   GENICAM_AcquisitionControl *pAcquisitionCtrl = NULL;
+   GENICAM_AcquisitionControlInfo acquisitionControlInfo = {0};
+
+
+   acquisitionControlInfo.pCamera = pGetCamera;
+   isExposureTimeSuccess = GENICAM_createAcquisitionControl(&acquisitionControlInfo, &pAcquisitionCtrl);
+   if( isExposureTimeSuccess != 0)
+   {
+      qDebug()<<"ExposureTime  fail.\n";
+       return -1;
+   }
+
+   exposureTimeValue = 0.0;
+   doubleNode = pAcquisitionCtrl->exposureTime(pAcquisitionCtrl);
+   isExposureTimeSuccess = doubleNode.getValue(&doubleNode, &exposureTimeValue);
+   if( isExposureTimeSuccess != 0)
+   {
+       qDebug()<<"get exposureTime fail.\n";
+
+       //注意：需要释放pAcquisitionCtrl内部对象内存
+       pAcquisitionCtrl->release(pAcquisitionCtrl);
+
+       //注意：需要释放doubleNode内部对象内存
+       doubleNode.release(&doubleNode);
+       return -1;
+   }
+   else
+   {
+       //注意：需要释放pAcquisitionCtrl内部对象内存
+       pAcquisitionCtrl->release(pAcquisitionCtrl);
+       qDebug()<<"before change ,exposureTime is %f\n"<<exposureTimeValue;
+   }
+
+   doubleNode.setValue(&doubleNode, (exposureTimeValue + 2));
+   if( isExposureTimeSuccess != 0)
+   {
+      qDebug()<<"set exposureTime fail.\n";
+       //注意：需要释放doubleNode内部对象内存
+       doubleNode.release(&doubleNode);
+       return -1;
+   }
+
+   doubleNode.getValue(&doubleNode, &exposureTimeValue);
+   if( isExposureTimeSuccess != 0)
+   {
+      qDebug()<<"get exposureTime fail.\n";
+       //注意：需要释放doubleNode内部对象内存
+       doubleNode.release(&doubleNode);
+       return -1;
+   }
+   else
+   {
+      qDebug()<<"after change ,exposureTime is %f\n"<<exposureTimeValue;
+       //注意：需要释放doubleNode内部对象内存
+       doubleNode.release(&doubleNode);
+   }
+
+   return 0;
+}
+int32_t HDCamera::GENICAM_CreateStreamSource(GENICAM_Camera *pGetCamera, GENICAM_StreamSource **ppStreamSource)
+{
+    int32_t isCreateStreamSource;
+    GENICAM_StreamSourceInfo stStreamSourceInfo;
+
+
+    stStreamSourceInfo.channelId = 0;
+    stStreamSourceInfo.pCamera = pGetCamera;
+
+    isCreateStreamSource = GENICAM_createStreamSource(&stStreamSourceInfo, ppStreamSource);
+
+    if( isCreateStreamSource != 0)
+    {
+        //printf("create stream obj  fail.\r\n");
+        return -1;
+    }
+
+    return 0;
+}
+int32_t HDCamera::GENICAM_startGrabbing(GENICAM_StreamSource *pStreamSource)
+{
+    int32_t isStartGrabbingSuccess;
+    GENICAM_EGrabStrategy eGrabStrategy;
+
+    eGrabStrategy = grabStrartegySequential;
+    isStartGrabbingSuccess = pStreamSource->startGrabbing(pStreamSource, 0, eGrabStrategy);
+
+    if( isStartGrabbingSuccess != 0)
+    {
+        //printf("StartGrabbing  fail.\n");
+        return -1;
+    }
+
+    return 0;
+}
