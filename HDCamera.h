@@ -13,12 +13,15 @@ public:
 
 
    void displayDeviceInfo(GENICAM_Camera *pCameraList, int cameraCnt);//相机参数显示读取
+   void HDCameraParameterInt();
+   void HD_Connect();
    int32_t GENICAM_connect(GENICAM_Camera *pGetCamera);//相机连接
    int32_t modifyCamralExposureTime(GENICAM_Camera *pGetCamera);//修改曝光时间
    int32_t GENICAM_CreateStreamSource(GENICAM_Camera *pGetCamera, GENICAM_StreamSource **ppStreamSource);//创建流对象
    int32_t GENICAM_startGrabbing(GENICAM_StreamSource *pStreamSource);//开始拉流
    int32_t GENICAM_stopGrabbing(GENICAM_StreamSource *pStreamSource);//关闭流
    int32_t GENICAM_disconnect(GENICAM_Camera *pGetCamera);
+
 };
 
 #endif // HDCAMERA_H

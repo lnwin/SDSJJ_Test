@@ -1,6 +1,21 @@
 ﻿#include "HDCamera.h"
 #include <string>
 #include <QDebug>
+#include <process.h>
+
+//------------------------------------------------------
+GENICAM_StreamSource *pStreamSource = NULL;
+GENICAM_Camera *Camerainformation;
+int32_t ret;
+GENICAM_System *pSystem = NULL;
+GENICAM_Camera *pCamera = NULL;
+GENICAM_Camera *pCameraList = NULL;
+GENICAM_AcquisitionControl *pAcquisitionCtrl = NULL;
+uint32_t cameraCnt = 0;
+HANDLE threadHandle;
+unsigned threadID;
+int cameraIndex = -1;
+//--------------------------------------------------------
 
 HDCamera::HDCamera(QWidget* parent):
     QOpenGLWidget(parent)
@@ -12,6 +27,50 @@ HDCamera::HDCamera()
 
 }
 
+unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是静态成员函数@@@@@@@@@@   弄清楚这一点！
+{
+    int i;
+    int32_t ret = -1;
+    uint64_t blockId = 0;
+    GENICAM_Frame* pFrame;
+
+    for (i = 0; i < 1; i++)
+    {
+        if(NULL == pStreamSource)
+        {
+            return 0;
+        }
+
+
+        ret = pStreamSource->getFrame(pStreamSource, &pFrame, 100);
+        if (ret < 0)
+        {
+            qDebug()<<"getFrame  fail.\n";
+            continue;
+        }
+
+        ret = pFrame->valid(pFrame);
+        if (ret < 0)
+        {
+            qDebug()<<"frame is invalid!\n";
+
+            //Caution：release the frame after using it
+            //注意：使用该帧后需要显示释放
+            pFrame->release(pFrame);
+
+            continue;
+        }
+
+        qDebug()<<"get frame id = [%u] successfully!\n"<<pFrame->getBlockId(pFrame);
+
+
+        //Caution：release the frame after using it
+        //注意：使用该帧后需要显示释放
+        pFrame->release(pFrame);
+    }
+
+    return 1;
+}
 
 void HDCamera:: displayDeviceInfo(GENICAM_Camera *pCameraList, int cameraCnt)
 {
@@ -114,6 +173,39 @@ void HDCamera:: displayDeviceInfo(GENICAM_Camera *pCameraList, int cameraCnt)
         }
         return;
 }
+void HDCamera::HDCameraParameterInt()
+{
+    // discover camera
+        //发现设备
+        ret = GENICAM_getSystemInstance(&pSystem);
+        if (-1 == ret)
+        {
+
+            qDebug()<<"pSystem is null.\r\n";
+            getchar();
+            return ;
+        }
+
+        ret = pSystem->discovery(pSystem, &pCameraList, &cameraCnt, typeAll);
+        if (-1 == ret)
+        {
+             qDebug()<<"discovery device fail.\r\n";
+            getchar();
+            return ;
+        }
+
+        if(cameraCnt < 1)
+        {
+            qDebug()<<"no camera\r\n";
+            getchar();
+            return;
+        }
+         Camerainformation =&pCameraList[0];
+        // ui->HDcameraList->addItem(Camerainformation->getModelName(Camerainformation));
+         qDebug()<<"HDCamera init success! ";
+
+
+};
 int32_t HDCamera::GENICAM_connect(GENICAM_Camera *pGetCamera)
 {
     int32_t isConnectSuccess;
@@ -253,3 +345,70 @@ int32_t HDCamera::GENICAM_disconnect(GENICAM_Camera *pGetCamera)
 
     return 0;
 }
+void HDCamera::HD_Connect()
+{
+
+
+     pCamera = &pCameraList[0];
+     if(GENICAM_connect(pCamera)==0)
+     {
+        qDebug()<<"**HDCamera open success! **";
+     }
+     else
+     {
+           qDebug()<<"**HDCamera open failed!**";
+     }
+     //---------------------------修改曝光
+     if(modifyCamralExposureTime(pCamera)==0)
+     {
+         qDebug()<<"**HDCamera modifiy exposure time success!**";
+     }
+     else
+     {
+          qDebug()<<"**HDCamera modifiy exposure time failed!**";
+     }
+     //--------------------------创建流对象
+     if(GENICAM_CreateStreamSource(pCamera, &pStreamSource)==0)
+     {
+         qDebug()<<"**HDCamera create streamsource success!**";
+     }
+     else
+     {
+         qDebug()<<"**HDCamera create streamsource failed!**";
+          pStreamSource->release(pStreamSource);
+     }
+
+
+
+     threadHandle = (HANDLE)_beginthreadex(NULL,
+                                            0,
+                                            (unsigned(__stdcall *)(void *)) frameGrabbingProc,
+                                            NULL,
+                                            CREATE_SUSPENDED,
+                                            &threadID);
+     if ( threadHandle == 0 )
+         {
+             qDebug()<<"Failed to create getFrame thread!\n";
+             //注意：需要释放pStreamSource内部对象内存
+             pStreamSource->release(pStreamSource);
+             return;
+         }
+
+     //-------------------------------------拉流
+     if(GENICAM_startGrabbing(pStreamSource)==0)
+     {
+         qDebug()<<"**HDCamera StartGrabbing success!**";
+     }
+     else
+     {
+         qDebug()<<"**HDCamera StartGrabbing failed!**";
+          pStreamSource->release(pStreamSource);
+     }
+     //--------------------------------------开启线程
+          ResumeThread(threadHandle);
+
+}
+
+
+
+
