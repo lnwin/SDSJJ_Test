@@ -5,7 +5,7 @@
 #include <SDK.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
-
+#include <QPainter>
 class HDCamera:public QOpenGLWidget
 {
     Q_OBJECT
@@ -24,6 +24,12 @@ public:
    int32_t GENICAM_startGrabbing(GENICAM_StreamSource *pStreamSource);//开始拉流
    int32_t GENICAM_stopGrabbing(GENICAM_StreamSource *pStreamSource);//关闭流
    int32_t GENICAM_disconnect(GENICAM_Camera *pGetCamera);
+  // unsigned __stdcall frameGrabbingProc();
+signals:
+
+   void sendQimage2Main(QImage image);
+protected:
+    void paintEvent(QPaintEvent *e);
 
 };
 

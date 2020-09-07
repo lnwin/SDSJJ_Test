@@ -64,6 +64,7 @@ HEADERS += \
     HDCamera.h \
     OpenGLShow.h \
     QtVideoCapture.h \
+    SDK.h \
     WorkThread.h \
     gl_image.h \
     mainwindow.h \

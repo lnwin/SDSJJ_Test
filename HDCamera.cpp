@@ -14,6 +14,14 @@ uint32_t cameraCnt = 0;
 HANDLE threadHandle;
 unsigned threadID;
 int cameraIndex = -1;
+QPainter HDGLpainter;
+QImage HDimage;
+QImage HDshowimage;
+//--------------------------------------------------------
+int32_t react = -1;
+//uint64_t blockId = 0;
+GENICAM_Frame* pFrame;
+bool threadflag = false;
 //--------------------------------------------------------
 
 HDCamera::HDCamera(QWidget* parent):
@@ -26,30 +34,32 @@ HDCamera::HDCamera()
 
 }
 
-unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是静态成员函数@@@@@@@@@@   弄清楚这一点！
-{
-    int i;
-    int32_t ret = -1;
-    uint64_t blockId = 0;
-    GENICAM_Frame* pFrame;
 
-    for (i = 0; i < 1; i++)
+unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要是静态成员函数@@@@@@@@@@   弄清楚这一点！
+{
+
+   //  int i;
+
+    while(1)
     {
+
+        if(!threadflag)
+        {
+            break;
+        }
         if(NULL == pStreamSource)
         {
             return 0;
         }
-
-
-        ret = pStreamSource->getFrame(pStreamSource, &pFrame, 100);
-        if (ret < 0)
+        react = pStreamSource->getFrame(pStreamSource, &pFrame, 100);
+        if (react < 0)
         {
             qDebug()<<"getFrame  fail.\n";
             continue;
         }
 
-        ret = pFrame->valid(pFrame);
-        if (ret < 0)
+        react = pFrame->valid(pFrame);
+        if (react < 0)
         {
             qDebug()<<"frame is invalid!\n";
 
@@ -61,20 +71,22 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是静态成�
         }
 
          qDebug()<<"get frame id = [%u] successfully!\n"<<pFrame->getBlockId(pFrame);
-         cv::Mat image = cv::Mat(pFrame->getImageHeight(pFrame),
+         HDimage = QImage((uint8_t*) pFrame->getImage(pFrame),
          pFrame->getImageWidth(pFrame),
-         CV_8U,
-         (uint8_t*)((pFrame->getImage(pFrame))));
-         cv::imshow("HDCamera",image);
-
+         pFrame->getImageHeight(pFrame),
+         QImage::Format_Grayscale8);
+         HDshowimage=HDimage;
+         AK.update();
+         qDebug()<<"test successful";
         //Caution：release the frame after using it
         //注意：使用该帧后需要显示释放
-        pFrame->release(pFrame);
+         pFrame->release(pFrame);
+
     }
 
     return 1;
-}
 
+}
 void HDCamera:: displayDeviceInfo(GENICAM_Camera *pCameraList, int cameraCnt)
 {
         GENICAM_Camera *pDisplayCamera = NULL;
@@ -351,7 +363,6 @@ int32_t HDCamera::GENICAM_disconnect(GENICAM_Camera *pGetCamera)
 void HDCamera::HD_Connect()
 {
 
-
      pCamera = &pCameraList[0];
      if(GENICAM_connect(pCamera)==0)
      {
@@ -370,7 +381,7 @@ void HDCamera::HD_Connect()
      {
           qDebug()<<"**HDCamera modifiy exposure time failed!**";
      }
-     //--------------------------创建流对象
+     //---------------------------创建流对象
      if(GENICAM_CreateStreamSource(pCamera, &pStreamSource)==0)
      {
          qDebug()<<"**HDCamera create streamsource success!**";
@@ -381,12 +392,13 @@ void HDCamera::HD_Connect()
           pStreamSource->release(pStreamSource);
      }
 
-
-
+     HDCamera *AK =new HDCamera();
+     AK->show();
      threadHandle = (HANDLE)_beginthreadex(NULL,
                                             0,
                                             (unsigned(__stdcall *)(void *)) frameGrabbingProc,
-                                            NULL,
+                                            //NULL,
+                                            AK,//把对象当作参数传递进去
                                             CREATE_SUSPENDED,
                                             &threadID);
      if ( threadHandle == 0 )
@@ -397,7 +409,7 @@ void HDCamera::HD_Connect()
              return;
          }
 
-     //-------------------------------------拉流
+     //--------------------------------------拉流
      if(GENICAM_startGrabbing(pStreamSource)==0)
      {
          qDebug()<<"**HDCamera StartGrabbing success!**";
@@ -408,11 +420,14 @@ void HDCamera::HD_Connect()
           pStreamSource->release(pStreamSource);
      }
      //--------------------------------------开启线程
-          ResumeThread(threadHandle);
+     threadflag=true;
+     ResumeThread(threadHandle);
 
 }
 void HDCamera::HD_Disconnect()
 {
+
+        threadflag=false;
         WaitForSingleObject(threadHandle, INFINITE);
         CloseHandle(threadHandle);
 
@@ -422,14 +437,29 @@ void HDCamera::HD_Disconnect()
         //注意：需要释放pStreamSource内部对象内存
         pStreamSource->release(pStreamSource);
         //断开设备
-            if(GENICAM_disconnect(pCamera)== 0)
-            {
-               qDebug()<<"disconnect camera successfully!.\n";
+        if(GENICAM_disconnect(pCamera)== 0)
+       {
 
-            }
+            qDebug()<<"disconnect camera successfully!.\n";
+
+       }
 
 
 };
+void HDCamera::paintEvent(QPaintEvent *e)
+{
+     if(HDGLpainter.begin(this))
+  {
 
+   HDGLpainter.setRenderHint(QPainter::Antialiasing);
+  // GLpainter.drawImage(QPoint((this->width()-640)/2, (this->height()-480)/2), AK);//这个函数可能有点问题，可能在函数的调用上访问冲突;
+   QRect target(0.0, 0.0,640.0, 480.0); //建立目标矩形，该区域是显示图像的目的地
+   QRect source(0.0, 0.0,HDshowimage.width(), HDshowimage.height());
+   HDGLpainter.drawImage(target,HDshowimage, source);
+  }
+    HDGLpainter.end();
+
+
+}
 
 

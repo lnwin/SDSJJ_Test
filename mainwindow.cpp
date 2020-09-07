@@ -46,17 +46,19 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-
+   //-----------------------------------------------------------------------------------对象实例化
     ui->setupUi(this);
-    ui->progressBar->setRange(0,1000);  
-    searchPort();
-    searchCamera();
-    USBCameraint();//载入USB相机   
+    ui->progressBar->setRange(0,1000);
+    surface_= new QtVideoCapture();
     serial = new QSerialPort;
     glImage = new GL_Image();
     OpenGL  = new OpenGLshow();
-    //----------------------------------------------------------------------------------工业相机载入
-    HDCamera = new class HDCamera();//实例化对象
+    HDCamera = new class HDCamera();
+    //----------------------------------------------------------------------------------串口、工业相机载入
+
+    searchPort();
+    searchCamera();
+    USBCameraint();//载入USB相机
     HDCamera->HDCameraParameterInt();//相机信息获取
 
     //----------------------------------------------------------------------------------工业相机载入
@@ -285,7 +287,7 @@ void MainWindow::on_ParameterContrast_clicked()//-------------------------------
 };
 void MainWindow::on_OpenHDcamera_clicked()//---------------------------------------------打开工业相机
 {
-
+   // HDCamera->show();
    if(!HDCamerastarted)
    {
        HDCamera->HD_Connect();
@@ -314,13 +316,11 @@ cv::Mat XXgray;
 int ddd=0;
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示与扫描开启函数
 {
-     // QTime counttime_1;
-     // counttime_1.start();
+
+      qDebug()<<"接收image成功";
       QImage rgba =image.mirrored();
-      glImage->pictureFromcamera(rgba);   
+      glImage->pictureFromcamera(rgba);
       ui->openGLWidget_2->update();
-     // glImage->show();
-     // glImage->update();
 
     if(startscan)
     {
@@ -376,8 +376,7 @@ void MainWindow::USBCameraint()//USB相机载入
     set.setResolution(640,480);
     set.setMinimumFrameRate(30);
     Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
-    Qtthread-> camera->setViewfinderSettings(set);
-    surface_= new QtVideoCapture();
+    Qtthread-> camera->setViewfinderSettings(set);   
     Camera_Parameter =new CameraParameter();
    // OpenGL->setGeometry(300,300,1080,720);
     Qtthread-> camera->setViewfinder(surface_);

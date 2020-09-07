@@ -18,7 +18,7 @@ public:
     WorkThread *workThreadGl;
 signals:
     void sendcloudlist2GLshow(QList <float>);
- protected:
+protected:
     void paintEvent(QPaintEvent *e);
 
 public slots:
