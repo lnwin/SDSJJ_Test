@@ -35,18 +35,15 @@ HDCamera::HDCamera()
 }
 
 
-unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要是静态成员函数@@@@@@@@@@   弄清楚这一点！
+unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要是全局函数@@@@@@@@@@   弄清楚这一点！
 {
 
-   //  int i;
+   // int i=0;
 
     while(1)
     {
 
-        if(!threadflag)
-        {
-            break;
-        }
+
         if(NULL == pStreamSource)
         {
             return 0;
@@ -55,7 +52,7 @@ unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要�
         if (react < 0)
         {
             qDebug()<<"getFrame  fail.\n";
-            continue;
+           // continue;
         }
 
         react = pFrame->valid(pFrame);
@@ -67,23 +64,25 @@ unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要�
             //注意：使用该帧后需要显示释放
             pFrame->release(pFrame);
 
-            continue;
+           // continue;
         }
 
-         qDebug()<<"get frame id = [%u] successfully!\n"<<pFrame->getBlockId(pFrame);
+        // qDebug()<<"get frame successfully!\n"<<pFrame->getBlockId(pFrame);
+        // pFrame->release(pFrame);
          HDimage = QImage((uint8_t*) pFrame->getImage(pFrame),
          pFrame->getImageWidth(pFrame),
          pFrame->getImageHeight(pFrame),
          QImage::Format_Grayscale8);
          HDshowimage=HDimage;
          AK.update();
-         qDebug()<<"test successful";
         //Caution：release the frame after using it
         //注意：使用该帧后需要显示释放
          pFrame->release(pFrame);
 
+         qDebug()<<"test successful";
     }
 
+    WaitForSingleObject(threadHandle, INFINITE);
     return 1;
 
 }
@@ -389,7 +388,7 @@ void HDCamera::HD_Connect()
      else
      {
          qDebug()<<"**HDCamera create streamsource failed!**";
-          pStreamSource->release(pStreamSource);
+         pStreamSource->release(pStreamSource);
      }
 
      HDCamera *AK =new HDCamera();
@@ -420,15 +419,16 @@ void HDCamera::HD_Connect()
           pStreamSource->release(pStreamSource);
      }
      //--------------------------------------开启线程
-     threadflag=true;
+     //threadflag=true;
      ResumeThread(threadHandle);
+
 
 }
 void HDCamera::HD_Disconnect()
 {
 
-        threadflag=false;
-        WaitForSingleObject(threadHandle, INFINITE);
+       // threadflag=false;
+       // WaitForSingleObject(threadHandle, INFINITE);
         CloseHandle(threadHandle);
 
         // stop grabbing from camera
@@ -445,6 +445,7 @@ void HDCamera::HD_Disconnect()
        }
 
 
+
 };
 void HDCamera::paintEvent(QPaintEvent *e)
 {
@@ -458,7 +459,6 @@ void HDCamera::paintEvent(QPaintEvent *e)
    HDGLpainter.drawImage(target,HDshowimage, source);
   }
     HDGLpainter.end();
-
 
 }
 
