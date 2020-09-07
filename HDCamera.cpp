@@ -2,6 +2,9 @@
 #include <string>
 #include <QDebug>
 #include <process.h>
+#include <QTime>
+#include <QCoreApplication>
+#include<QApplication>
 //------------------------------------------------------
 GENICAM_StreamSource *pStreamSource = NULL;
 GENICAM_Camera *Camerainformation;
@@ -23,6 +26,7 @@ int32_t react = -1;
 GENICAM_Frame* pFrame;
 bool threadflag = false;
 //--------------------------------------------------------
+//HDCamera AK;
 
 HDCamera::HDCamera(QWidget* parent):
     QOpenGLWidget(parent)
@@ -34,13 +38,20 @@ HDCamera::HDCamera()
 
 }
 
+void HDCamera::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数
+{
+    QTime _Timer = QTime::currentTime().addMSecs(msec);
 
-unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要是全局函数@@@@@@@@@@   弄清楚这一点！
+    while( QTime::currentTime() < _Timer )
+
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
+}
+unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函数@@@@@@@@@@   弄清楚这一点！
 {
 
    // int i=0;
 
-    for(int i=0;i<10;i++)
+   while(threadflag)
     {
 
 
@@ -52,7 +63,7 @@ unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要�
         if (react < 0)
         {
             qDebug()<<"getFrame  fail.\n";
-           // continue;
+            continue;
         }
 
         react = pFrame->valid(pFrame);
@@ -64,28 +75,27 @@ unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要�
             //注意：使用该帧后需要显示释放
             pFrame->release(pFrame);
 
-           // continue;
+            continue;
         }
 
-        // qDebug()<<"get frame successfully!\n"<<pFrame->getBlockId(pFrame);
+         qDebug()<<"get frame successfully!\n"<<pFrame->getBlockId(pFrame);
         // pFrame->release(pFrame);
          HDimage = QImage((uint8_t*) pFrame->getImage(pFrame),
          pFrame->getImageWidth(pFrame),
          pFrame->getImageHeight(pFrame),
          QImage::Format_Grayscale8);
-         HDshowimage=HDimage;
-         AK.update();
+         HDshowimage=HDimage;        
         //Caution：release the frame after using it
         //注意：使用该帧后需要显示释放
          pFrame->release(pFrame);
-
+         HDCamera::HDStatic();//----------------------------调用静态函数
+        // emit AK.sendQimage2Main(HDimage);
+        // AK.update();
          qDebug()<<"test successful";
+        // AK.Delay_MSec(50);
     }
 
-    WaitForSingleObject(threadHandle, INFINITE);
-    CloseHandle(threadHandle);
-    AK.GENICAM_stopGrabbing(pStreamSource);
-    pStreamSource->release(pStreamSource);
+   // AK.close();
     qDebug()<<"thread stop successful";
     return 1;
 
@@ -395,13 +405,13 @@ void HDCamera::HD_Connect()
          pStreamSource->release(pStreamSource);
      }
 
-     HDCamera *AK =new HDCamera();
-     AK->show();
+    // HDCamera *AK =new HDCamera();//--------------------------------
+    // AK->show();                  //--------------------------------创建窗口后线程的调用出现了问题，卡死
      threadHandle = (HANDLE)_beginthreadex(NULL,
                                             0,
                                             (unsigned(__stdcall *)(void *)) frameGrabbingProc,
-                                            //NULL,
-                                            AK,//把对象当作参数传递进去
+                                            NULL,
+                                            //AK,//把对象当作参数传递进去
                                             CREATE_SUSPENDED,
                                             &threadID);
      if ( threadHandle == 0 )
@@ -425,7 +435,17 @@ void HDCamera::HD_Connect()
      //--------------------------------------开启线程
      threadflag=true;
      ResumeThread(threadHandle);
+//     qDebug()<<"start to end thread";
+//     WaitForSingleObject(threadHandle, INFINITE);
+//     CloseHandle(threadHandle);
+//     GENICAM_stopGrabbing(pStreamSource);
+//     pStreamSource->release(pStreamSource);
+//     if(GENICAM_disconnect(pCamera)== 0)
+//    {
 
+//         qDebug()<<"disconnect camera successfully!.\n";
+
+//    }
 
 
 }
@@ -433,8 +453,9 @@ void HDCamera::HD_Disconnect()
 {
 
         threadflag=false;
-        //WaitForSingleObject(threadHandle, INFINITE);
-        //CloseHandle(threadHandle);
+        qDebug()<<"start to end thread";
+        WaitForSingleObject(threadHandle, INFINITE);
+        CloseHandle(threadHandle);
 
         // stop grabbing from camera
         GENICAM_stopGrabbing(pStreamSource);
@@ -442,12 +463,12 @@ void HDCamera::HD_Disconnect()
         //注意：需要释放pStreamSource内部对象内存
         pStreamSource->release(pStreamSource);
         //断开设备
-        //if(GENICAM_disconnect(pCamera)== 0)
-      // {
+        if(GENICAM_disconnect(pCamera)== 0)
+       {
 
-      //      qDebug()<<"disconnect camera successfully!.\n";
+            qDebug()<<"disconnect camera successfully!.\n";
 
-     //  }
+       }
 
 
 
@@ -466,5 +487,12 @@ void HDCamera::paintEvent(QPaintEvent *e)
     HDGLpainter.end();
 
 }
-
-
+void HDCamera::HDStatic()
+{
+    qDebug()<<"static success";
+  //  QApplication::postEvent('test',test());
+};
+void HDCamera::test()
+{
+    qDebug()<<"post tes success";
+}

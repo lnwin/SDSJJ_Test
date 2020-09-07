@@ -9,11 +9,12 @@
 class HDCamera:public QOpenGLWidget
 {
     Q_OBJECT
+
 public:
     HDCamera();
     HDCamera(QWidget* parent );
-
-
+   static void HDStatic();
+   void  Delay_MSec(unsigned int );
    void displayDeviceInfo(GENICAM_Camera *pCameraList, int cameraCnt);//相机参数显示读取
    void HDCameraParameterInt();
    void HD_Connect();
@@ -24,10 +25,11 @@ public:
    int32_t GENICAM_startGrabbing(GENICAM_StreamSource *pStreamSource);//开始拉流
    int32_t GENICAM_stopGrabbing(GENICAM_StreamSource *pStreamSource);//关闭流
    int32_t GENICAM_disconnect(GENICAM_Camera *pGetCamera);
-  // unsigned __stdcall frameGrabbingProc();
+    void test();
+   // unsigned __stdcall frameGrabbingProc();
 signals:
+   void sendQimage2Main(QImage);
 
-   void sendQimage2Main(QImage image);
 protected:
     void paintEvent(QPaintEvent *e);
 

@@ -58,17 +58,19 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
 
     searchPort();
     searchCamera();
-    USBCameraint();//载入USB相机
+    //USBCameraint();//载入USB相机
     HDCamera->HDCameraParameterInt();//相机信息获取
 
     //----------------------------------------------------------------------------------工业相机载入
 
     connect(Qtthread,SIGNAL(sendMessage2Main(int)),this,SLOT(receivedFromThread(int)));//进度条信号连接
-    //connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
+   // connect(Qtthread,SIGNAL(setTabWidgt2Camera(int)),this,SLOT(receivedSetTabWidgt2Camera(int)));//Camera窗体切换信号连接
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输   
-    connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输   
+    connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
+
+    //connect(HDCamera,SIGNAL(sendQimage2Main(QImage)),this,SLOT(receiveQimageFromHD(QImage)));
 }
 MainWindow::~MainWindow()
 {
@@ -310,6 +312,11 @@ void MainWindow::receivedFromThread(int ID)//-----------------------------------
 void MainWindow::receivedSetTabWidgt2Camera(int K)//------------------------------------窗体切换传递函数
 {
     //ui->tabWidget->setCurrentIndex(K);
+}
+void MainWindow::receiveQimageFromHD(QImage image)
+{
+       qDebug()<<"接收image成功";
+       ui->openGLWidget_2->update();
 }
 cv::Mat XXIMAGE;
 cv::Mat XXgray;

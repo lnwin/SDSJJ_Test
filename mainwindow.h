@@ -73,6 +73,7 @@ private slots:
     void receivedFromThread(int);
     void receivedSetTabWidgt2Camera(int);
     void on_OpenHDcamera_clicked();
+    void receiveQimageFromHD(QImage);
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
