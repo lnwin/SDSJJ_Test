@@ -40,7 +40,7 @@ unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要�
 
    // int i=0;
 
-    while(1)
+    for(int i=0;i<10;i++)
     {
 
 
@@ -83,6 +83,10 @@ unsigned __stdcall frameGrabbingProc(HDCamera AK)//@@@@@@@@@线程函数需要�
     }
 
     WaitForSingleObject(threadHandle, INFINITE);
+    CloseHandle(threadHandle);
+    AK.GENICAM_stopGrabbing(pStreamSource);
+    pStreamSource->release(pStreamSource);
+    qDebug()<<"thread stop successful";
     return 1;
 
 }
@@ -419,17 +423,18 @@ void HDCamera::HD_Connect()
           pStreamSource->release(pStreamSource);
      }
      //--------------------------------------开启线程
-     //threadflag=true;
+     threadflag=true;
      ResumeThread(threadHandle);
+
 
 
 }
 void HDCamera::HD_Disconnect()
 {
 
-       // threadflag=false;
-       // WaitForSingleObject(threadHandle, INFINITE);
-        CloseHandle(threadHandle);
+        threadflag=false;
+        //WaitForSingleObject(threadHandle, INFINITE);
+        //CloseHandle(threadHandle);
 
         // stop grabbing from camera
         GENICAM_stopGrabbing(pStreamSource);
@@ -437,12 +442,12 @@ void HDCamera::HD_Disconnect()
         //注意：需要释放pStreamSource内部对象内存
         pStreamSource->release(pStreamSource);
         //断开设备
-        if(GENICAM_disconnect(pCamera)== 0)
-       {
+        //if(GENICAM_disconnect(pCamera)== 0)
+      // {
 
-            qDebug()<<"disconnect camera successfully!.\n";
+      //      qDebug()<<"disconnect camera successfully!.\n";
 
-       }
+     //  }
 
 
 
