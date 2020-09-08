@@ -37,7 +37,7 @@ HDCamera::HDCamera()
 {
 
 }
-
+HDCamera* HDCamera::m_pInstance = nullptr;
 void HDCamera::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数
 {
     QTime _Timer = QTime::currentTime().addMSecs(msec);
@@ -51,10 +51,13 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
 
    // int i=0;
 
-   while(threadflag)
+ for(int i=1;i<100;i++)
     {
 
-
+        if(!threadflag)
+        {
+            break;
+        };
         if(NULL == pStreamSource)
         {
             return 0;
@@ -96,6 +99,7 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
     }
 
    // AK.close();
+
     qDebug()<<"thread stop successful";
     return 1;
 
@@ -452,9 +456,9 @@ void HDCamera::HD_Connect()
 void HDCamera::HD_Disconnect()
 {
 
-        threadflag=false;
         qDebug()<<"start to end thread";
-        WaitForSingleObject(threadHandle, INFINITE);
+        threadflag=false;
+        WaitForSingleObject(threadHandle, 1000);
         CloseHandle(threadHandle);
 
         // stop grabbing from camera
@@ -489,10 +493,14 @@ void HDCamera::paintEvent(QPaintEvent *e)
 }
 void HDCamera::HDStatic()
 {
+
+    emit HDCamera::GetInstance()->sendQimage2Main(HDshowimage);
     qDebug()<<"static success";
-  //  QApplication::postEvent('test',test());
+
 };
 void HDCamera::test()
 {
+
+
     qDebug()<<"post tes success";
 }

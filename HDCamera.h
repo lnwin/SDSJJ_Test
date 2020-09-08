@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <QPainter>
+
 class HDCamera:public QOpenGLWidget
 {
     Q_OBJECT
@@ -13,6 +14,20 @@ class HDCamera:public QOpenGLWidget
 public:
     HDCamera();
     HDCamera(QWidget* parent );
+    // 设置单例类
+    static HDCamera* GetInstance()
+    {
+        if ( m_pInstance == NULL )
+        {
+            if( m_pInstance == NULL )
+            {
+                m_pInstance = new HDCamera();
+            }
+        }
+
+        return m_pInstance;
+    }
+
    static void HDStatic();
    void  Delay_MSec(unsigned int );
    void displayDeviceInfo(GENICAM_Camera *pCameraList, int cameraCnt);//相机参数显示读取
@@ -27,12 +42,15 @@ public:
    int32_t GENICAM_disconnect(GENICAM_Camera *pGetCamera);
     void test();
    // unsigned __stdcall frameGrabbingProc();
+
+   // bool event(QEvent *event);
 signals:
-   void sendQimage2Main(QImage);
+    void sendQimage2Main(QImage);
 
 protected:
     void paintEvent(QPaintEvent *e);
-
+private:
+   static HDCamera* m_pInstance;
 };
 
 #endif // HDCAMERA_H

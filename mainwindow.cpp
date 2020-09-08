@@ -22,6 +22,7 @@
 #include <string.h>
 #include <Windows.h>
 #include <process.h>
+#include <exception>
 using namespace std;
 using namespace cv;
 
@@ -53,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     serial = new QSerialPort;
     glImage = new GL_Image();
     OpenGL  = new OpenGLshow();
-    HDCamera = new class HDCamera();
+    HDCamera = HDCamera::GetInstance();
     //----------------------------------------------------------------------------------串口、工业相机载入
 
     searchPort();
@@ -70,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输   
     connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
 
-    //connect(HDCamera,SIGNAL(sendQimage2Main(QImage)),this,SLOT(receiveQimageFromHD(QImage)));
+    connect(HDCamera,SIGNAL(sendQimage2Main(QImage)),this,SLOT(receiveQimageFromHD(QImage)));//   HDcamera 的单例类传递函数
 }
 MainWindow::~MainWindow()
 {
@@ -315,8 +316,11 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 }
 void MainWindow::receiveQimageFromHD(QImage image)
 {
-       qDebug()<<"接收image成功";
+
+       qDebug()<<"received image success";
+       glImage->pictureFromcamera(image);
        ui->openGLWidget_2->update();
+
 }
 cv::Mat XXIMAGE;
 cv::Mat XXgray;
@@ -324,15 +328,18 @@ int ddd=0;
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示与扫描开启函数
 {
 
-      qDebug()<<"接收image成功";
-      QImage rgba =image.mirrored();
-      glImage->pictureFromcamera(rgba);
-      ui->openGLWidget_2->update();
 
+      qDebug()<<"show image success";
+      qDebug()<<image;
+     // QImage rgba =image.mirrored();
+
+     // glImage->pictureFromcamera(image);
+     // ui->openGLWidget_2->update();
+     qDebug()<<"show image success %%%%%%%";
     if(startscan)
     {
 
-      XXIMAGE = Qtthread->QImage2cvMat(rgba);
+     // XXIMAGE = Qtthread->QImage2cvMat(rgba);
       if(!XXIMAGE.empty())
      {
 
