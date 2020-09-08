@@ -29,7 +29,7 @@ public:
     }
 
    static void HDStatic();
-   void  Delay_MSec(unsigned int );
+   static void  Delay_MSec(unsigned int );
    void displayDeviceInfo(GENICAM_Camera *pCameraList, int cameraCnt);//相机参数显示读取
    void HDCameraParameterInt();
    void HD_Connect();
@@ -44,6 +44,7 @@ public:
    // unsigned __stdcall frameGrabbingProc();
 
    // bool event(QEvent *event);
+
 signals:
     void sendQimage2Main(QImage);
 
