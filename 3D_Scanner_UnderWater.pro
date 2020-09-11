@@ -1302,3 +1302,9 @@ DISTFILES += \
 
 RESOURCES += \
     picture.qrc
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/Depends/x64/vs2013shared/ -lImageConvert
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Depends/x64/vs2013shared/ -lImageConvert
+
+INCLUDEPATH += $$PWD/Include
+DEPENDPATH += $$PWD/Include

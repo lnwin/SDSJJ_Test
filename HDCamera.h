@@ -40,10 +40,11 @@ public:
    int32_t GENICAM_startGrabbing(GENICAM_StreamSource *pStreamSource);//开始拉流
    int32_t GENICAM_stopGrabbing(GENICAM_StreamSource *pStreamSource);//关闭流
    int32_t GENICAM_disconnect(GENICAM_Camera *pGetCamera);
-    void test();
+   void test();
    // unsigned __stdcall frameGrabbingProc();
 
    // bool event(QEvent *event);
+public slots:
 
 signals:
     void sendQimage2Main(QImage);

@@ -5,6 +5,7 @@
 #include <QTime>
 #include <QCoreApplication>
 #include<QApplication>
+#include<Media/ImageConvert.h>
 //------------------------------------------------------
 GENICAM_StreamSource *pStreamSource = NULL;
 GENICAM_Camera *Camerainformation;
@@ -51,7 +52,8 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
 
    // int i=0;
 
-    while(threadflag)
+   // while(threadflag)
+    for(int i=0;i<1;i++)
     {
 
 
@@ -80,10 +82,43 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
 
         qDebug()<<"get frame successfully!\n"<<pFrame->getBlockId(pFrame);
 
-         HDimage = QImage((uint8_t*) pFrame->getImage(pFrame),
-         pFrame->getImageWidth(pFrame),
-         pFrame->getImageHeight(pFrame),
-         QImage::Format_Grayscale8);
+       // int nBGRBufferSize = pFrame->getImageWidth(pFrame) * pFrame->getImageHeight(pFrame) * 3;
+      //  uint8_t *pBGRbuffer = (uint8_t *)malloc(nBGRBufferSize);
+
+        uint8_t *pRGBbuffer = NULL;
+        int nRgbBufferSize = 0;
+        nRgbBufferSize =pFrame->getImageWidth(pFrame) * pFrame->getImageHeight(pFrame) * 3;
+        pRGBbuffer = (uint8_t *)malloc(nRgbBufferSize);
+        if (pRGBbuffer == NULL)
+        {
+            /* 释放内存 */
+            free(pRGBbuffer);
+            printf("RGBbuffer malloc failed.\n");
+            continue;
+        }
+
+
+
+        IMGCNV_SOpenParam openParam;
+        openParam.width = pFrame->getImageWidth(pFrame);
+        openParam.height = pFrame->getImageHeight(pFrame);
+        openParam.paddingX = pFrame->getImagePaddingX(pFrame);
+        openParam.paddingY = pFrame->getImagePaddingY(pFrame);
+        openParam.dataSize = pFrame->getImageSize(pFrame);
+        openParam.pixelForamt = pFrame->getImagePixelFormat(pFrame);
+
+       IMGCNV_ConvertToRGB24
+                (///pRGBbuffer,
+                 (uint8_t*)pFrame->getImage(pFrame),
+                &openParam,
+                pRGBbuffer,
+                &nRgbBufferSize
+                );
+
+         HDimage = QImage((uint8_t*)pRGBbuffer,
+                          pFrame->getImageWidth(pFrame),
+                          pFrame->getImageHeight(pFrame),
+                          QImage::Format_RGB888);
          HDshowimage=HDimage;        
         //Caution：release the frame after using it
         //注意：使用该帧后需要显示释放
@@ -443,7 +478,7 @@ void HDCamera::HD_Disconnect()
 
         qDebug()<<"start to end thread";
         threadflag=false;
-        HDCamera::Delay_MSec(20);
+        HDCamera::Delay_MSec(25);
         WaitForSingleObject(threadHandle, INFINITE);
         CloseHandle(threadHandle);
 
@@ -481,6 +516,7 @@ void HDCamera::HDStatic()
 {
 
     emit HDCamera::GetInstance()->sendQimage2Main(HDshowimage);
+
     //qDebug()<<"static success";
 
 };
@@ -488,5 +524,8 @@ void HDCamera::test()
 {
 
 
+
     qDebug()<<"post tes success";
 }
+
+
