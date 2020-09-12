@@ -26,7 +26,8 @@ int32_t react = -1;
 //uint64_t blockId = 0;
 GENICAM_Frame* pFrame;
 bool threadflag = false;
-
+uint8_t *pRGBbuffer =NULL;
+ int nRgbBufferSize = 0;
 //--------------------------------------------------------
 //HDCamera AK;
 
@@ -54,7 +55,7 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
    // int i=0;
 
     while(threadflag)
-    //for(int i=0;i<100;i++)
+   // for(int i=0;i<10;i++)
     {
 
 
@@ -83,23 +84,7 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
 
       //  qDebug()<<"get frame successfully!\n"<<pFrame->getBlockId(pFrame);
 
-       // int nBGRBufferSize = pFrame->getImageWidth(pFrame) * pFrame->getImageHeight(pFrame) * 3;
-      //  uint8_t *pBGRbuffer = (uint8_t *)malloc(nBGRBufferSize);
-
-        uint8_t *pRGBbuffer = NULL;
-        int nRgbBufferSize = 0;
-        nRgbBufferSize =pFrame->getImageWidth(pFrame) * pFrame->getImageHeight(pFrame) * 3;
-        pRGBbuffer = (uint8_t *)malloc(nRgbBufferSize);
-        if (pRGBbuffer == NULL)
-        {
-            /* 释放内存 */
-            free(pRGBbuffer);
-            printf("RGBbuffer malloc failed.\n");
-            continue;
-        }
-
-
-
+//---------------------------------------------------------------彩色图像
         IMGCNV_SOpenParam openParam;
         openParam.width = pFrame->getImageWidth(pFrame);
         openParam.height = pFrame->getImageHeight(pFrame);
@@ -108,29 +93,32 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
         openParam.dataSize = pFrame->getImageSize(pFrame);
         openParam.pixelForamt = pFrame->getImagePixelFormat(pFrame);
 
-       IMGCNV_ConvertToRGB24
+        IMGCNV_ConvertToRGB24
                 (
                  (uint8_t*)pFrame->getImage(pFrame),
                 &openParam,
                 pRGBbuffer,
                 &nRgbBufferSize
                 );
-
+//---------------------------------------------------------------彩色图像
          HDimage = QImage((uint8_t*)pRGBbuffer,
                           pFrame->getImageWidth(pFrame),
                           pFrame->getImageHeight(pFrame),
                           QImage::Format_RGB888);
-         HDshowimage=HDimage;
+        //------------------------------------------------------黑白图像
+//         HDimage = QImage((uint8_t*) pFrame->getImage(pFrame),
+//         pFrame->getImageWidth(pFrame),
+//         pFrame->getImageHeight(pFrame),
+//         QImage::Format_Grayscale8);
          HDCamera::HDStatic();//----------------------------调用静态函数
         //Caution：release the frame after using it
         //注意：使用该帧后需要显示释放
          pFrame->release(pFrame);
 
 
-
     }
 
-   // AK.close();
+
 
 
     return 1;
@@ -412,6 +400,15 @@ int32_t HDCamera::GENICAM_disconnect(GENICAM_Camera *pGetCamera)
 }
 void HDCamera::HD_Connect()
 {
+     pRGBbuffer =new uint8_t[18874368];
+     if (pRGBbuffer == NULL)
+      {
+          /* 释放内存 */
+        //  free(pRGBbuffer);
+
+          qDebug()<<"RGBbuffer new failed.\n";
+
+      }
 
      pCamera = &pCameraList[0];
 
@@ -521,7 +518,7 @@ void HDCamera::paintEvent(QPaintEvent *e)
 void HDCamera::HDStatic()
 {
 
-    emit HDCamera::GetInstance()->sendQimage2Main(HDshowimage);
+    emit HDCamera::GetInstance()->sendQimage2Main(HDimage);
 
     //qDebug()<<"static success";
 
@@ -557,7 +554,7 @@ int32_t HDCamera::setCamerabrightness(GENICAM_Camera *pGetCamera, double a )
      doubleNode.release(&doubleNode);
      return -1;
     }
-   // int64_t nHeight;
+
     if (0 != doubleNode.setValue(&doubleNode, a))
     {
      // 注意：需要调用 release 释放内存
@@ -566,11 +563,10 @@ int32_t HDCamera::setCamerabrightness(GENICAM_Camera *pGetCamera, double a )
      doubleNode.release(&doubleNode);
      return -1;
     }
-   // else
-    //{
+
         pImageFormatCtrl->release(pImageFormatCtrl);
         doubleNode.release(&doubleNode);
-   // }
+
 
     return 0;
 };
