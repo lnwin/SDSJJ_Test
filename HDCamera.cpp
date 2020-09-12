@@ -26,6 +26,7 @@ int32_t react = -1;
 //uint64_t blockId = 0;
 GENICAM_Frame* pFrame;
 bool threadflag = false;
+
 //--------------------------------------------------------
 //HDCamera AK;
 
@@ -52,8 +53,8 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
 
    // int i=0;
 
-   // while(threadflag)
-    for(int i=0;i<1;i++)
+    while(threadflag)
+    //for(int i=0;i<100;i++)
     {
 
 
@@ -80,7 +81,7 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
             continue;
         }
 
-        qDebug()<<"get frame successfully!\n"<<pFrame->getBlockId(pFrame);
+      //  qDebug()<<"get frame successfully!\n"<<pFrame->getBlockId(pFrame);
 
        // int nBGRBufferSize = pFrame->getImageWidth(pFrame) * pFrame->getImageHeight(pFrame) * 3;
       //  uint8_t *pBGRbuffer = (uint8_t *)malloc(nBGRBufferSize);
@@ -108,7 +109,7 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
         openParam.pixelForamt = pFrame->getImagePixelFormat(pFrame);
 
        IMGCNV_ConvertToRGB24
-                (///pRGBbuffer,
+                (
                  (uint8_t*)pFrame->getImage(pFrame),
                 &openParam,
                 pRGBbuffer,
@@ -119,11 +120,12 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
                           pFrame->getImageWidth(pFrame),
                           pFrame->getImageHeight(pFrame),
                           QImage::Format_RGB888);
-         HDshowimage=HDimage;        
+         HDshowimage=HDimage;
+         HDCamera::HDStatic();//----------------------------调用静态函数
         //Caution：release the frame after using it
         //注意：使用该帧后需要显示释放
          pFrame->release(pFrame);
-         HDCamera::HDStatic();//----------------------------调用静态函数
+
 
 
     }
@@ -412,10 +414,12 @@ void HDCamera::HD_Connect()
 {
 
      pCamera = &pCameraList[0];
+
      if(GENICAM_connect(pCamera)==0)
      {
         qDebug()<<"**HDCamera open success! **";
      }
+
      else
      {
            qDebug()<<"**HDCamera open failed!**";
@@ -429,6 +433,7 @@ void HDCamera::HD_Connect()
      {
           qDebug()<<"**HDCamera modifiy exposure time failed!**";
      }
+
      //---------------------------创建流对象
      if(GENICAM_CreateStreamSource(pCamera, &pStreamSource)==0)
      {
@@ -467,6 +472,7 @@ void HDCamera::HD_Connect()
          qDebug()<<"**HDCamera StartGrabbing failed!**";
           pStreamSource->release(pStreamSource);
      }
+
      //--------------------------------------开启线程
      threadflag=true;
      ResumeThread(threadHandle);
@@ -527,5 +533,45 @@ void HDCamera::test()
 
     qDebug()<<"post tes success";
 }
+int32_t HDCamera::setCamerabrightness(GENICAM_Camera *pGetCamera, double a )
+{
+     GENICAM_DoubleNode doubleNode;
+     GENICAM_AnalogControl *pImageFormatCtrl = NULL;
+     GENICAM_AnalogControlInfo imageFormatControlInfo = { 0 };
+     imageFormatControlInfo.pCamera = pGetCamera; //
 
+
+    if (0 != GENICAM_createAnalogControl(&imageFormatControlInfo, &pImageFormatCtrl))
+    {
+     // 注意：需要调用 release 释放内存
+        qDebug()<<"gain  fail.\n";
+      pImageFormatCtrl->release(pImageFormatCtrl);
+     return -1;
+    }
+    doubleNode = pImageFormatCtrl->gainRaw(pImageFormatCtrl);
+
+    if (0 != doubleNode.isValid(&doubleNode))
+    {
+     // 注意：需要调用 release 释放内存
+     pImageFormatCtrl->release(pImageFormatCtrl);
+     doubleNode.release(&doubleNode);
+     return -1;
+    }
+   // int64_t nHeight;
+    if (0 != doubleNode.setValue(&doubleNode, a))
+    {
+     // 注意：需要调用 release 释放内存
+        qDebug()<<"get gainraw fail.\n";
+     pImageFormatCtrl->release(pImageFormatCtrl);
+     doubleNode.release(&doubleNode);
+     return -1;
+    }
+   // else
+    //{
+        pImageFormatCtrl->release(pImageFormatCtrl);
+        doubleNode.release(&doubleNode);
+   // }
+
+    return 0;
+};
 

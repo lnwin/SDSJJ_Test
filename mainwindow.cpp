@@ -318,7 +318,7 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 void MainWindow::receiveQimageFromHD(QImage image)
 {
 
-       qDebug()<<"received image success";
+    //   qDebug()<<"received image success";
        glImage->pictureFromcamera(image);
        ui->openGLWidget_2->update();
 

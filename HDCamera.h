@@ -41,6 +41,7 @@ public:
    int32_t GENICAM_stopGrabbing(GENICAM_StreamSource *pStreamSource);//关闭流
    int32_t GENICAM_disconnect(GENICAM_Camera *pGetCamera);
    void test();
+   int32_t setCamerabrightness(GENICAM_Camera *pGetCamera,double Gain);
    // unsigned __stdcall frameGrabbingProc();
 
    // bool event(QEvent *event);
@@ -51,8 +52,9 @@ signals:
 
 protected:
     void paintEvent(QPaintEvent *e);
+
 private:
-   static HDCamera* m_pInstance;
+    static HDCamera* m_pInstance;
 };
 
 #endif // HDCAMERA_H
