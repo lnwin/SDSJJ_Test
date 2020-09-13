@@ -55,7 +55,7 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
    // int i=0;
 
     while(threadflag)
-   // for(int i=0;i<10;i++)
+   // for(int i=0;i<1000;i++)
     {
 
 
@@ -87,10 +87,15 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
 //---------------------------------------------------------------彩色图像
         IMGCNV_SOpenParam openParam;
         openParam.width = pFrame->getImageWidth(pFrame);
+
         openParam.height = pFrame->getImageHeight(pFrame);
+
         openParam.paddingX = pFrame->getImagePaddingX(pFrame);
+
         openParam.paddingY = pFrame->getImagePaddingY(pFrame);
+
         openParam.dataSize = pFrame->getImageSize(pFrame);
+
         openParam.pixelForamt = pFrame->getImagePixelFormat(pFrame);
 
         IMGCNV_ConvertToRGB24
@@ -104,13 +109,15 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
          HDimage = QImage((uint8_t*)pRGBbuffer,
                           pFrame->getImageWidth(pFrame),
                           pFrame->getImageHeight(pFrame),
+                        //  3*pFrame->getImageWidth(pFrame),
                           QImage::Format_RGB888);
         //------------------------------------------------------黑白图像
 //         HDimage = QImage((uint8_t*) pFrame->getImage(pFrame),
 //         pFrame->getImageWidth(pFrame),
 //         pFrame->getImageHeight(pFrame),
 //         QImage::Format_Grayscale8);
-         HDCamera::HDStatic();//----------------------------调用静态函数
+        // HDCamera::HDStatic();//----------------------------调用静态函数
+          emit HDCamera::GetInstance()->sendQimage2Main(HDimage);
         //Caution：release the frame after using it
         //注意：使用该帧后需要显示释放
          pFrame->release(pFrame);
@@ -254,7 +261,7 @@ void HDCamera::HDCameraParameterInt()
             return;
         }
          Camerainformation =&pCameraList[0];
-        // ui->HDcameraList->addItem(Camerainformation->getModelName(Camerainformation));
+       //ui->HDcameraList->addItem(Camerainformation->getModelName(Camerainformation));
          qDebug()<<"HDCamera init success! ";
 
 
@@ -530,13 +537,14 @@ void HDCamera::test()
 
     qDebug()<<"post tes success";
 }
-int32_t HDCamera::setCamerabrightness(GENICAM_Camera *pGetCamera, double a )
+int32_t HDCamera::setCameragain(int a )
 {
+    //GENICAM_Camera *pGetCamera,
      GENICAM_DoubleNode doubleNode;
      GENICAM_AnalogControl *pImageFormatCtrl = NULL;
      GENICAM_AnalogControlInfo imageFormatControlInfo = { 0 };
-     imageFormatControlInfo.pCamera = pGetCamera; //
-
+     imageFormatControlInfo.pCamera = pCamera; //
+     double K =(double)a;
 
     if (0 != GENICAM_createAnalogControl(&imageFormatControlInfo, &pImageFormatCtrl))
     {
@@ -555,7 +563,7 @@ int32_t HDCamera::setCamerabrightness(GENICAM_Camera *pGetCamera, double a )
      return -1;
     }
 
-    if (0 != doubleNode.setValue(&doubleNode, a))
+    if (0 != doubleNode.setValue(&doubleNode, K))
     {
      // 注意：需要调用 release 释放内存
         qDebug()<<"get gainraw fail.\n";
@@ -570,4 +578,43 @@ int32_t HDCamera::setCamerabrightness(GENICAM_Camera *pGetCamera, double a )
 
     return 0;
 };
+int32_t HDCamera::setCamerbrightness(int brightness)
+{
+    GENICAM_IntNode doubleNode;
+    GENICAM_ISPControl *pImageFormatCtrl = NULL;
+    GENICAM_ISPControlInfo imageFormatControlInfo = { 0 };
+    imageFormatControlInfo.pCamera = pCamera; //
+
+
+   if (0 != GENICAM_createISPControl(&imageFormatControlInfo, &pImageFormatCtrl))
+   {
+    // 注意：需要调用 release 释放内存
+       qDebug()<<"gain  fail.\n";
+     pImageFormatCtrl->release(pImageFormatCtrl);
+    return -1;
+   }
+   doubleNode = pImageFormatCtrl->brightness (pImageFormatCtrl);
+
+   if (0 != doubleNode.isValid(&doubleNode))
+   {
+    // 注意：需要调用 release 释放内存
+    pImageFormatCtrl->release(pImageFormatCtrl);
+    doubleNode.release(&doubleNode);
+    return -1;
+   }
+
+   if (0 != doubleNode.setValue(&doubleNode, brightness))
+   {
+    // 注意：需要调用 release 释放内存
+       qDebug()<<"get gainraw fail.\n";
+    pImageFormatCtrl->release(pImageFormatCtrl);
+    doubleNode.release(&doubleNode);
+    return -1;
+   }
+
+       pImageFormatCtrl->release(pImageFormatCtrl);
+       doubleNode.release(&doubleNode);
+    return 0;
+};
+
 

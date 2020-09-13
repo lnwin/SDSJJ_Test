@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     glImage = new GL_Image();
     OpenGL  = new OpenGLshow();
     HDCamera = HDCamera::GetInstance();
+
     //----------------------------------------------------------------------------------串口、工业相机载入
 
     searchPort();
@@ -70,8 +71,9 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输   
     connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
-
     connect(HDCamera,SIGNAL(sendQimage2Main(QImage)),this,SLOT(receiveQimageFromHD(QImage)));//   HDcamera 的单例类传递函数
+    connect(this, SIGNAL(sendcameragain2HDcamera(int)),HDCamera, SLOT(setCameragain(int)));
+    connect(this, SIGNAL(sendbrightness2HDcamera(int)),HDCamera, SLOT(setCamerbrightness(int)));
 
 }
 MainWindow::~MainWindow()
@@ -418,6 +420,28 @@ void MainWindow::USBCameraint()//USB相机载入
 
 
 
+//---------------------------------------------------------------------按键槽函数
 
 
 
+void MainWindow::on_CameraBrightness_valueChanged(int value)
+{
+      ui->Brightness_spinBox->setValue(value);
+}
+
+void MainWindow::on_CameraGain_valueChanged(int value)
+{
+      ui->Cameragain_spinBox ->setValue(value);
+}
+
+void MainWindow::on_Brightness_spinBox_valueChanged(int arg1)
+{
+   emit sendbrightness2HDcamera(arg1);
+    ui->CameraBrightness->setValue(arg1);
+}
+
+void MainWindow::on_Cameragain_spinBox_valueChanged(int arg1)
+{
+   emit sendcameragain2HDcamera(arg1);
+     ui->CameraGain->setValue(arg1);
+}

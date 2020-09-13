@@ -74,6 +74,14 @@ private slots:
     void receivedSetTabWidgt2Camera(int);
     void on_OpenHDcamera_clicked();
     void receiveQimageFromHD(QImage);
+    void on_CameraBrightness_valueChanged(int value);
+
+    void on_CameraGain_valueChanged(int value);
+
+    void on_Brightness_spinBox_valueChanged(int arg1);
+
+    void on_Cameragain_spinBox_valueChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
@@ -89,7 +97,8 @@ signals:
     //void sendfilepath2opengl(QString);
     void sendfilename2opengl(QString);
     void sendseting2opengl(QList<float>);
-
+    void sendbrightness2HDcamera(int);
+    void sendcameragain2HDcamera(int);
 
 };
 
