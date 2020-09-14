@@ -337,10 +337,8 @@ void MainWindow::showImage(QImage image)//--------------------------------------
 
       qDebug()<<image;
       QImage rgba =image.mirrored();
-
-      glImage->pictureFromcamera(image);
-      ui->openGLWidget_2->update();
-  qDebug()<<"GL over";
+      glImage->pictureFromcamera(rgba);
+      ui->openGLWidget_2->update();  
     if(startscan)
     {
 

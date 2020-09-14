@@ -41,8 +41,7 @@ bool QtVideoCapture::present(const QVideoFrame &frame)//------------------------
                            cloneFrame.width(),
                            cloneFrame.height(),
                            QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat()));
-        emit frameAvailable(image);
-        qDebug()<<"send USB camera success";
+        emit frameAvailable(image);        
         cloneFrame.unmap();
         return true;
 
