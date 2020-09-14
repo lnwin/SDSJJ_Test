@@ -301,13 +301,14 @@ void MainWindow::on_OpenHDcamera_clicked()//------------------------------------
        HDCamera->HD_Connect();
        HDCamerastarted=true;
        ui->OpenHDcamera ->setText("CloseHDcamera");
+        ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
    }
    else
    {
        HDCamera->HD_Disconnect();
        HDCamerastarted=false;
        ui->OpenHDcamera ->setText("OpenHDcamera");
-
+       ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/gray.png);");
    }
 
 }
@@ -322,7 +323,7 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 void MainWindow::receiveQimageFromHD(QImage image)
 {
 
-    //   qDebug()<<"received image success";
+
        glImage->pictureFromcamera(image);
        ui->openGLWidget_2->update();
 
@@ -335,7 +336,7 @@ void MainWindow::showImage(QImage image)//--------------------------------------
 
 
 
-      qDebug()<<image;
+
       QImage rgba =image.mirrored();
       glImage->pictureFromcamera(rgba);
       ui->openGLWidget_2->update();  

@@ -361,7 +361,7 @@ public:
         baselinelabel->setText(QCoreApplication::translate("MainWindow", "baseLine", nullptr));
         laserAngleLine->setText(QCoreApplication::translate("MainWindow", "70", nullptr));
 #if QT_CONFIG(tooltip)
-        show3D->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>\347\202\271\344\272\221\346\225\260\346\215\256\346\230\276\347\244\272</p></body></html>", nullptr));
+        show3D->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>\347\202\271\344\272\221\346\225\260\346\215\256\346\230\276\347\244\272(\344\273\216\346\226\207\344\273\266)</p></body></html>", nullptr));
 #endif // QT_CONFIG(tooltip)
         show3D->setText(QCoreApplication::translate("MainWindow", "Show 3D Model", nullptr));
 #if QT_CONFIG(tooltip)

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1290</width>
+    <width>1441</width>
     <height>769</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
      <rect>
       <x>590</x>
       <y>740</y>
-      <width>691</width>
+      <width>841</width>
       <height>21</height>
      </rect>
     </property>
@@ -250,7 +250,7 @@
       </rect>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;点云数据显示&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;点云数据显示(从文件)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>Show 3D Model</string>
@@ -950,6 +950,19 @@
       <number>1</number>
      </property>
     </widget>
+   </widget>
+   <widget class="QSlider" name="verticalSlider">
+    <property name="geometry">
+     <rect>
+      <x>1320</x>
+      <y>19</y>
+      <width>91</width>
+      <height>611</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
    </widget>
   </widget>
  </widget>
