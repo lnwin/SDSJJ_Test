@@ -82,6 +82,10 @@ private slots:
 
     void on_Cameragain_spinBox_valueChanged(int arg1);
 
+    void on_CameraGama_valueChanged(int value);
+
+    void on_Gama_spinBox_valueChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
@@ -99,6 +103,8 @@ signals:
     void sendseting2opengl(QList<float>);
     void sendbrightness2HDcamera(int);
     void sendcameragain2HDcamera(int);
+    void sendcameragama2HDcamera(int);
+
 
 };
 

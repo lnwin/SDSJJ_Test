@@ -54,13 +54,14 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     serial = new QSerialPort;
     glImage = new GL_Image();
     OpenGL  = new OpenGLshow();
+    Camera_Parameter =new CameraParameter();//校准对象
     HDCamera = HDCamera::GetInstance();
 
     //----------------------------------------------------------------------------------串口、工业相机载入
 
     searchPort();
     searchCamera();
-    //USBCameraint();//载入USB相机
+    USBCameraint();//载入USB相机
     HDCamera->HDCameraParameterInt();//相机信息获取
 
     //----------------------------------------------------------------------------------工业相机载入
@@ -74,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(HDCamera,SIGNAL(sendQimage2Main(QImage)),this,SLOT(receiveQimageFromHD(QImage)));//   HDcamera 的单例类传递函数
     connect(this, SIGNAL(sendcameragain2HDcamera(int)),HDCamera, SLOT(setCameragain(int)));
     connect(this, SIGNAL(sendbrightness2HDcamera(int)),HDCamera, SLOT(setCamerbrightness(int)));
+    connect(this, SIGNAL(sendcameragama2HDcamera(int)),HDCamera, SLOT(setCameragama(int)));
 
 }
 MainWindow::~MainWindow()
@@ -332,17 +334,17 @@ void MainWindow::showImage(QImage image)//--------------------------------------
 {
 
 
-      qDebug()<<"show image success";
-      qDebug()<<image;
-     // QImage rgba =image.mirrored();
 
-     // glImage->pictureFromcamera(image);
-     // ui->openGLWidget_2->update();
-     qDebug()<<"show image success %%%%%%%";
+      qDebug()<<image;
+      QImage rgba =image.mirrored();
+
+      glImage->pictureFromcamera(image);
+      ui->openGLWidget_2->update();
+  qDebug()<<"GL over";
     if(startscan)
     {
 
-     // XXIMAGE = Qtthread->QImage2cvMat(rgba);
+      XXIMAGE = Qtthread->QImage2cvMat(rgba);
       if(!XXIMAGE.empty())
      {
 
@@ -393,9 +395,8 @@ void MainWindow::USBCameraint()//USB相机载入
     set.setResolution(640,480);
     set.setMinimumFrameRate(30);
     Qtthread-> camera->setCaptureMode(QCamera::CaptureStillImage);
-    Qtthread-> camera->setViewfinderSettings(set);   
-    Camera_Parameter =new CameraParameter();
-   // OpenGL->setGeometry(300,300,1080,720);
+    Qtthread-> camera->setViewfinderSettings(set);
+      // OpenGL->setGeometry(300,300,1080,720);
     Qtthread-> camera->setViewfinder(surface_);
 
 }
@@ -444,4 +445,15 @@ void MainWindow::on_Cameragain_spinBox_valueChanged(int arg1)
 {
    emit sendcameragain2HDcamera(arg1);
      ui->CameraGain->setValue(arg1);
+}
+
+void MainWindow::on_CameraGama_valueChanged(int value)
+{
+  ui->Gama_spinBox->setValue(value);
+}
+
+void MainWindow::on_Gama_spinBox_valueChanged(int arg1)
+{
+  emit sendcameragama2HDcamera(arg1);
+    ui->CameraGama->setValue(arg1);
 }

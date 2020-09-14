@@ -93,6 +93,9 @@ public:
     QLabel *label_10;
     QSpinBox *Brightness_spinBox;
     QSpinBox *Cameragain_spinBox;
+    QSlider *CameraGama;
+    QLabel *label_11;
+    QSpinBox *Gama_spinBox;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -319,7 +322,20 @@ public:
         Cameragain_spinBox = new QSpinBox(widget);
         Cameragain_spinBox->setObjectName(QString::fromUtf8("Cameragain_spinBox"));
         Cameragain_spinBox->setGeometry(QRect(200, 40, 42, 22));
+        Cameragain_spinBox->setMaximum(30);
         Cameragain_spinBox->setValue(7);
+        CameraGama = new QSlider(widget);
+        CameraGama->setObjectName(QString::fromUtf8("CameraGama"));
+        CameraGama->setGeometry(QRect(90, 70, 101, 22));
+        CameraGama->setMaximum(4);
+        CameraGama->setOrientation(Qt::Horizontal);
+        label_11 = new QLabel(widget);
+        label_11->setObjectName(QString::fromUtf8("label_11"));
+        label_11->setGeometry(QRect(10, 70, 71, 20));
+        Gama_spinBox = new QSpinBox(widget);
+        Gama_spinBox->setObjectName(QString::fromUtf8("Gama_spinBox"));
+        Gama_spinBox->setGeometry(QRect(200, 70, 42, 22));
+        Gama_spinBox->setMaximum(4);
         MainWindow->setCentralWidget(centralwidget);
 
         retranslateUi(MainWindow);
@@ -402,9 +418,16 @@ public:
         camera_light->setText(QString());
         scan_light->setText(QString());
         label_8->setText(QString());
+#if QT_CONFIG(tooltip)
+        OpenHDcamera->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>\346\211\223\345\274\200/\345\205\263\351\227\255\345\267\245\344\270\232\347\233\270\346\234\272</p></body></html>", nullptr));
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(whatsthis)
+        OpenHDcamera->setWhatsThis(QCoreApplication::translate("MainWindow", "<html><head/><body><p><br/></p></body></html>", nullptr));
+#endif // QT_CONFIG(whatsthis)
         OpenHDcamera->setText(QCoreApplication::translate("MainWindow", "OpenHDCamera", nullptr));
         label_9->setText(QCoreApplication::translate("MainWindow", "brightness ", nullptr));
         label_10->setText(QCoreApplication::translate("MainWindow", "Camera gain", nullptr));
+        label_11->setText(QCoreApplication::translate("MainWindow", "Gama", nullptr));
     } // retranslateUi
 
 };

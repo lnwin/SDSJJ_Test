@@ -45,9 +45,11 @@ public:
    // unsigned __stdcall frameGrabbingProc();
 
    // bool event(QEvent *event);
+
 public slots:
     int32_t setCameragain(int Gain);
     int32_t setCamerbrightness(int brightness);
+    int32_t setCameragama(int Gama);
 
 signals:
     void sendQimage2Main(QImage);

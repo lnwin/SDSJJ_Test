@@ -616,5 +616,45 @@ int32_t HDCamera::setCamerbrightness(int brightness)
        doubleNode.release(&doubleNode);
     return 0;
 };
+int32_t HDCamera::setCameragama(int a )
+{
+    //GENICAM_Camera *pGetCamera,
+     GENICAM_DoubleNode doubleNode;
+     GENICAM_AnalogControl *pImageFormatCtrl = NULL;
+     GENICAM_AnalogControlInfo imageFormatControlInfo = { 0 };
+     imageFormatControlInfo.pCamera = pCamera; //
+     double K =(double)a;
 
+    if (0 != GENICAM_createAnalogControl(&imageFormatControlInfo, &pImageFormatCtrl))
+    {
+     // 注意：需要调用 release 释放内存
+        qDebug()<<"gain  fail.\n";
+      pImageFormatCtrl->release(pImageFormatCtrl);
+     return -1;
+    }
+    doubleNode = pImageFormatCtrl->gamma (pImageFormatCtrl);
+
+    if (0 != doubleNode.isValid(&doubleNode))
+    {
+     // 注意：需要调用 release 释放内存
+     pImageFormatCtrl->release(pImageFormatCtrl);
+     doubleNode.release(&doubleNode);
+     return -1;
+    }
+
+    if (0 != doubleNode.setValue(&doubleNode, K))
+    {
+     // 注意：需要调用 release 释放内存
+        qDebug()<<"get gama fail.\n";
+     pImageFormatCtrl->release(pImageFormatCtrl);
+     doubleNode.release(&doubleNode);
+     return -1;
+    }
+
+        pImageFormatCtrl->release(pImageFormatCtrl);
+        doubleNode.release(&doubleNode);
+
+
+    return 0;
+};
 
