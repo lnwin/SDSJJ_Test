@@ -786,8 +786,8 @@
       <rect>
        <x>250</x>
        <y>10</y>
-       <width>101</width>
-       <height>51</height>
+       <width>91</width>
+       <height>81</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -822,7 +822,7 @@
       <number>1</number>
      </property>
      <property name="value">
-      <number>70</number>
+      <number>99</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -841,7 +841,7 @@
       <number>30</number>
      </property>
      <property name="value">
-      <number>7</number>
+      <number>1</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -883,7 +883,7 @@
       </rect>
      </property>
      <property name="value">
-      <number>70</number>
+      <number>99</number>
      </property>
     </widget>
     <widget class="QSpinBox" name="Cameragain_spinBox">
@@ -899,7 +899,7 @@
       <number>30</number>
      </property>
      <property name="value">
-      <number>7</number>
+      <number>1</number>
      </property>
     </widget>
     <widget class="QSlider" name="CameraGama">
@@ -913,6 +913,9 @@
      </property>
      <property name="maximum">
       <number>4</number>
+     </property>
+     <property name="value">
+      <number>1</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -943,6 +946,9 @@
      <property name="maximum">
       <number>4</number>
      </property>
+     <property name="value">
+      <number>1</number>
+     </property>
     </widget>
    </widget>
   </widget>
@@ -956,7 +962,7 @@
   <customwidget>
    <class>OpenGLshow</class>
    <extends>QOpenGLWidget</extends>
-   <header location="global">OpenGLShow.h</header>
+   <header>OpenGLShow.h</header>
   </customwidget>
  </customwidgets>
  <resources>

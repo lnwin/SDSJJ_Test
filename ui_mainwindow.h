@@ -9,7 +9,6 @@
 #ifndef UI_MAINWINDOW_H
 #define UI_MAINWINDOW_H
 
-#include <OpenGLShow.h>
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
@@ -26,6 +25,7 @@
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 #include <gl_image.h>
+#include "OpenGLShow.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -294,20 +294,20 @@ public:
         widget->setGeometry(QRect(10, 660, 571, 101));
         OpenHDcamera = new QPushButton(widget);
         OpenHDcamera->setObjectName(QString::fromUtf8("OpenHDcamera"));
-        OpenHDcamera->setGeometry(QRect(250, 10, 101, 51));
+        OpenHDcamera->setGeometry(QRect(250, 10, 91, 81));
         CameraBrightness = new QSlider(widget);
         CameraBrightness->setObjectName(QString::fromUtf8("CameraBrightness"));
         CameraBrightness->setGeometry(QRect(90, 10, 101, 22));
         CameraBrightness->setMinimumSize(QSize(101, 22));
         CameraBrightness->setMaximum(100);
         CameraBrightness->setSingleStep(1);
-        CameraBrightness->setValue(70);
+        CameraBrightness->setValue(99);
         CameraBrightness->setOrientation(Qt::Horizontal);
         CameraGain = new QSlider(widget);
         CameraGain->setObjectName(QString::fromUtf8("CameraGain"));
         CameraGain->setGeometry(QRect(90, 40, 101, 22));
         CameraGain->setMaximum(30);
-        CameraGain->setValue(7);
+        CameraGain->setValue(1);
         CameraGain->setOrientation(Qt::Horizontal);
         label_9 = new QLabel(widget);
         label_9->setObjectName(QString::fromUtf8("label_9"));
@@ -318,16 +318,17 @@ public:
         Brightness_spinBox = new QSpinBox(widget);
         Brightness_spinBox->setObjectName(QString::fromUtf8("Brightness_spinBox"));
         Brightness_spinBox->setGeometry(QRect(200, 10, 42, 22));
-        Brightness_spinBox->setValue(70);
+        Brightness_spinBox->setValue(99);
         Cameragain_spinBox = new QSpinBox(widget);
         Cameragain_spinBox->setObjectName(QString::fromUtf8("Cameragain_spinBox"));
         Cameragain_spinBox->setGeometry(QRect(200, 40, 42, 22));
         Cameragain_spinBox->setMaximum(30);
-        Cameragain_spinBox->setValue(7);
+        Cameragain_spinBox->setValue(1);
         CameraGama = new QSlider(widget);
         CameraGama->setObjectName(QString::fromUtf8("CameraGama"));
         CameraGama->setGeometry(QRect(90, 70, 101, 22));
         CameraGama->setMaximum(4);
+        CameraGama->setValue(1);
         CameraGama->setOrientation(Qt::Horizontal);
         label_11 = new QLabel(widget);
         label_11->setObjectName(QString::fromUtf8("label_11"));
@@ -336,6 +337,7 @@ public:
         Gama_spinBox->setObjectName(QString::fromUtf8("Gama_spinBox"));
         Gama_spinBox->setGeometry(QRect(200, 70, 42, 22));
         Gama_spinBox->setMaximum(4);
+        Gama_spinBox->setValue(1);
         MainWindow->setCentralWidget(centralwidget);
 
         retranslateUi(MainWindow);

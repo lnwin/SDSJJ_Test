@@ -428,16 +428,12 @@ void HDCamera::HD_Connect()
      {
            qDebug()<<"**HDCamera open failed!**";
      }
-     //---------------------------修改曝光
-     if(modifyCamralExposureTime(pCamera)==0)
-     {
-         qDebug()<<"**HDCamera modifiy exposure time success!**";
-     }
-     else
-     {
-          qDebug()<<"**HDCamera modifiy exposure time failed!**";
-     }
+     //-------------------------增益、Gama、亮度设置
+     setCameragain(1);
+     setCameragama(1);
+     setCamerbrightness(99);
 
+     //----------------------------
      //---------------------------创建流对象
      if(GENICAM_CreateStreamSource(pCamera, &pStreamSource)==0)
      {
