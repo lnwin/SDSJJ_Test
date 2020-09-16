@@ -1297,6 +1297,7 @@ DEPENDPATH += D:/opencv/build/include
 #DEPENDPATH += 'D:/PCL 1.11.0/3rdParty/VTK/include'
 
 DISTFILES += \
+    Depends/ImageConvert.dll \
     Depends/win32/vs2013shared/ImageConvert.lib \
     Depends/win32/vs2013shared/MVSDKmd.lib \
     Depends/x64/vs2013shared/ImageConvert.lib \
