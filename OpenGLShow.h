@@ -1,4 +1,4 @@
-#ifndef OPENGLSHOW_H
+﻿#ifndef OPENGLSHOW_H
 #define OPENGLSHOW_H
 
 #include <QOpenGLExtraFunctions>
@@ -36,7 +36,9 @@ protected:
    void  readclouddata();
    void  Delay_MSec(unsigned int );
 
-
+       GLdouble   objx;
+       GLdouble   objy;
+       GLdouble   objz;
 
 public slots:
    void receivecloudfilename(QString);

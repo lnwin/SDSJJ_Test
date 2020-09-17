@@ -209,6 +209,26 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
              Addclouddata_y++;
              Addclouddata_z++;
         }
+         GLfloat  z =  0 ;
+        double  modelview[ 16 ], projection[ 16 ];
+        int  viewport[ 4 ];
+        glGetIntegerv( GL_VIEWPORT, viewport );
+        qDebug( "Window coords are (%d, %d)\n" , mousedond_x, mousedond_y);
+        glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
+        glGetDoublev( GL_PROJECTION_MATRIX, projection );
+        //Read the window z value from the z-buffer
+
+        glReadBuffer(GL_FRONT);
+        glReadPixels( mousedond_x, viewport[ 3 ]-mousedond_y,  1 ,  1 , GL_DEPTH_COMPONENT, GL_FLOAT, &z );
+        gluUnProject( mousedond_x, viewport[ 3 ]-mousedond_y, z, modelview, projection, viewport, &objx, &objy, &objz );
+
+        qDebug( "World coords at z=%.1f are (%.3f, %.3f, %.3f)\n" , z, objx, objy, objz);
+
+        update();
+
+
+
+
 
 
 }
