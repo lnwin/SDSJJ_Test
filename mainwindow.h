@@ -79,13 +79,14 @@ private slots:
 
     void on_CameraGain_valueChanged(int value);
 
-    void on_Brightness_spinBox_valueChanged(int arg1);
-
-    void on_Cameragain_spinBox_valueChanged(int arg1);
 
     void on_CameraGama_valueChanged(int value);
 
-    void on_Gama_spinBox_valueChanged(int arg1);
+    void on_Brightness_spinBoxdouble_valueChanged(double arg1);
+
+    void on_Cameragain_spinBoxdouble_valueChanged(double arg1);
+
+    void on_Gama_spinBoxdouble_valueChanged(double arg1);
 
 private:
     Ui::MainWindow *ui;
@@ -102,9 +103,9 @@ signals:
     //void sendfilepath2opengl(QString);
     void sendfilename2opengl(QString);
     void sendseting2opengl(QList<float>);
-    void sendbrightness2HDcamera(int);
-    void sendcameragain2HDcamera(int);
-    void sendcameragama2HDcamera(int);
+    void sendbrightness2HDcamera(double);
+    void sendcameragain2HDcamera(double);
+    void sendcameragama2HDcamera(double);
 
 
 };

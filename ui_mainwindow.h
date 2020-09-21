@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -21,7 +22,6 @@
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
-#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 #include <gl_image.h>
@@ -91,11 +91,11 @@ public:
     QSlider *CameraGain;
     QLabel *label_9;
     QLabel *label_10;
-    QSpinBox *Brightness_spinBox;
-    QSpinBox *Cameragain_spinBox;
     QSlider *CameraGama;
     QLabel *label_11;
-    QSpinBox *Gama_spinBox;
+    QDoubleSpinBox *Brightness_spinBoxdouble;
+    QDoubleSpinBox *Cameragain_spinBoxdouble;
+    QDoubleSpinBox *Gama_spinBoxdouble;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -294,20 +294,22 @@ public:
         widget->setGeometry(QRect(10, 660, 571, 101));
         OpenHDcamera = new QPushButton(widget);
         OpenHDcamera->setObjectName(QString::fromUtf8("OpenHDcamera"));
-        OpenHDcamera->setGeometry(QRect(250, 10, 91, 81));
+        OpenHDcamera->setGeometry(QRect(340, 10, 91, 81));
         CameraBrightness = new QSlider(widget);
         CameraBrightness->setObjectName(QString::fromUtf8("CameraBrightness"));
+        CameraBrightness->setEnabled(false);
         CameraBrightness->setGeometry(QRect(90, 10, 101, 22));
         CameraBrightness->setMinimumSize(QSize(101, 22));
-        CameraBrightness->setMaximum(100);
+        CameraBrightness->setMaximum(1000);
         CameraBrightness->setSingleStep(1);
-        CameraBrightness->setValue(99);
+        CameraBrightness->setValue(500);
         CameraBrightness->setOrientation(Qt::Horizontal);
         CameraGain = new QSlider(widget);
         CameraGain->setObjectName(QString::fromUtf8("CameraGain"));
+        CameraGain->setEnabled(false);
         CameraGain->setGeometry(QRect(90, 40, 101, 22));
-        CameraGain->setMaximum(30);
-        CameraGain->setValue(1);
+        CameraGain->setMaximum(300);
+        CameraGain->setValue(10);
         CameraGain->setOrientation(Qt::Horizontal);
         label_9 = new QLabel(widget);
         label_9->setObjectName(QString::fromUtf8("label_9"));
@@ -315,29 +317,40 @@ public:
         label_10 = new QLabel(widget);
         label_10->setObjectName(QString::fromUtf8("label_10"));
         label_10->setGeometry(QRect(10, 40, 71, 16));
-        Brightness_spinBox = new QSpinBox(widget);
-        Brightness_spinBox->setObjectName(QString::fromUtf8("Brightness_spinBox"));
-        Brightness_spinBox->setGeometry(QRect(200, 10, 42, 22));
-        Brightness_spinBox->setValue(99);
-        Cameragain_spinBox = new QSpinBox(widget);
-        Cameragain_spinBox->setObjectName(QString::fromUtf8("Cameragain_spinBox"));
-        Cameragain_spinBox->setGeometry(QRect(200, 40, 42, 22));
-        Cameragain_spinBox->setMaximum(30);
-        Cameragain_spinBox->setValue(1);
         CameraGama = new QSlider(widget);
         CameraGama->setObjectName(QString::fromUtf8("CameraGama"));
+        CameraGama->setEnabled(false);
         CameraGama->setGeometry(QRect(90, 70, 101, 22));
-        CameraGama->setMaximum(4);
+        CameraGama->setMaximum(40);
+        CameraGama->setPageStep(5);
         CameraGama->setValue(1);
         CameraGama->setOrientation(Qt::Horizontal);
         label_11 = new QLabel(widget);
         label_11->setObjectName(QString::fromUtf8("label_11"));
         label_11->setGeometry(QRect(10, 70, 71, 20));
-        Gama_spinBox = new QSpinBox(widget);
-        Gama_spinBox->setObjectName(QString::fromUtf8("Gama_spinBox"));
-        Gama_spinBox->setGeometry(QRect(200, 70, 42, 22));
-        Gama_spinBox->setMaximum(4);
-        Gama_spinBox->setValue(1);
+        Brightness_spinBoxdouble = new QDoubleSpinBox(widget);
+        Brightness_spinBoxdouble->setObjectName(QString::fromUtf8("Brightness_spinBoxdouble"));
+        Brightness_spinBoxdouble->setEnabled(false);
+        Brightness_spinBoxdouble->setGeometry(QRect(200, 10, 51, 22));
+        Brightness_spinBoxdouble->setDecimals(0);
+        Brightness_spinBoxdouble->setValue(50.000000000000000);
+        Cameragain_spinBoxdouble = new QDoubleSpinBox(widget);
+        Cameragain_spinBoxdouble->setObjectName(QString::fromUtf8("Cameragain_spinBoxdouble"));
+        Cameragain_spinBoxdouble->setEnabled(false);
+        Cameragain_spinBoxdouble->setGeometry(QRect(200, 40, 51, 22));
+        Cameragain_spinBoxdouble->setDecimals(1);
+        Cameragain_spinBoxdouble->setMaximum(30.000000000000000);
+        Cameragain_spinBoxdouble->setSingleStep(0.100000000000000);
+        Cameragain_spinBoxdouble->setValue(1.000000000000000);
+        Gama_spinBoxdouble = new QDoubleSpinBox(widget);
+        Gama_spinBoxdouble->setObjectName(QString::fromUtf8("Gama_spinBoxdouble"));
+        Gama_spinBoxdouble->setEnabled(false);
+        Gama_spinBoxdouble->setGeometry(QRect(200, 70, 51, 22));
+        Gama_spinBoxdouble->setDecimals(1);
+        Gama_spinBoxdouble->setMaximum(4.000000000000000);
+        Gama_spinBoxdouble->setSingleStep(0.100000000000000);
+        Gama_spinBoxdouble->setStepType(QAbstractSpinBox::AdaptiveDecimalStepType);
+        Gama_spinBoxdouble->setValue(0.500000000000000);
         MainWindow->setCentralWidget(centralwidget);
 
         retranslateUi(MainWindow);

@@ -193,9 +193,14 @@ void OpenGLshow:: paintGL()
 
 
 }
+GLint viewport[4];
+GLdouble modelview[16];
+GLdouble projection[16];
+GLfloat winX,winY,winZ;
+GLdouble object_x,object_y,object_z;
 void OpenGLshow:: mousePressEvent(QMouseEvent *event)
 {
-
+         update();
          mousedond_x=event->x();
          mousedond_y=event->y();
         if(event->button()==Qt::LeftButton)
@@ -209,21 +214,16 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
              Addclouddata_y++;
              Addclouddata_z++;
         }
-         GLfloat  z =  0 ;
-        double  modelview[ 16 ], projection[ 16 ];
-        int  viewport[ 4 ];
         glGetIntegerv( GL_VIEWPORT, viewport );
-        qDebug( "Window coords are (%d, %d)\n" , mousedond_x, mousedond_y);
-        glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
-        glGetDoublev( GL_PROJECTION_MATRIX, projection );
-        //Read the window z value from the z-buffer
+        glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+        glGetDoublev(GL_PROJECTION_MATRIX, projection);
 
-        glReadBuffer(GL_FRONT);
-        glReadPixels( mousedond_x, viewport[ 3 ]-mousedond_y,  1 ,  1 , GL_DEPTH_COMPONENT, GL_FLOAT, &z );
-        gluUnProject( mousedond_x, viewport[ 3 ]-mousedond_y, z, modelview, projection, viewport, &objx, &objy, &objz );
-
-        qDebug( "World coords at z=%.1f are (%.3f, %.3f, %.3f)\n" , z, objx, objy, objz);
-
+        winX=(float)mousedond_x;
+        winY=(float)viewport[3]-(float)mousedond_y;
+        glReadBuffer(GL_BACK);
+        glReadPixels(winX,int(winY),1,1,GL_DEPTH_COMPONENT,GL_FLOAT,&winZ);
+        gluUnProject( winX, viewport[ 3 ]-winY, winZ, modelview, projection, viewport, &objx, &objy, &objz );
+        qDebug( "World coords at z=%.1f are (%.3f, %.3f, %.3f)\n" , winZ, objx, objy, objz);
         update();
 
 

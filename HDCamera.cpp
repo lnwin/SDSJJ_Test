@@ -63,10 +63,10 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
         {
             return 0;
         }
-        react = pStreamSource->getFrame(pStreamSource, &pFrame, 100);
+        react = pStreamSource->getFrame(pStreamSource, &pFrame, INFINITE);
         if (react < 0)
         {
-            qDebug()<<"getFrame  fail.\n";
+            qDebug()<<"getFrame  fail.??\n";
             continue;
         }
 
@@ -85,37 +85,37 @@ unsigned __stdcall frameGrabbingProc()//@@@@@@@@@线程函数需要是全局函�
       //  qDebug()<<"get frame successfully!\n"<<pFrame->getBlockId(pFrame);
 
 //---------------------------------------------------------------彩色图像
-        IMGCNV_SOpenParam openParam;
-        openParam.width = pFrame->getImageWidth(pFrame);
+//        IMGCNV_SOpenParam openParam;
+//        openParam.width = pFrame->getImageWidth(pFrame);
 
-        openParam.height = pFrame->getImageHeight(pFrame);
+//        openParam.height = pFrame->getImageHeight(pFrame);
 
-        openParam.paddingX = pFrame->getImagePaddingX(pFrame);
+//        openParam.paddingX = pFrame->getImagePaddingX(pFrame);
 
-        openParam.paddingY = pFrame->getImagePaddingY(pFrame);
+//        openParam.paddingY = pFrame->getImagePaddingY(pFrame);
 
-        openParam.dataSize = pFrame->getImageSize(pFrame);
+//        openParam.dataSize = pFrame->getImageSize(pFrame);
 
-        openParam.pixelForamt = pFrame->getImagePixelFormat(pFrame);
+//        openParam.pixelForamt = pFrame->getImagePixelFormat(pFrame);
 
-        IMGCNV_ConvertToRGB24
-                (
-                 (uint8_t*)pFrame->getImage(pFrame),
-                &openParam,
-                pRGBbuffer,
-                &nRgbBufferSize
-                );
+//        IMGCNV_ConvertToRGB24
+//                (
+//                 (uint8_t*)pFrame->getImage(pFrame),
+//                &openParam,
+//                pRGBbuffer,
+//                &nRgbBufferSize
+//                );
 //---------------------------------------------------------------彩色图像
-         HDimage = QImage((uint8_t*)pRGBbuffer,
-                          pFrame->getImageWidth(pFrame),
-                          pFrame->getImageHeight(pFrame),
-                        //  3*pFrame->getImageWidth(pFrame),
-                          QImage::Format_RGB888);
+//         HDimage = QImage((uint8_t*)pRGBbuffer,
+//                          pFrame->getImageWidth(pFrame),
+//                          pFrame->getImageHeight(pFrame),
+//                        //  3*pFrame->getImageWidth(pFrame),
+//                          QImage::Format_RGB888);
         //------------------------------------------------------黑白图像
-//         HDimage = QImage((uint8_t*) pFrame->getImage(pFrame),
-//         pFrame->getImageWidth(pFrame),
-//         pFrame->getImageHeight(pFrame),
-//         QImage::Format_Grayscale8);
+         HDimage = QImage((uint8_t*) pFrame->getImage(pFrame),
+         pFrame->getImageWidth(pFrame),
+         pFrame->getImageHeight(pFrame),
+         QImage::Format_Grayscale8);
         // HDCamera::HDStatic();//----------------------------调用静态函数
           emit HDCamera::GetInstance()->sendQimage2Main(HDimage);
         //Caution：release the frame after using it
@@ -430,8 +430,8 @@ void HDCamera::HD_Connect()
      }
      //-------------------------增益、Gama、亮度设置
      setCameragain(1);
-     setCameragama(1);
-     setCamerbrightness(99);
+     setCameragama(0.5);
+     setCamerbrightness(50);
 
      //----------------------------
      //---------------------------创建流对象
@@ -533,14 +533,14 @@ void HDCamera::test()
 
     qDebug()<<"post tes success";
 }
-int32_t HDCamera::setCameragain(int a )
+int32_t HDCamera::setCameragain(double a )
 {
     //GENICAM_Camera *pGetCamera,
      GENICAM_DoubleNode doubleNode;
      GENICAM_AnalogControl *pImageFormatCtrl = NULL;
      GENICAM_AnalogControlInfo imageFormatControlInfo = { 0 };
      imageFormatControlInfo.pCamera = pCamera; //
-     double K =(double)a;
+
 
     if (0 != GENICAM_createAnalogControl(&imageFormatControlInfo, &pImageFormatCtrl))
     {
@@ -559,7 +559,7 @@ int32_t HDCamera::setCameragain(int a )
      return -1;
     }
 
-    if (0 != doubleNode.setValue(&doubleNode, K))
+    if (0 != doubleNode.setValue(&doubleNode, a))
     {
      // 注意：需要调用 release 释放内存
         qDebug()<<"get gainraw fail.\n";
@@ -574,7 +574,7 @@ int32_t HDCamera::setCameragain(int a )
 
     return 0;
 };
-int32_t HDCamera::setCamerbrightness(int brightness)
+int32_t HDCamera::setCamerbrightness(double brightness)
 {
     GENICAM_IntNode doubleNode;
     GENICAM_ISPControl *pImageFormatCtrl = NULL;
@@ -612,14 +612,14 @@ int32_t HDCamera::setCamerbrightness(int brightness)
        doubleNode.release(&doubleNode);
     return 0;
 };
-int32_t HDCamera::setCameragama(int a )
+int32_t HDCamera::setCameragama(double a )
 {
     //GENICAM_Camera *pGetCamera,
      GENICAM_DoubleNode doubleNode;
      GENICAM_AnalogControl *pImageFormatCtrl = NULL;
      GENICAM_AnalogControlInfo imageFormatControlInfo = { 0 };
      imageFormatControlInfo.pCamera = pCamera; //
-     double K =(double)a;
+
 
     if (0 != GENICAM_createAnalogControl(&imageFormatControlInfo, &pImageFormatCtrl))
     {
@@ -638,7 +638,7 @@ int32_t HDCamera::setCameragama(int a )
      return -1;
     }
 
-    if (0 != doubleNode.setValue(&doubleNode, K))
+    if (0 != doubleNode.setValue(&doubleNode, a))
     {
      // 注意：需要调用 release 释放内存
         qDebug()<<"get gama fail.\n";

@@ -784,7 +784,7 @@
     <widget class="QPushButton" name="OpenHDcamera">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>340</x>
        <y>10</y>
        <width>91</width>
        <height>81</height>
@@ -801,6 +801,9 @@
      </property>
     </widget>
     <widget class="QSlider" name="CameraBrightness">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -816,19 +819,22 @@
       </size>
      </property>
      <property name="maximum">
-      <number>100</number>
+      <number>1000</number>
      </property>
      <property name="singleStep">
       <number>1</number>
      </property>
      <property name="value">
-      <number>99</number>
+      <number>500</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
     <widget class="QSlider" name="CameraGain">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -838,10 +844,10 @@
       </rect>
      </property>
      <property name="maximum">
-      <number>30</number>
+      <number>300</number>
      </property>
      <property name="value">
-      <number>1</number>
+      <number>10</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -873,36 +879,10 @@
       <string>Camera gain</string>
      </property>
     </widget>
-    <widget class="QSpinBox" name="Brightness_spinBox">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>10</y>
-       <width>42</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="value">
-      <number>99</number>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="Cameragain_spinBox">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>40</y>
-       <width>42</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="maximum">
-      <number>30</number>
-     </property>
-     <property name="value">
-      <number>1</number>
-     </property>
-    </widget>
     <widget class="QSlider" name="CameraGama">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -912,7 +892,10 @@
       </rect>
      </property>
      <property name="maximum">
-      <number>4</number>
+      <number>40</number>
+     </property>
+     <property name="pageStep">
+      <number>5</number>
      </property>
      <property name="value">
       <number>1</number>
@@ -934,20 +917,76 @@
       <string>Gama</string>
      </property>
     </widget>
-    <widget class="QSpinBox" name="Gama_spinBox">
+    <widget class="QDoubleSpinBox" name="Brightness_spinBoxdouble">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>10</y>
+       <width>51</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="decimals">
+      <number>0</number>
+     </property>
+     <property name="value">
+      <double>50.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="Cameragain_spinBoxdouble">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>40</y>
+       <width>51</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="decimals">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <double>30.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="Gama_spinBoxdouble">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>200</x>
        <y>70</y>
-       <width>42</width>
+       <width>51</width>
        <height>22</height>
       </rect>
      </property>
+     <property name="decimals">
+      <number>1</number>
+     </property>
      <property name="maximum">
-      <number>4</number>
+      <double>4.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="stepType">
+      <enum>QAbstractSpinBox::AdaptiveDecimalStepType</enum>
      </property>
      <property name="value">
-      <number>1</number>
+      <double>0.500000000000000</double>
      </property>
     </widget>
    </widget>

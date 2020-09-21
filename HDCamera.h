@@ -47,9 +47,9 @@ public:
    // bool event(QEvent *event);
 
 public slots:
-    int32_t setCameragain(int Gain);
-    int32_t setCamerbrightness(int brightness);
-    int32_t setCameragama(int Gama);
+    int32_t setCameragain(double Gain);
+    int32_t setCamerbrightness(double brightness);
+    int32_t setCameragama(double Gama);
 
 signals:
     void sendQimage2Main(QImage);

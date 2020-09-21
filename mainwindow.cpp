@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
 
     searchPort();
     searchCamera();
-    USBCameraint();//载入USB相机
+   // USBCameraint();//载入USB相机
     HDCamera->HDCameraParameterInt();//相机信息获取
 
     //----------------------------------------------------------------------------------工业相机载入
@@ -73,9 +73,9 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输   
     connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
     connect(HDCamera,SIGNAL(sendQimage2Main(QImage)),this,SLOT(receiveQimageFromHD(QImage)));//   HDcamera 的单例类传递函数
-    connect(this, SIGNAL(sendcameragain2HDcamera(int)),HDCamera, SLOT(setCameragain(int)));
-    connect(this, SIGNAL(sendbrightness2HDcamera(int)),HDCamera, SLOT(setCamerbrightness(int)));
-    connect(this, SIGNAL(sendcameragama2HDcamera(int)),HDCamera, SLOT(setCameragama(int)));
+    connect(this, SIGNAL(sendcameragain2HDcamera(double)),HDCamera, SLOT(setCameragain(double)));
+    connect(this, SIGNAL(sendbrightness2HDcamera(double)),HDCamera, SLOT(setCamerbrightness(double)));
+    connect(this, SIGNAL(sendcameragama2HDcamera( double )),HDCamera, SLOT(setCameragama(double)));
 
 }
 MainWindow::~MainWindow()
@@ -301,7 +301,13 @@ void MainWindow::on_OpenHDcamera_clicked()//------------------------------------
        HDCamera->HD_Connect();
        HDCamerastarted=true;
        ui->OpenHDcamera ->setText("CloseHDcamera");
-        ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
+       ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
+       ui->CameraGain->setEnabled(true);
+       ui->CameraGama->setEnabled(true);
+       ui->CameraBrightness->setEnabled(true);
+       ui->Brightness_spinBoxdouble->setEnabled(true);
+       ui->Gama_spinBoxdouble->setEnabled(true);
+       ui->Cameragain_spinBoxdouble->setEnabled(true);
    }
    else
    {
@@ -309,6 +315,12 @@ void MainWindow::on_OpenHDcamera_clicked()//------------------------------------
        HDCamerastarted=false;
        ui->OpenHDcamera ->setText("OpenHDcamera");
        ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/gray.png);");
+       ui->CameraGain->setEnabled(false);
+       ui->CameraGama->setEnabled(false);
+       ui->CameraBrightness->setEnabled(false);
+       ui->Brightness_spinBoxdouble->setEnabled(false);
+       ui->Gama_spinBoxdouble->setEnabled(false);
+       ui->Cameragain_spinBoxdouble->setEnabled(false);
    }
 
 }
@@ -426,33 +438,44 @@ void MainWindow::USBCameraint()//USB相机载入
 
 void MainWindow::on_CameraBrightness_valueChanged(int value)
 {
-      ui->Brightness_spinBox->setValue(value);
+   double K=value*0.1;
+    ui->Brightness_spinBoxdouble->setValue(K);
+   emit sendbrightness2HDcamera(K);
 }
 
 void MainWindow::on_CameraGain_valueChanged(int value)
 {
-      ui->Cameragain_spinBox ->setValue(value);
+     double K=value*0.1;
+    ui->Cameragain_spinBoxdouble ->setValue(  K);
+     emit sendcameragain2HDcamera( K);
 }
 
-void MainWindow::on_Brightness_spinBox_valueChanged(int arg1)
-{
-   emit sendbrightness2HDcamera(arg1);
-    ui->CameraBrightness->setValue(arg1);
-}
 
-void MainWindow::on_Cameragain_spinBox_valueChanged(int arg1)
-{
-   emit sendcameragain2HDcamera(arg1);
-     ui->CameraGain->setValue(arg1);
-}
+
 
 void MainWindow::on_CameraGama_valueChanged(int value)
 {
-  ui->Gama_spinBox->setValue(value);
+     double K=value*0.1;
+     ui->Gama_spinBoxdouble->setValue( K);
+     emit sendcameragama2HDcamera( K);
 }
 
-void MainWindow::on_Gama_spinBox_valueChanged(int arg1)
+
+
+void MainWindow::on_Brightness_spinBoxdouble_valueChanged(double arg1)
 {
-  emit sendcameragama2HDcamera(arg1);
-    ui->CameraGama->setValue(arg1);
+   int K =arg1*10;
+    ui->CameraBrightness->setValue(K);
+}
+
+void MainWindow::on_Cameragain_spinBoxdouble_valueChanged(double arg1)
+{
+ int K =arg1*10;
+    ui->CameraGain->setValue(K);
+}
+
+void MainWindow::on_Gama_spinBoxdouble_valueChanged(double arg1)
+{
+ int K =arg1*10;
+    ui->CameraGama->setValue(K);
 }
