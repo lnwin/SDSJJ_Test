@@ -41,7 +41,6 @@ private:
        void cal_selected_index();
        M3DVector3f *pts;
        int nr;
-
        M3DVector2f left_bottom, right_top;
        M3DMatrix44f model_view, proj;
        int viewport[4];
