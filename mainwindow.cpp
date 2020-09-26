@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     searchPort();
     searchCamera();
    // USBCameraint();//载入USB相机
-    HDCamera->HDCameraParameterInt();//相机信息获取
+   // HDCamera->HDCameraParameterInt();//相机信息获取
 
     //----------------------------------------------------------------------------------工业相机载入
 

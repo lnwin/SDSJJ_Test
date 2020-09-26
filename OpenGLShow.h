@@ -10,6 +10,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include<math3d.h>
+#include <vector>
 class OpenGLshow :public QOpenGLWidget,protected QOpenGLFunctions_4_5_Core
 {
 
@@ -24,6 +26,26 @@ public:
    void  show3Dframefrompicturepath(QString picturepath);
    void  doingfreshen(cv::Mat frame);
    void  clearcloud();
+   void  draw_area();
+   /*** 计算选中的点， 并突出显示 ***/
+   void highlight_selected_pts();
+
+   void get_selected_pts_index(std::vector<int> &);
+   void set_config(M3DVector3f *pts, int _nr, M3DVector2f _left_bottom, M3DVector2f _right_top, M3DMatrix44f model_view, M3DMatrix44f proj, int viewport[]);
+
+   /*** 还可以添加一些helper函数 ***/
+   //-----------------------------------
+
+private:
+       bool drop_in_area(M3DVector3f x);
+       void cal_selected_index();
+       M3DVector3f *pts;
+       int nr;
+
+       M3DVector2f left_bottom, right_top;
+       M3DMatrix44f model_view, proj;
+       int viewport[4];
+       std::vector<int> vec_selected_pts_index;
 protected:
 
    void  initializeGL();

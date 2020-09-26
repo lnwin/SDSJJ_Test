@@ -11,6 +11,8 @@
 #include<QMessageBox>
 #include <QTime>
 #include <QCoreApplication>
+#include<glut.h>
+//---------------------------------------------------------------
 
 //---------------------------------------------------------------着色器配置
 using namespace std;
@@ -68,13 +70,15 @@ OpenGLshow::~OpenGLshow()
 void OpenGLshow::initializeGL()
 {
 
-    initializeOpenGLFunctions();    
+    initializeOpenGLFunctions();
     glClearColor(0.0,0.0,0.0,1.0);
     glShadeModel(GL_SMOOTH);
-    glClearDepth(1.0);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
+//    glClearDepth(1.0);
+//    glEnable(GL_DEPTH_TEST);
+//    glDepthFunc(GL_LEQUAL);
+//    glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
+//-----------------------------------------------------------//
+
 
 }
 
@@ -83,9 +87,11 @@ void OpenGLshow::resizeGL(int width, int height)
 
         glViewport(0,0,width,height);
         glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
         glLoadIdentity();
         gluPerspective(60.0,760/490,0.1,100000);//设置观察视窗
         glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
         glLoadIdentity();
 
 }
@@ -97,110 +103,105 @@ void OpenGLshow:: paintGL()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    glTranslatef(translate_x,translate_y,fov); //先平移再旋转
-    glRotatef(yaw,0.0,1.0,0.0);
-    glRotatef(pitch,0.0,0.0,1.0);
-    glBegin(GL_POINTS);
-        for (int i = 0; i < cloud_x.count(); i++)
-        {
+   // glTranslatef(translate_x,translate_y,fov); //先平移再旋转
+  //  glRotatef(yaw,0.0,1.0,0.0);
+   // glRotatef(pitch,0.0,0.0,1.0);
 
-            viewDistance = sqrt(cloud_x[i]*cloud_x[i]+cloud_z[i]*cloud_z[i])/1000.0f;
-            if(viewDistance < 5)
-           {
-                glColor3f (1.0f, 0.5f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-            else if(viewDistance >= 5 && viewDistance < 6)
-           {
-                glColor3f (1.0f, 0.6f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-            else if(viewDistance >= 6 && viewDistance < 7)
-           {
-                glColor3f (1.0f, 0.7f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-            else if(viewDistance >= 7 && viewDistance < 8)
-           {
-                glColor3f (1.0f, 0.8f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 8 && viewDistance < 9)
-           {
-                glColor3f (1.0F, 0.9f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 9 && viewDistance < 10)
-           {
-                glColor3f (1.0f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 10 && viewDistance < 11)
-           {
-                glColor3f (0.9f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 11 && viewDistance < 12)
-           {
-                glColor3f (0.8f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-          else   if(viewDistance >= 12 && viewDistance < 13)
-           {
-                glColor3f (0.7f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 13 && viewDistance < 14)
-           {
-                glColor3f (0.6f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 14 && viewDistance < 15)
-           {
-                glColor3f (0.5f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 15 && viewDistance <16)
-           {
-                glColor3f (0.4f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 16 && viewDistance < 17)
-           {
-                glColor3f (0.3f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-           else  if(viewDistance >= 17 && viewDistance < 18)
-           {
-                glColor3f (0.2f, 1.0f, 0.0f);
-                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
-            else  if(viewDistance >= 18)
-            {
-            glColor3f (0.1f, 1.0f, 0.0f);
-            glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
-           }
 
-        }
+/* //-----------------------------------------------------------------点云绘制
+//        for (int i = 0; i < cloud_x.count(); i++)
+//        {
+//           // glLoadName(i);//name the points
+//            glBegin(GL_POINTS);
+//            viewDistance = sqrt(cloud_x[i]*cloud_x[i]+cloud_z[i]*cloud_z[i])/1000.0f;
+//            if(viewDistance < 5)
+//           {
+//                glColor3f (1.0f, 0.5f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//            else if(viewDistance >= 5 && viewDistance < 6)
+//           {
+//                glColor3f (1.0f, 0.6f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//            else if(viewDistance >= 6 && viewDistance < 7)
+//           {
+//                glColor3f (1.0f, 0.7f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//            else if(viewDistance >= 7 && viewDistance < 8)
+//           {
+//                glColor3f (1.0f, 0.8f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 8 && viewDistance < 9)
+//           {
+//                glColor3f (1.0F, 0.9f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 9 && viewDistance < 10)
+//           {
+//                glColor3f (1.0f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 10 && viewDistance < 11)
+//           {
+//                glColor3f (0.9f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 11 && viewDistance < 12)
+//           {
+//                glColor3f (0.8f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//          else   if(viewDistance >= 12 && viewDistance < 13)
+//           {
+//                glColor3f (0.7f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 13 && viewDistance < 14)
+//           {
+//                glColor3f (0.6f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 14 && viewDistance < 15)
+//           {
+//                glColor3f (0.5f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 15 && viewDistance <16)
+//           {
+//                glColor3f (0.4f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 16 && viewDistance < 17)
+//           {
+//                glColor3f (0.3f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//           else  if(viewDistance >= 17 && viewDistance < 18)
+//           {
+//                glColor3f (0.2f, 1.0f, 0.0f);
+//                glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//            else  if(viewDistance >= 18)
+//            {
+//            glColor3f (0.1f, 1.0f, 0.0f);
+//            glVertex3f(cloud_x[i]/20,  cloud_y[i]/20, cloud_z[i]/20);
+//           }
+//          glEnd();
+//        }
+///-----------------------------------------------------------------点云绘制
+*/
 
-    glEnd();
-//    glBegin(GL_LINES);    //--------------------------------------------------实时扫描线的绘制
-//    glColor3f (0.1f, 1.0f, 1.0f);
-//    glVertex3f(cloud_x[777]/20,  cloud_y[777]/20, cloud_z[777]/20);
-//    glVertex3f(0,  0, 0);
-//    glEnd();
+
     glFlush();
 
 
 }
-GLint viewport[4];
-GLdouble modelview[16];
-GLdouble projection[16];
-GLfloat winX,winY,winZ;
-GLdouble object_x,object_y,object_z;
 void OpenGLshow:: mousePressEvent(QMouseEvent *event)
 {
-         update();
+        // update();
          mousedond_x=event->x();
          mousedond_y=event->y();
         if(event->button()==Qt::LeftButton)
@@ -214,17 +215,14 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
              Addclouddata_y++;
              Addclouddata_z++;
         }
-        glGetIntegerv( GL_VIEWPORT, viewport );
-        glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
-        glGetDoublev(GL_PROJECTION_MATRIX, projection);
 
-        winX=(float)mousedond_x;
-        winY=(float)viewport[3]-(float)mousedond_y;
-        glReadBuffer(GL_BACK);
-        glReadPixels(winX,int(winY),1,1,GL_DEPTH_COMPONENT,GL_FLOAT,&winZ);
-        gluUnProject( winX, viewport[ 3 ]-winY, winZ, modelview, projection, viewport, &objx, &objy, &objz );
-        qDebug( "World coords at z=%.1f are (%.3f, %.3f, %.3f)\n" , winZ, objx, objy, objz);
-        update();
+     //   int width = glutGet( GLUT_WINDOW_WIDTH ), height = glutGet( GLUT_WINDOW_HEIGHT );
+
+
+
+
+
+
 
 
 
@@ -255,7 +253,7 @@ void OpenGLshow:: mouseMoveEvent(QMouseEvent *event)
         yoffset = (event->y()-mousedond_y)/40;
         translate_y-=yoffset;
     }
-     this->update();    
+     this->update();
 }
 void OpenGLshow:: wheelEvent(QWheelEvent*event)
  {
@@ -296,7 +294,7 @@ void OpenGLshow:: readclouddata()//---------------------------------------读取
             cloud_z.append(cloudata[2].toFloat());
 
          }
-     }    
+     }
 
 
 };
@@ -442,7 +440,7 @@ void OpenGLshow::clearcloud()
     glLoadIdentity();
 }
 
- void OpenGLshow::show3Dframefrompicturepath(QString picturepath)//------------------------------------读取历史照片数据
+void OpenGLshow::show3Dframefrompicturepath(QString picturepath)//------------------------------------读取历史照片数据
  {
      cloud_x.clear();
      cloud_y.clear();
@@ -478,7 +476,7 @@ void OpenGLshow::clearcloud()
          }
  }
 
- void OpenGLshow::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数
+void OpenGLshow::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数
  {
      QTime _Timer = QTime::currentTime().addMSecs(msec);
 
@@ -486,7 +484,42 @@ void OpenGLshow::clearcloud()
 
      QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
  }
+void OpenGLshow::draw_area()
+{
+//    int width = glutGet( GLUT_WINDOW_WIDTH ), height = glutGet( GLUT_WINDOW_HEIGHT );
+//        glMatrixMode(GL_PROJECTION);
+//        glPushMatrix();
+//            glLoadIdentity();
+//            gluOrtho2D(0, width, 0, height);
 
+//            glMatrixMode( GL_MODELVIEW );
+//            glPushMatrix();
+//                glLoadIdentity();
+
+//                /*** 画矩形 ***/
+//                glColor4f(1.0, 1.0, 0, 0.2);
+//                glEnable( GL_BLEND );
+//                glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//                glRectf( m3dGetVectorX(left_bottom), m3dGetVectorY(left_bottom), m3dGetVectorX(right_top), m3dGetVectorY(right_top));
+
+
+//                /*** 画矩形虚线 ***/
+//                glEnable( GL_LINE_STIPPLE );
+//                glColor4f(1, 0, 0, 0.5);
+//                glLineStipple(3, 0xAAAA);
+
+//                glBegin( GL_LINE_LOOP );
+//                glVertex2f(m3dGetVectorX(left_bottom), m3dGetVectorY(left_bottom));
+//                glVertex2f(m3dGetVectorX(right_top), m3dGetVectorY(left_bottom));
+//                glVertex2f(m3dGetVectorX(right_top), m3dGetVectorY(right_top));
+//                glVertex2f(m3dGetVectorX(left_bottom), m3dGetVectorY(right_top));
+//                glEnd();
+
+//            glPopMatrix();
+//        glPopMatrix();
+//        glDisable( GL_LINE_STIPPLE );
+//        glDisable( GL_BLEND );
+}
 
 
 

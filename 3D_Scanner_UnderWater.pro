@@ -52,6 +52,7 @@ INCLUDEPATH += ./Include
 SOURCES += \
     CameraParameter.cpp \
     HDCamera.cpp \
+    Math3d.cpp \
     OpenGLShow.cpp \
     QtVideoCapture.cpp \
     WorkThread.cpp \
@@ -68,6 +69,7 @@ HEADERS += \
     WorkThread.h \
     gl_image.h \
     mainwindow.h \
+    math3d.h \
     stb_image.h
 
 FORMS += \
