@@ -28,6 +28,9 @@ float yaw=-75,pitch,roll;//中心位置
 float xoffset, yoffset,zoffset;
 float viewDistance;
 bool mousebutton_left;
+bool mousebutton_right;
+bool mousebutton_mid;
+
 float Addclouddata_x=0,Addclouddata_y=0,Addclouddata_z=0;
 //---------------------------------------------------------------------------------------激光测距参数
 float PixelSize =0.004;//0.009
@@ -230,24 +233,33 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
 
                mousebutton_left = true;
                 //-----------------------------------原版代码
-               int width = GLwidth, height = GLheight;
-               bool_select_area = true;
-               m3dLoadVector2(left_bottom, mousedond_x, height - mousedond_y);
-               m3dLoadVector2(right_top, mousedond_x, height - mousedond_y);
 
 
 
         }
-        else
+        else if(event->button()==Qt::RightButton)
         {
-             mousebutton_left = false;
-             Addclouddata_x++;
-             Addclouddata_y++;
-             Addclouddata_z++;
+
+             mousebutton_right=true;
+               mousebutton_left = false;
+             int width = GLwidth, height = GLheight;
+             bool_select_area = true;
+             m3dLoadVector2(left_bottom, mousedond_x, height - mousedond_y);
+             m3dLoadVector2(right_top, mousedond_x, height - mousedond_y);
+
+
+        }
+        else if(event->buttons()==Qt::MiddleButton)
+        {
+            mousebutton_mid=true;
+            mousebutton_left = false;
+            mousebutton_right = false;
+            Addclouddata_x++;
+            Addclouddata_y++;
+            Addclouddata_z++;
 
         }
 
-      //------------------------------opengl框选相关
 
 
 
@@ -277,27 +289,34 @@ void OpenGLshow:: mouseMoveEvent(QMouseEvent *event)
        yaw+=xoffset;
        yoffset = (event->y()-mousedond_y)/40;
        pitch-=yoffset;
- //----------------------------------------------框选
-       int width = GLwidth, height = GLheight;
 
-      if( bool_select_area )
-      {
-               m3dLoadVector2(right_top, event->x() , height - event->y() );
-      }
- //----------------------------------------------框选
     }
-    else
+    else if(mousebutton_right)
     {
-       // xoffset=0;
-        xoffset = (event->x()-mousedond_x)/40;
-        translate_x+=xoffset;
-        yoffset = (event->y()-mousedond_y)/40;
-        translate_y-=yoffset;
+        //----------------------------------------------框选
+              int width = GLwidth, height = GLheight;
+
+             if( bool_select_area )
+             {
+                 m3dLoadVector2(right_top, event->x() , height - event->y() );
+             }
+        //----------------------------------------------框选
+    }
+    else if(mousebutton_mid)
+    {
+
+             // xoffset=0;
+              xoffset = (event->x()-mousedond_x);
+              translate_x+=xoffset;
+              yoffset = (event->y()-mousedond_y);
+              translate_y-=yoffset;
     }
      this->update();
 }
 void OpenGLshow:: wheelEvent(QWheelEvent*event)
  {
+
+
 
     if(event->delta()>0)
      {
