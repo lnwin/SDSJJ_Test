@@ -110,8 +110,10 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Depends/x64/vs2013share
 INCLUDEPATH += $$PWD/Include
 DEPENDPATH += $$PWD/Include
 
-win32:CONFIG(release, debug|release): LIBS += -LD:/Qt/5.14.2/msvc2017_64/lib/ -lfreeglut
-else:win32:CONFIG(debug, debug|release): LIBS += -LD:/Qt/5.14.2/msvc2017_64/lib/ -lfreeglutd
 
-INCLUDEPATH += D:/Qt/5.14.2/msvc2017_64/include
-DEPENDPATH += D:/Qt/5.14.2/msvc2017_64/include
+
+win32:CONFIG(release, debug|release): LIBS += -LD:/Qt5.14/5.14.2/msvc2017_64/lib/ -lfreeglut
+else:win32:CONFIG(debug, debug|release): LIBS += -LD:/Qt5.14/5.14.2/msvc2017_64/lib/ -lfreeglutd
+
+INCLUDEPATH += D:/Qt5.14/5.14.2/msvc2017_64/include
+DEPENDPATH += D:/Qt5.14/5.14.2/msvc2017_64/include
