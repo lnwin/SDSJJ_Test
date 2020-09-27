@@ -606,9 +606,11 @@ void OpenGLshow::highlight_selected_pts()
             for(i = 0; i != vec_selected_pts_index.size(); i++)
             {
                 glVertex3fv(pts[ vec_selected_pts_index[i] ]);
-                float a = *pts[vec_selected_pts_index[i]];
+                float x = *pts[vec_selected_pts_index[i]];
+                float y = *pts[vec_selected_pts_index[i]+1];
+                float z = *pts[vec_selected_pts_index[i]+2];
 
-                qDebug("the points x :%f\n", a);
+                qDebug("the points x:%f y:%f z: %f  ", x,y,z);
             }
 
             glEnd();
