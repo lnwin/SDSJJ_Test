@@ -29,13 +29,12 @@ public:
    void  draw_area();
    /*** 计算选中的点， 并突出显示 ***/
    void highlight_selected_pts();
-
    void get_selected_pts_index(std::vector<int> &);
    void set_config(M3DVector3f *pts, int _nr, M3DVector2f _left_bottom, M3DVector2f _right_top, M3DMatrix44f model_view, M3DMatrix44f proj, int viewport[]);
 
    /*** 还可以添加一些helper函数 ***/
    //-----------------------------------
-
+   void display();
 private:
        bool drop_in_area(M3DVector3f x);
        void cal_selected_index();
@@ -43,7 +42,8 @@ private:
        int nr;
        M3DVector2f left_bottom, right_top;
        M3DMatrix44f model_view, proj;
-       int viewport[4];
+       int viewport[4];    
+       bool bool_select_area = false;
        std::vector<int> vec_selected_pts_index;
 protected:
 
@@ -57,9 +57,6 @@ protected:
    void  readclouddata();
    void  Delay_MSec(unsigned int );
 
-       GLdouble   objx;
-       GLdouble   objy;
-       GLdouble   objz;
 
 public slots:
    void receivecloudfilename(QString);

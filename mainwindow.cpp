@@ -23,6 +23,7 @@
 #include <Windows.h>
 #include <process.h>
 #include <exception>
+#include<GL/glut.h>
 using namespace std;
 using namespace cv;
 
@@ -40,8 +41,10 @@ bool startscan=false;
 bool cameraIsStarted=false;
 bool HDCamerastarted=false;
 const float PI =3.1415926;
+//---------------------------------------------------------------------------------------select
 
 
+//---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------参数配置
 MainWindow::MainWindow(QWidget *parent)// -----------------------------------------------载入函数
     : QMainWindow(parent)
@@ -51,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     ui->setupUi(this);
     ui->progressBar->setRange(0,1000);
     surface_= new QtVideoCapture();
-    serial = new QSerialPort;
+    serial =  new QSerialPort;
     glImage = new GL_Image();
     OpenGL  = new OpenGLshow();
     Camera_Parameter =new CameraParameter();//校准对象
@@ -76,6 +79,12 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(this, SIGNAL(sendcameragain2HDcamera(double)),HDCamera, SLOT(setCameragain(double)));
     connect(this, SIGNAL(sendbrightness2HDcamera(double)),HDCamera, SLOT(setCamerbrightness(double)));
     connect(this, SIGNAL(sendcameragama2HDcamera( double )),HDCamera, SLOT(setCameragama(double)));
+    //--------------------------------------------------glut函数加载
+
+
+
+
+    //------------------------------------------------------------
 
 }
 MainWindow::~MainWindow()
@@ -479,3 +488,5 @@ void MainWindow::on_Gama_spinBoxdouble_valueChanged(double arg1)
  int K =arg1*10;
     ui->CameraGama->setValue(K);
 }
+
+
