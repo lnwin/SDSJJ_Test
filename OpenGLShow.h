@@ -45,6 +45,8 @@ private:
        int viewport[4];    
        bool bool_select_area = false;
        std::vector<int> vec_selected_pts_index;
+
+       void painttest();
 protected:
 
    void  initializeGL();

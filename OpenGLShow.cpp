@@ -85,38 +85,41 @@ void OpenGLshow::initializeGL()
 
 
 }
-
+int GLwidth,GLheight;
 void OpenGLshow::resizeGL(int width, int height)
 {
 
+       GLwidth=width;
+       GLheight=height;
         glViewport(0,0,width,height);
         glMatrixMode(GL_PROJECTION);
         glPushMatrix();
         glLoadIdentity();
-        gluPerspective(60.0,760/490,0.1,100000);//设置观察视窗
+        gluPerspective(60.0,width/height,0.1,100000);//设置观察视窗
         glMatrixMode(GL_MODELVIEW);
         glPushMatrix();
         glLoadIdentity();
 
 }
-static M3DVector3f corners[] = {
-    -25, 25, 25,
-    25, 25, 25,
-    25, -25, 25,
-    -25, -25, 25,
-    -25, 25, -25,
-    25, 25, -25,
-    25, -25, -25,
-    -25, -25, -25
-};
+static M3DVector3f corners[1000000];
+//= {
+//    -25, 25, 25,
+//    25, 25, 25,
+//    25, -25, 25,
+//    -25, -25, 25,
+//    -25, 25, -25,
+//    25, 25, -25,
+//    25, -25, -25,
+//    -25, -25, -25
+//};
 void OpenGLshow:: paintGL()
 {
-    M3DMatrix44f mat_proj, mat_modelview;
+
 /*
-//    glEnable(GL_DEPTH_TEST);
-//    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    glLoadIdentity();
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
 //    glTranslatef(translate_x,translate_y,fov); //先平移再旋转
 //    glRotatef(yaw,0.0,1.0,0.0);
 //    glRotatef(pitch,0.0,0.0,1.0);
@@ -206,84 +209,7 @@ void OpenGLshow:: paintGL()
 //        }
 */
 
-
-       int width = 640, height = 480;
-
-
-       glViewport (0, 0, (GLsizei) width, (GLsizei) height);
-
-       glGetIntegerv(GL_VIEWPORT, viewport);
-
-       glClear (GL_COLOR_BUFFER_BIT);
-
-       glPushAttrib(GL_POLYGON_BIT);
-       glPolygonMode( GL_FRONT_AND_BACK, GL_LINE);
-
-       glMatrixMode (GL_PROJECTION);
-       glLoadIdentity ();
-       gluPerspective(65.0, (GLfloat) width/(GLfloat) height, 1.0, 300);
-
-       // 获取投影矩阵
-       glGetFloatv(GL_PROJECTION_MATRIX, mat_proj);
-
-       glMatrixMode(GL_MODELVIEW);
-       glLoadIdentity();
-       gluLookAt(0, 0, 140, 0, 0, 0, 0, 1, 0);
-       glColor4f(0.1, 0.4, 0.6, 0.7);
-       glPushMatrix();
-
-            // 获取模型视图矩阵
-            glGetFloatv(GL_MODELVIEW_MATRIX, mat_modelview);
-
-            glBegin( GL_QUADS );
-            glVertex3fv(corners[0]);
-            glVertex3fv(corners[1]);
-            glVertex3fv(corners[5]);
-            glVertex3fv(corners[4]);
-
-            glVertex3fv(corners[4]);
-            glVertex3fv(corners[7]);
-            glVertex3fv(corners[3]);
-            glVertex3fv(corners[0]);
-
-            glVertex3fv(corners[3]);
-            glVertex3fv(corners[2]);
-            glVertex3fv(corners[6]);
-            glVertex3fv(corners[7]);
-
-            glVertex3fv(corners[7]);
-            glVertex3fv(corners[6]);
-            glVertex3fv(corners[5]);
-            glVertex3fv(corners[4]);
-
-            glVertex3fv(corners[5]);
-            glVertex3fv(corners[1]);
-            glVertex3fv(corners[2]);
-            glVertex3fv(corners[6]);
-
-            glVertex3fv(corners[1]);
-            glVertex3fv(corners[2]);
-            glVertex3fv(corners[3]);
-            glVertex3fv(corners[0]);
-            glEnd();
-
-       glPopMatrix();
-       glPopAttrib();
-
-       // 配置
-
-       set_config( corners, 8, left_bottom, right_top, mat_modelview, mat_proj, viewport);
-
-       /************************************************************************/
-       /* 构造一个新的环境                                                                     */
-       /************************************************************************/
-
-       if( bool_select_area ){
-
-          draw_area();
-          highlight_selected_pts();
-
-       }
+    display();
 
     glFlush();
 
@@ -304,7 +230,7 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
 
                mousebutton_left = true;
                 //-----------------------------------原版代码
-               int width = 640, height = 480;
+               int width = GLwidth, height = GLheight;
                bool_select_area = true;
                m3dLoadVector2(left_bottom, mousedond_x, height - mousedond_y);
                m3dLoadVector2(right_top, mousedond_x, height - mousedond_y);
@@ -352,7 +278,7 @@ void OpenGLshow:: mouseMoveEvent(QMouseEvent *event)
        yoffset = (event->y()-mousedond_y)/40;
        pitch-=yoffset;
  //----------------------------------------------框选
-       int width = 640, height = 480;
+       int width = GLwidth, height = GLheight;
 
       if( bool_select_area )
       {
@@ -375,12 +301,12 @@ void OpenGLshow:: wheelEvent(QWheelEvent*event)
 
     if(event->delta()>0)
      {
-         fov+=event->delta()/10;
+         fov+=event->delta();
 
      }
      if(event->delta()<0)
      {
-         fov+=event->delta()/10;
+         fov+=event->delta();
      }
 
      this->update();
@@ -393,6 +319,7 @@ void OpenGLshow:: receivecloudfilename(QString filename)//----------------接受
     this->update();
 
 };
+int cornernumber=10;
 void OpenGLshow:: readclouddata()//---------------------------------------读取点云数据文件
 {
      QFile file(cloudfilename);
@@ -400,19 +327,19 @@ void OpenGLshow:: readclouddata()//---------------------------------------读取
          return;
      QTextStream in(&file);
      QString line = "ready";
+     cornernumber=0;
      while (!line.isNull())
      {
          line = in.readLine();
          if(!line.isNull())
          {
             cloudata=line.split(',');
-            cloud_x.append(cloudata[0].toFloat());
-            cloud_y.append(cloudata[1].toFloat());
-            cloud_z.append(cloudata[2].toFloat());
-
+            corners[cornernumber][0]=cloudata[0].toFloat();
+            corners[cornernumber][1]=cloudata[1].toFloat();
+            corners[cornernumber][2]=cloudata[2].toFloat();
          }
-     }
-
+         cornernumber++;
+     } 
 
 };
 void OpenGLshow:: receiveseting(QList<float> setinglist)
@@ -604,7 +531,7 @@ void OpenGLshow::Delay_MSec(unsigned int msec)//--------------------------------
 //-----------------------------------------------------------------------------------------------------以下为opengl框选函数
 void OpenGLshow::draw_area()
 {
-    int width =640, height = 480;
+    int width =GLwidth, height = GLheight;
         glMatrixMode(GL_PROJECTION);
         glPushMatrix();
             glLoadIdentity();
@@ -727,7 +654,7 @@ void OpenGLshow:: display(void)
 {
    M3DMatrix44f mat_proj, mat_modelview;
 
-   int width = glutGet( GLUT_WINDOW_WIDTH ), height = glutGet( GLUT_WINDOW_HEIGHT );
+   int width = GLwidth, height = GLheight;
 
 
    glViewport (0, 0, (GLsizei) width, (GLsizei) height);
@@ -741,58 +668,158 @@ void OpenGLshow:: display(void)
 
    glMatrixMode (GL_PROJECTION);
    glLoadIdentity ();
-   gluPerspective(65.0, (GLfloat) width/(GLfloat) height, 1.0, 300);
+   gluPerspective(65.0, (GLfloat) width/(GLfloat) height, 1.0, 30000);
 
    // 获取投影矩阵
    glGetFloatv(GL_PROJECTION_MATRIX, mat_proj);
 
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt(0, 0, 70, 0, 0, 0, 0, 1, 0);
-   glColor4f(0.1, 0.4, 0.6, 0.7);
+ //  gluLookAt(0, 0, 70, 0, 0, 0, 0, 1, 0);
+   glTranslatef(translate_x,translate_y,fov); //先平移再旋转
+   glRotatef(yaw,0.0,1.0,0.0);
+   glRotatef(pitch,0.0,0.0,1.0);
+ //  glColor4f(0.1, 0.4, 0.6, 0.7);
    glPushMatrix();
 
         // 获取模型视图矩阵
-        glGetFloatv(GL_MODELVIEW_MATRIX, mat_modelview);
+  glGetFloatv(GL_MODELVIEW_MATRIX, mat_modelview);
 
-        glBegin( GL_QUADS );
-        glVertex3fv(corners[0]);
-        glVertex3fv(corners[1]);
-        glVertex3fv(corners[5]);
-        glVertex3fv(corners[4]);
+//        glBegin( GL_QUADS );
+//        glVertex3fv(corners[0]);
+//        glVertex3fv(corners[1]);
+//        glVertex3fv(corners[5]);
+//        glVertex3fv(corners[4]);
 
-        glVertex3fv(corners[4]);
-        glVertex3fv(corners[7]);
-        glVertex3fv(corners[3]);
-        glVertex3fv(corners[0]);
+//        glVertex3fv(corners[4]);
+//        glVertex3fv(corners[7]);
+//        glVertex3fv(corners[3]);
+//        glVertex3fv(corners[0]);
 
-        glVertex3fv(corners[3]);
-        glVertex3fv(corners[2]);
-        glVertex3fv(corners[6]);
-        glVertex3fv(corners[7]);
+//        glVertex3fv(corners[3]);
+//        glVertex3fv(corners[2]);
+//        glVertex3fv(corners[6]);
+//        glVertex3fv(corners[7]);
 
-        glVertex3fv(corners[7]);
-        glVertex3fv(corners[6]);
-        glVertex3fv(corners[5]);
-        glVertex3fv(corners[4]);
+//        glVertex3fv(corners[7]);
+//        glVertex3fv(corners[6]);
+//        glVertex3fv(corners[5]);
+//        glVertex3fv(corners[4]);
 
-        glVertex3fv(corners[5]);
-        glVertex3fv(corners[1]);
-        glVertex3fv(corners[2]);
-        glVertex3fv(corners[6]);
+//        glVertex3fv(corners[5]);
+//        glVertex3fv(corners[1]);
+//        glVertex3fv(corners[2]);
+//        glVertex3fv(corners[6]);
 
-        glVertex3fv(corners[1]);
-        glVertex3fv(corners[2]);
-        glVertex3fv(corners[3]);
-        glVertex3fv(corners[0]);
-        glEnd();
+//        glVertex3fv(corners[1]);
+//        glVertex3fv(corners[2]);
+//        glVertex3fv(corners[3]);
+//        glVertex3fv(corners[0]);
+//        glEnd();
+        for (int i = 0; i < cornernumber-3; i++)
+             {
+                // glLoadName(i);//name the points
+                 glBegin(GL_POINTS);
+                 viewDistance = sqrt(corners[i][0]*corners[i][0]+corners[i][2]*corners[i][2])/1000.0f;
+                 if(viewDistance < 5)
+                {
+                     glColor3f (1.0f, 0.5f, 0.0f);
+                     glVertex3fv(corners[i]);
 
+                }
+                 else if(viewDistance >= 5 && viewDistance < 6)
+                {
+                     glColor3f (1.0f, 0.6f, 0.0f);
+                      glVertex3fv(corners[i]);
+
+                }
+                 else if(viewDistance >= 6 && viewDistance < 7)
+                {
+                     glColor3f (1.0f, 0.7f, 0.0f);
+                     glVertex3fv(corners[i]);
+
+                }
+                 else if(viewDistance >= 7 && viewDistance < 8)
+                {
+                     glColor3f (1.0f, 0.8f, 0.0f);
+                      glVertex3fv(corners[i]);
+
+                }
+                else  if(viewDistance >= 8 && viewDistance < 9)
+                {
+                     glColor3f (1.0F, 0.9f, 0.0f);
+                     glVertex3fv(corners[i]);
+
+                }
+                else  if(viewDistance >= 9 && viewDistance < 10)
+                {
+                     glColor3f (1.0f, 1.0f, 0.0f);
+                     glVertex3fv(corners[i]);
+
+                }
+                else  if(viewDistance >= 10 && viewDistance < 11)
+                {
+                     glColor3f (0.9f, 1.0f, 0.0f);
+                      glVertex3fv(corners[i]);
+
+                }
+                else  if(viewDistance >= 11 && viewDistance < 12)
+                {
+                     glColor3f (0.8f, 1.0f, 0.0f);
+                     glVertex3fv(corners[i]);
+
+                }
+               else   if(viewDistance >= 12 && viewDistance < 13)
+                {
+                     glColor3f (0.7f, 1.0f, 0.0f);
+                     glVertex3fv(corners[i]);
+
+                }
+                else  if(viewDistance >= 13 && viewDistance < 14)
+                {
+                     glColor3f (0.6f, 1.0f, 0.0f);
+                      glVertex3fv(corners[i]);
+
+                }
+                else  if(viewDistance >= 14 && viewDistance < 15)
+                {
+                     glColor3f (0.5f, 1.0f, 0.0f);
+                     glVertex3fv(corners[i]);
+
+                }
+                else  if(viewDistance >= 15 && viewDistance <16)
+                {
+                     glColor3f (0.4f, 1.0f, 0.0f);
+                    glVertex3fv(corners[i]);
+
+                }
+                else  if(viewDistance >= 16 && viewDistance < 17)
+                {
+                     glColor3f (0.3f, 1.0f, 0.0f);
+                     glVertex3fv(corners[i]);
+
+                }
+                else  if(viewDistance >= 17 && viewDistance < 18)
+                {
+                     glColor3f (0.2f, 1.0f, 0.0f);
+                     glVertex3fv(corners[i]);
+
+                }
+                 else  if(viewDistance >= 18)
+                 {
+                 glColor3f (0.1f, 1.0f, 0.0f);
+                 glVertex3fv(corners[i]);
+
+                }
+               glEnd();
+}
    glPopMatrix();
    glPopAttrib();
 
    // 配置
 
-    set_config( corners, 8, left_bottom, right_top, mat_modelview, mat_proj, viewport);
+   // set_config( corners, 8, left_bottom, right_top, mat_modelview, mat_proj, viewport);
+   set_config( corners, cornernumber-2, left_bottom, right_top, mat_modelview, mat_proj, viewport);
 
    /************************************************************************/
    /* 构造一个新的环境                                                                     */
@@ -804,7 +831,7 @@ void OpenGLshow:: display(void)
       highlight_selected_pts();
 
    }
-   glutSwapBuffers();
+   // update();
 }
 
 
