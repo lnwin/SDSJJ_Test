@@ -238,18 +238,33 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
         }
         else if(event->button()==Qt::RightButton)
         {
+             mousebutton_right=true;
+             mousebutton_left = false;
+             int width = GLwidth, height = GLheight;
              mouserightclick_times+=1;
              if(mouserightclick_times>2)
              {
                  mouserightclick_times=0;
              }
-             mousebutton_right=true;
-             mousebutton_left = false;
-             int width = GLwidth, height = GLheight;
-             bool_select_area = true;
-             m3dLoadVector2(left_bottom, mousedond_x, height - mousedond_y);
-             m3dLoadVector2(right_top, mousedond_x, height - mousedond_y);
-             qDebug()<<mousedond_x<<mousedond_y;
+
+            if(mouserightclick_times==1)
+            {
+                m3dLoadVector2(left_bottom, mousedond_x, height - mousedond_y);
+                m3dLoadVector2(right_top, mousedond_x+10, height - mousedond_y-10);
+                  qDebug()<< "mouse1";
+
+            }
+            if(mouserightclick_times==2)
+            {
+
+                m3dLoadVector2(left_bottom_2, mousedond_x, height - mousedond_y);
+                m3dLoadVector2(right_top_2, mousedond_x+10, height - mousedond_y-10);
+                 qDebug()<< "mouse2";
+            }
+
+
+
+
 
         }
         else if(event->buttons()==Qt::MiddleButton)
@@ -289,13 +304,13 @@ void OpenGLshow:: mouseMoveEvent(QMouseEvent *event)
     else if(mousebutton_right)
     {
         //----------------------------------------------框选
-              int width = GLwidth, height = GLheight;
+//              int width = GLwidth, height = GLheight;
 
-             if( bool_select_area )
-             {
-                 m3dLoadVector2(right_top, event->x() , height - event->y() );
-             }
-        //----------------------------------------------框选
+//             if( bool_select_area )
+//             {
+//                 m3dLoadVector2(right_top, event->x() , height - event->y() );
+//             }
+        //----------------------------------------------框选     
     }
     else if(mousebutton_mid)
     {
@@ -580,6 +595,19 @@ void OpenGLshow::draw_area()
                 glVertex2f(m3dGetVectorX(left_bottom), m3dGetVectorY(right_top));
                 glEnd();
 
+                if(mouserightclick_times==2)
+                {
+                    glColor4f(1, 0, 0, 0.5);
+                    glLineStipple(3, 0xAAAA);
+                    glBegin( GL_LINE_LOOP );
+                    glVertex2f(m3dGetVectorX(left_bottom_2), m3dGetVectorY(left_bottom_2));
+                    glVertex2f(m3dGetVectorX(right_top_2), m3dGetVectorY(left_bottom_2));
+                    glVertex2f(m3dGetVectorX(right_top_2), m3dGetVectorY(right_top_2));
+                    glVertex2f(m3dGetVectorX(left_bottom_2), m3dGetVectorY(right_top_2));
+                    glEnd();
+                    qDebug()<<left_bottom_2[0] <<left_bottom[0];
+                }
+
         glPopMatrix();
         glPopMatrix();
         glDisable( GL_LINE_STIPPLE );
@@ -607,7 +635,7 @@ void OpenGLshow::highlight_selected_pts()
 
             for(i = 0; i != vec_selected_pts_index.size(); i++)
             {
-                glVertex3fv(pts[ vec_selected_pts_index[i] ]);
+                glVertex3fv(pts[vec_selected_pts_index[i] ]);
                 painter_x = pts[vec_selected_pts_index[i]][0];
                 painter_y = pts[vec_selected_pts_index[i]][1] ;
                 painter_z = pts[vec_selected_pts_index[i]][2];
@@ -650,10 +678,15 @@ void OpenGLshow::set_config( M3DVector3f *_pts, int _nr, M3DVector2f _left_botto
 {
     pts = _pts;
     nr = _nr;
-
+if(mouserightclick_times==1)
+   {
     m3dCopyVector2(left_bottom, _left_bottom);
     m3dCopyVector2(right_top, _right_top);
-
+}
+if(mouserightclick_times==2)
+ {   m3dCopyVector2(left_bottom_2, _left_bottom);
+    m3dCopyVector2(right_top_2, _right_top);
+  }
     m3dCopyMatrix44(model_view, _model_view);
     m3dCopyMatrix44(proj, _proj);
     memcpy(viewport, _viewport, sizeof(int) * 4);
@@ -726,8 +759,8 @@ void OpenGLshow:: display(void)
  //  glColor4f(0.1, 0.4, 0.6, 0.7);
    glPushMatrix();
   // 获取模型视图矩阵
-  glGetFloatv(GL_MODELVIEW_MATRIX, mat_modelview);
-  for (int i = 0; i < cornernumber-3; i++)
+   glGetFloatv(GL_MODELVIEW_MATRIX, mat_modelview);
+   for (int i = 0; i < cornernumber-3; i++)
              {
                 // glLoadName(i);//name the points
                  glBegin(GL_POINTS);
@@ -827,10 +860,12 @@ void OpenGLshow:: display(void)
    glPopMatrix();
    glPopAttrib();
    // 配置  
-   m3dLoadVector2(right_top, mousedond_x , height - mousedond_y );
-   m3dLoadVector2(left_bottom, mousedond_x+2 , height - mousedond_y-2 );
-   set_config( corners, cornernumber-2, left_bottom, right_top, mat_modelview, mat_proj, viewport);
 
+if(mouserightclick_times==1)
+  {set_config(corners, cornernumber-2, left_bottom, right_top, mat_modelview, mat_proj, viewport);}
+ if(mouserightclick_times==2)
+  { set_config(corners, cornernumber-2, left_bottom_2, right_top_2, mat_modelview, mat_proj, viewport);}
+   qDebug()<< "display";
    /************************************************************************/
    /* 构造一个新的环境                                                        */
    /************************************************************************/
