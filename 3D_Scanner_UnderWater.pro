@@ -112,8 +112,9 @@ DEPENDPATH += $$PWD/Include
 
 
 
-win32:CONFIG(release, debug|release): LIBS += -LD:/Qt/5.14.2/msvc2017_64/lib/ -lfreeglut
-else:win32:CONFIG(debug, debug|release): LIBS += -LD:/Qt/5.14.2/msvc2017_64/lib/ -lfreeglut
+win32:CONFIG(release, debug|release): LIBS += -LD:/Qt5.14/5.14.2/msvc2017_64/lib/ -lfreeglut
+else:win32:CONFIG(debug, debug|release): LIBS += -LD:/Qt5.14/5.14.2/msvc2017_64/lib/ -lfreeglut
 
-INCLUDEPATH += D:/Qt/5.14.2/msvc2017_64/include
-DEPENDPATH += D:/Qt/5.14.2/msvc2017_64/include
+INCLUDEPATH += D:/Qt5.14/5.14.2/msvc2017_64/include
+DEPENDPATH += D:/Qt5.14/5.14.2/msvc2017_64/include
+

@@ -68,6 +68,7 @@ OpenGLshow::~OpenGLshow()
     cloud_x.clear();
     cloud_y.clear();
     cloud_z.clear();
+    vec_selected_pts_index.clear();
     this->destroy();
 }
 
@@ -214,7 +215,6 @@ void OpenGLshow:: paintGL()
 */
 
     display();
-
     glFlush();
 
    // this->update();
@@ -231,7 +231,7 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
                mousebutton_left = true;
                mousebutton_right=false;
                mouserightclick_times=0;
-                //-----------------------------------原版代码
+               //-----------------------------------原版代码
 
 
 
@@ -259,7 +259,7 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
 
                 m3dLoadVector2(left_bottom_2, mousedond_x, height - mousedond_y);
                 m3dLoadVector2(right_top_2, mousedond_x+10, height - mousedond_y-10);
-                 qDebug()<< "mouse2";
+                qDebug()<< "mouse2";
             }
 
 
@@ -558,6 +558,7 @@ void OpenGLshow::Delay_MSec(unsigned int msec)//--------------------------------
      QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
  }
 //-----------------------------------------------------------------------------------------------------以下为opengl框选函数
+
 void OpenGLshow::draw_area()
 {
     int width =GLwidth, height = GLheight;
@@ -579,9 +580,9 @@ void OpenGLshow::draw_area()
 
                 /*** 画矩形虚线 ***/
                 glEnable( GL_LINE_STIPPLE );
-                glColor4f(1, 0, 0, 0.5);
+                glColor4f(1, 1, 1, 0.5);
                 glLineStipple(3, 0xAAAA);
-
+                glLineWidth(1);
                 glBegin( GL_LINE_LOOP );
 //                glVertex2f(m3dGetVectorX(left_bottom), m3dGetVectorY(left_bottom));
 //                glVertex2f(m3dGetVectorX(right_top), m3dGetVectorY(left_bottom));
@@ -597,7 +598,7 @@ void OpenGLshow::draw_area()
 
                 if(mouserightclick_times==2)
                 {
-                    glColor4f(1, 0, 0, 0.5);
+                    glColor4f(1, 1, 1, 0.5);
                     glLineStipple(3, 0xAAAA);
                     glBegin( GL_LINE_LOOP );
                     glVertex2f(m3dGetVectorX(left_bottom_2), m3dGetVectorY(left_bottom_2));
@@ -605,7 +606,8 @@ void OpenGLshow::draw_area()
                     glVertex2f(m3dGetVectorX(right_top_2), m3dGetVectorY(right_top_2));
                     glVertex2f(m3dGetVectorX(left_bottom_2), m3dGetVectorY(right_top_2));
                     glEnd();
-                    qDebug()<<left_bottom_2[0] <<left_bottom[0];
+
+
                 }
 
         glPopMatrix();
@@ -613,7 +615,10 @@ void OpenGLshow::draw_area()
         glDisable( GL_LINE_STIPPLE );
         glDisable( GL_BLEND );
 }
-float painter_x,painter_y,painter_z;
+float painter_x_start,painter_y_start,painter_z_start;
+float painter_x_end,painter_y_end,painter_z_end;
+
+
 void OpenGLshow::highlight_selected_pts()
 {
     int i = 0;
@@ -636,13 +641,61 @@ void OpenGLshow::highlight_selected_pts()
             for(i = 0; i != vec_selected_pts_index.size(); i++)
             {
                 glVertex3fv(pts[vec_selected_pts_index[i] ]);
-                painter_x = pts[vec_selected_pts_index[i]][0];
-                painter_y = pts[vec_selected_pts_index[i]][1] ;
-                painter_z = pts[vec_selected_pts_index[i]][2];
-                qDebug("the points %d x:%f y:%f z: %f  ",i, painter_x,painter_y,painter_z);
+               if(mouserightclick_times==1)
+
+               { painter_x_start = pts[vec_selected_pts_index[i]][0];
+                painter_y_start = pts[vec_selected_pts_index[i]][1] ;
+                painter_z_start = pts[vec_selected_pts_index[i]][2];
+                qDebug("the last start points %d x:%f y:%f z: %f  ",i, painter_x_start,painter_y_start,painter_z_start);
+               }
+                if(mouserightclick_times==2)
+                {
+                    painter_x_end = pts[vec_selected_pts_index[i]][0];
+                    painter_y_end = pts[vec_selected_pts_index[i]][1] ;
+                    painter_z_end = pts[vec_selected_pts_index[i]][2];
+                    qDebug("the last end points %d x:%f y:%f z: %f  ",i, painter_x_end,painter_y_end,painter_z_end);
+
+                }
+
             }
 
             glEnd();
+            if(mouserightclick_times==2)
+            {
+            glColor4f(0, 0.2, 0.7, 0.2);
+            glLineWidth(2);
+            glBegin( GL_LINE_LOOP );
+            glVertex3f(painter_x_start,painter_y_start,painter_z_start);
+            glVertex3f(painter_x_end,painter_y_end,painter_z_end);
+            glEnd();
+            float D_value_x =painter_x_end-painter_x_start;
+            float D_value_y =painter_y_end-painter_y_start;
+            float D_value_z =painter_z_end-painter_z_start;
+            float points_distance_0=sqrt(D_value_x*D_value_x+D_value_y*D_value_y);
+            float points_distance_1=sqrt(points_distance_0*points_distance_0+D_value_z*D_value_z);
+
+            int describ_start= mousedond_x;
+            int describ_end= mousedond_y;
+
+             QPainter painter;
+             painter.begin(this);
+             QPen pen;
+             QBrush brush(QColor(7,7,77),Qt::SolidPattern);
+             pen.setColor(Qt::white);
+             painter.setPen(pen);
+             painter.setBrush(brush);
+             painter.drawRect(describ_start,describ_end-15,120,20);
+             painter.end();
+
+             qDebug()<<describ_start<<describ_end;
+             painter.begin(this);
+             QPen coordinate_pen;
+             coordinate_pen.setColor(Qt::white);
+             painter.setPen(coordinate_pen);
+             painter.drawText(describ_start+10,describ_end,"distance:"+QString("%1").arg(points_distance_1)+"mm");
+             painter.end();
+
+             }
 
             QPainter painter;
             painter.begin(this);
@@ -657,11 +710,20 @@ void OpenGLshow::highlight_selected_pts()
             QPen coordinate_pen;
             coordinate_pen.setColor(Qt::white);
             painter.setPen(coordinate_pen);
-
-            painter.drawText(GLwidth-110,15,"x:"+QString("%1").arg(painter_x));
-            painter.drawText(GLwidth-110,30,"y:"+ QString("%1").arg(painter_y));
-            painter.drawText(GLwidth-110,45,"z:"+QString("%1").arg(painter_z));
+            if(mouserightclick_times==1)
+            {
+            painter.drawText(GLwidth-110,15,"x:"+QString("%1").arg(painter_x_start));
+            painter.drawText(GLwidth-110,30,"y:"+ QString("%1").arg(painter_y_start));
+            painter.drawText(GLwidth-110,45,"z:"+QString("%1").arg(painter_z_start));
              painter.drawText(GLwidth-110,60,"cover points:"+ QString("%1").arg(vec_selected_pts_index.size()));
+            }
+            if(mouserightclick_times==2)
+            {
+            painter.drawText(GLwidth-110,15,"x:"+QString("%1").arg(painter_x_end));
+            painter.drawText(GLwidth-110,30,"y:"+ QString("%1").arg(painter_y_end));
+            painter.drawText(GLwidth-110,45,"z:"+QString("%1").arg(painter_z_end));
+             painter.drawText(GLwidth-110,60,"cover points:"+ QString("%1").arg(vec_selected_pts_index.size()));
+            }
             painter.end();
 
             glPopAttrib();
@@ -713,13 +775,20 @@ bool OpenGLshow::drop_in_area( M3DVector3f x )
     M3DVector2f win_coord;
 
     m3dProjectXY(win_coord, model_view, proj, viewport, x);
-
-    if( (win_coord[0] < left_bottom[0] && win_coord[0] <right_top[0]) || (win_coord[0] > left_bottom[0] && win_coord[0] > right_top[0] ))
+if(mouserightclick_times==1)
+  {  if( (win_coord[0] < left_bottom[0] && win_coord[0] <right_top[0]) || (win_coord[0] > left_bottom[0] && win_coord[0] > right_top[0] ))
         return false;
 
     if( (win_coord[1] < left_bottom[1] && win_coord[1] <right_top[1]) || (win_coord[1] > left_bottom[1] && win_coord[1] > right_top[1] ))
         return false;
+   }
+if(mouserightclick_times==2)
+   { if( (win_coord[0] < left_bottom_2[0] && win_coord[0] <right_top_2[0]) || (win_coord[0] > left_bottom_2[0] && win_coord[0] > right_top_2[0] ))
+        return false;
 
+    if( (win_coord[1] < left_bottom_2[1] && win_coord[1] <right_top_2[1]) || (win_coord[1] > left_bottom_2[1] && win_coord[1] > right_top_2[1] ))
+        return false;
+}
     return true;
 }
 
@@ -861,11 +930,13 @@ void OpenGLshow:: display(void)
    glPopAttrib();
    // 配置  
 
-if(mouserightclick_times==1)
-  {set_config(corners, cornernumber-2, left_bottom, right_top, mat_modelview, mat_proj, viewport);}
+ if(mouserightclick_times==1)
+ {
+     set_config(corners, cornernumber-2, left_bottom, right_top, mat_modelview, mat_proj, viewport);
+ }
  if(mouserightclick_times==2)
   { set_config(corners, cornernumber-2, left_bottom_2, right_top_2, mat_modelview, mat_proj, viewport);}
-   qDebug()<< "display";
+
    /************************************************************************/
    /* 构造一个新的环境                                                        */
    /************************************************************************/

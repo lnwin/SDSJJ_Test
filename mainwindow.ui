@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1293</width>
-    <height>769</height>
+    <height>778</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,8 +21,8 @@
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>740</y>
+      <x>470</x>
+      <y>680</y>
       <width>691</width>
       <height>21</height>
      </rect>
@@ -50,9 +50,9 @@
    <widget class="OpenGLshow" name="openGLWidget">
     <property name="geometry">
      <rect>
-      <x>649</x>
+      <x>650</x>
       <y>0</y>
-      <width>641</width>
+      <width>640</width>
       <height>480</height>
      </rect>
     </property>
@@ -777,27 +777,21 @@
      <rect>
       <x>10</x>
       <y>660</y>
-      <width>571</width>
-      <height>101</height>
+      <width>431</width>
+      <height>111</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="OpenHDcamera">
+    <widget class="QLabel" name="label_9">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>10</y>
-       <width>91</width>
-       <height>81</height>
+       <x>9</x>
+       <y>9</y>
+       <width>66</width>
+       <height>16</height>
       </rect>
      </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;打开/关闭工业相机&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
      <property name="text">
-      <string>OpenHDCamera</string>
+      <string>brightness </string>
      </property>
     </widget>
     <widget class="QSlider" name="CameraBrightness">
@@ -806,8 +800,8 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>10</y>
+       <x>81</x>
+       <y>9</y>
        <width>101</width>
        <height>22</height>
       </rect>
@@ -831,14 +825,65 @@
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+    <widget class="QDoubleSpinBox" name="Brightness_spinBoxdouble">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>10</y>
+       <width>48</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="decimals">
+      <number>0</number>
+     </property>
+     <property name="value">
+      <double>50.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="OpenHDcamera">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>10</y>
+       <width>101</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;打开/关闭工业相机&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>OpenHDCamera</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>66</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Camera gain</string>
+     </property>
+    </widget>
     <widget class="QSlider" name="CameraGain">
      <property name="enabled">
       <bool>false</bool>
      </property>
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>40</y>
+       <x>80</x>
+       <y>30</y>
        <width>101</width>
        <height>22</height>
       </rect>
@@ -853,30 +898,42 @@
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
-    <widget class="QLabel" name="label_9">
+    <widget class="QDoubleSpinBox" name="Cameragain_spinBoxdouble">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>71</width>
-       <height>16</height>
+       <x>190</x>
+       <y>40</y>
+       <width>41</width>
+       <height>20</height>
       </rect>
      </property>
-     <property name="text">
-      <string>brightness </string>
+     <property name="decimals">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <double>30.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
      </property>
     </widget>
-    <widget class="QLabel" name="label_10">
+    <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
-       <width>71</width>
+       <y>70</y>
+       <width>24</width>
        <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>Camera gain</string>
+      <string>Gama</string>
      </property>
     </widget>
     <widget class="QSlider" name="CameraGama">
@@ -885,9 +942,9 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>70</y>
-       <width>101</width>
+       <x>83</x>
+       <y>60</y>
+       <width>91</width>
        <height>22</height>
       </rect>
      </property>
@@ -904,73 +961,16 @@
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
-    <widget class="QLabel" name="label_11">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>70</y>
-       <width>71</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Gama</string>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="Brightness_spinBoxdouble">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>10</y>
-       <width>51</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>0</number>
-     </property>
-     <property name="value">
-      <double>50.000000000000000</double>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="Cameragain_spinBoxdouble">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>40</y>
-       <width>51</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <double>30.000000000000000</double>
-     </property>
-     <property name="singleStep">
-      <double>0.100000000000000</double>
-     </property>
-     <property name="value">
-      <double>1.000000000000000</double>
-     </property>
-    </widget>
     <widget class="QDoubleSpinBox" name="Gama_spinBoxdouble">
      <property name="enabled">
       <bool>false</bool>
      </property>
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>190</x>
        <y>70</y>
-       <width>51</width>
-       <height>22</height>
+       <width>48</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="decimals">
