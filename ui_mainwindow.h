@@ -101,7 +101,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1289, 769);
+        MainWindow->resize(1293, 769);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/new/icon/picture/camera.jpg"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);

@@ -12,6 +12,7 @@
 #include <QTime>
 #include <QCoreApplication>
 #include <GL/glut.h>
+#include<QPainter>
 //---------------------------------------------------------------
 
 //---------------------------------------------------------------着色器配置
@@ -216,13 +217,9 @@ void OpenGLshow:: paintGL()
 
     glFlush();
 
-    this->update();
-
-
-
-
+   // this->update();
 }
-int AA;
+int mouserightclick_times=0;
 void OpenGLshow:: mousePressEvent(QMouseEvent *event)
 {
 
@@ -232,6 +229,8 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
         {
 
                mousebutton_left = true;
+               mousebutton_right=false;
+               mouserightclick_times=0;
                 //-----------------------------------原版代码
 
 
@@ -239,14 +238,18 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
         }
         else if(event->button()==Qt::RightButton)
         {
-
+             mouserightclick_times+=1;
+             if(mouserightclick_times>2)
+             {
+                 mouserightclick_times=0;
+             }
              mousebutton_right=true;
-               mousebutton_left = false;
+             mousebutton_left = false;
              int width = GLwidth, height = GLheight;
              bool_select_area = true;
              m3dLoadVector2(left_bottom, mousedond_x, height - mousedond_y);
              m3dLoadVector2(right_top, mousedond_x, height - mousedond_y);
-
+             qDebug()<<mousedond_x<<mousedond_y;
 
         }
         else if(event->buttons()==Qt::MiddleButton)
@@ -262,20 +265,12 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
 
 
 
-
-
-
-
-
-
-
-
-
-
 }
 void OpenGLshow:: mouseReleaseEvent(QMouseEvent *event)
 {
         bool_select_area = false;
+
+        this->update();
 }
 void OpenGLshow:: mouseMoveEvent(QMouseEvent *event)
 {
@@ -311,7 +306,7 @@ void OpenGLshow:: mouseMoveEvent(QMouseEvent *event)
               yoffset = (event->y()-mousedond_y);
               translate_y-=yoffset;
     }
-     this->update();
+this->update();
 }
 void OpenGLshow:: wheelEvent(QWheelEvent*event)
  {
@@ -558,7 +553,7 @@ void OpenGLshow::draw_area()
 
             glMatrixMode( GL_MODELVIEW );
             glPushMatrix();
-                glLoadIdentity();
+            glLoadIdentity();
 
                 /*** 画矩形 ***/
 //                glColor4f(1.0, 1.0, 0, 0.2);
@@ -573,17 +568,24 @@ void OpenGLshow::draw_area()
                 glLineStipple(3, 0xAAAA);
 
                 glBegin( GL_LINE_LOOP );
+//                glVertex2f(m3dGetVectorX(left_bottom), m3dGetVectorY(left_bottom));
+//                glVertex2f(m3dGetVectorX(right_top), m3dGetVectorY(left_bottom));
+//                glVertex2f(m3dGetVectorX(right_top), m3dGetVectorY(right_top));
+//                glVertex2f(m3dGetVectorX(left_bottom), m3dGetVectorY(right_top));
+              //   m3dLoadVector2(right_top, mousedond_x , height - mousedond_y );
+              //   m3dLoadVector2(left_bottom, mousedond_x+20 , height - mousedond_y-20 );
                 glVertex2f(m3dGetVectorX(left_bottom), m3dGetVectorY(left_bottom));
                 glVertex2f(m3dGetVectorX(right_top), m3dGetVectorY(left_bottom));
                 glVertex2f(m3dGetVectorX(right_top), m3dGetVectorY(right_top));
                 glVertex2f(m3dGetVectorX(left_bottom), m3dGetVectorY(right_top));
                 glEnd();
 
-            glPopMatrix();
+        glPopMatrix();
         glPopMatrix();
         glDisable( GL_LINE_STIPPLE );
         glDisable( GL_BLEND );
 }
+float painter_x,painter_y,painter_z;
 void OpenGLshow::highlight_selected_pts()
 {
     int i = 0;
@@ -599,24 +601,45 @@ void OpenGLshow::highlight_selected_pts()
 
             glPushAttrib(GL_POINT_BIT);
             glPointSize(3);
-            glColor4f(0, 1, 0, 1);
+            glColor4f(0, 1, 1, 1);
 
             glBegin(GL_POINTS);
 
             for(i = 0; i != vec_selected_pts_index.size(); i++)
             {
                 glVertex3fv(pts[ vec_selected_pts_index[i] ]);
-                float x = *pts[vec_selected_pts_index[i]];
-                float y = *pts[vec_selected_pts_index[i]+1];
-                float z = *pts[vec_selected_pts_index[i]+2];
-
-                qDebug("the points x:%f y:%f z: %f  ", x,y,z);
+                painter_x = pts[vec_selected_pts_index[i]][0];
+                painter_y = pts[vec_selected_pts_index[i]][1] ;
+                painter_z = pts[vec_selected_pts_index[i]][2];
+                qDebug("the points %d x:%f y:%f z: %f  ",i, painter_x,painter_y,painter_z);
             }
 
             glEnd();
+
+            QPainter painter;
+            painter.begin(this);
+            QPen pen;
+            QBrush brush(QColor(7,7,77),Qt::SolidPattern);
+            pen.setColor(Qt::white);
+            painter.setPen(pen);
+            painter.setBrush(brush);
+            painter.drawRect(GLwidth-120,0,120,70);
+            painter.end();
+            painter.begin(this);
+            QPen coordinate_pen;
+            coordinate_pen.setColor(Qt::white);
+            painter.setPen(coordinate_pen);
+
+            painter.drawText(GLwidth-110,15,"x:"+QString("%1").arg(painter_x));
+            painter.drawText(GLwidth-110,30,"y:"+ QString("%1").arg(painter_y));
+            painter.drawText(GLwidth-110,45,"z:"+QString("%1").arg(painter_z));
+             painter.drawText(GLwidth-110,60,"cover points:"+ QString("%1").arg(vec_selected_pts_index.size()));
+            painter.end();
+
             glPopAttrib();
         glPopMatrix();
-    glPopMatrix();
+        glPopMatrix();
+
 }
 void OpenGLshow::get_selected_pts_index( vector<int> &v )
 {
@@ -702,42 +725,9 @@ void OpenGLshow:: display(void)
    glRotatef(pitch,0.0,0.0,1.0);
  //  glColor4f(0.1, 0.4, 0.6, 0.7);
    glPushMatrix();
-
-        // 获取模型视图矩阵
+  // 获取模型视图矩阵
   glGetFloatv(GL_MODELVIEW_MATRIX, mat_modelview);
-
-//        glBegin( GL_QUADS );
-//        glVertex3fv(corners[0]);
-//        glVertex3fv(corners[1]);
-//        glVertex3fv(corners[5]);
-//        glVertex3fv(corners[4]);
-
-//        glVertex3fv(corners[4]);
-//        glVertex3fv(corners[7]);
-//        glVertex3fv(corners[3]);
-//        glVertex3fv(corners[0]);
-
-//        glVertex3fv(corners[3]);
-//        glVertex3fv(corners[2]);
-//        glVertex3fv(corners[6]);
-//        glVertex3fv(corners[7]);
-
-//        glVertex3fv(corners[7]);
-//        glVertex3fv(corners[6]);
-//        glVertex3fv(corners[5]);
-//        glVertex3fv(corners[4]);
-
-//        glVertex3fv(corners[5]);
-//        glVertex3fv(corners[1]);
-//        glVertex3fv(corners[2]);
-//        glVertex3fv(corners[6]);
-
-//        glVertex3fv(corners[1]);
-//        glVertex3fv(corners[2]);
-//        glVertex3fv(corners[3]);
-//        glVertex3fv(corners[0]);
-//        glEnd();
-        for (int i = 0; i < cornernumber-3; i++)
+  for (int i = 0; i < cornernumber-3; i++)
              {
                 // glLoadName(i);//name the points
                  glBegin(GL_POINTS);
@@ -836,25 +826,30 @@ void OpenGLshow:: display(void)
 }
    glPopMatrix();
    glPopAttrib();
-
-   // 配置
-
-   // set_config( corners, 8, left_bottom, right_top, mat_modelview, mat_proj, viewport);
+   // 配置  
+   m3dLoadVector2(right_top, mousedond_x , height - mousedond_y );
+   m3dLoadVector2(left_bottom, mousedond_x+2 , height - mousedond_y-2 );
    set_config( corners, cornernumber-2, left_bottom, right_top, mat_modelview, mat_proj, viewport);
 
    /************************************************************************/
-   /* 构造一个新的环境                                                                     */
+   /* 构造一个新的环境                                                        */
    /************************************************************************/
 
-   if( bool_select_area ){
+   if( mouserightclick_times!=0&&mouserightclick_times<3&& mousebutton_right==true)
+   {
 
       draw_area();
       highlight_selected_pts();
 
    }
-   // update();
-}
 
+}
+void OpenGLshow:: countdistance(M3DVector3f N1,M3DVector3f N2)
+{
+
+
+
+};
 
 
 

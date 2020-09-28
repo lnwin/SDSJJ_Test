@@ -46,7 +46,7 @@ private:
        bool bool_select_area = false;
        std::vector<int> vec_selected_pts_index;
 
-       void painttest();
+       void countdistance(M3DVector3f,M3DVector3f);
 protected:
 
    void  initializeGL();
