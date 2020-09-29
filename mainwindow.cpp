@@ -195,19 +195,19 @@ void MainWindow::searchCamera()//-----------------------------------------------
 }
 void MainWindow::readcamerainformation()
 {
-    QList<QSize>Cameresollution =Qtthread->camera->supportedViewfinderResolutions();
+//    QList<QSize>Cameresollution =Qtthread->camera->supportedViewfinderResolutions();
 
-    for (const QSize &resolution : Cameresollution)
-    {
-        ui->Cameraresolution->addItem(QString("%1x%2").arg(resolution.width()).arg(resolution.height()));
-    }
+//    for (const QSize &resolution : Cameresollution)
+//    {
+//        ui->Cameraresolution->addItem(QString("%1x%2").arg(resolution.width()).arg(resolution.height()));
+//    }
 
-    QList<QCamera::FrameRateRange>Cameframrate =Qtthread->camera->supportedViewfinderFrameRateRanges();
+//    QList<QCamera::FrameRateRange>Cameframrate =Qtthread->camera->supportedViewfinderFrameRateRanges();
 
-    for (const QCamera::FrameRateRange & camerarate : Cameframrate)
-    {
-        ui->Cameraframerate->addItem(QString::number( camerarate.maximumFrameRate) );
-    }
+//    for (const QCamera::FrameRateRange & camerarate : Cameframrate)
+//    {
+//        ui->Cameraframerate->addItem(QString::number( camerarate.maximumFrameRate) );
+//    }
 }
 void MainWindow::on_openCamera_clicked()//-----------------------------------------------打开关闭Qt摄像头按钮
  {
