@@ -75,6 +75,7 @@ private slots:
     void receivedSetTabWidgt2Camera(int);
     void on_OpenHDcamera_clicked();
     void receiveQimageFromHD(QImage);
+    void receiveHDcamerastate(int);
     void on_CameraBrightness_valueChanged(int value);
 
     void on_CameraGain_valueChanged(int value);

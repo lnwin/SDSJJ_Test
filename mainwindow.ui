@@ -486,6 +486,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="openCamera">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -499,12 +502,15 @@
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;打开/关闭相机&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
-               <string>Open Camera</string>
+               <string>Open USB Camera</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="Scanningbutton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -949,6 +955,9 @@
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_14">
+            <property name="spacing">
+             <number>0</number>
+            </property>
             <property name="leftMargin">
              <number>7</number>
             </property>
@@ -957,6 +966,9 @@
             </property>
             <item>
              <widget class="QPushButton" name="OpenHDcamera">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>97</width>
@@ -970,7 +982,7 @@
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
-               <string>OpenHDCamera</string>
+               <string>Open HD Camera</string>
               </property>
              </widget>
             </item>

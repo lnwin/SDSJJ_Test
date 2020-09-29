@@ -76,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输   
     connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
     connect(HDCamera,SIGNAL(sendQimage2Main(QImage)),this,SLOT(receiveQimageFromHD(QImage)));//   HDcamera 的单例类传递函数
+   // connect(HDCamera,SIGNAL(sendHDcamerastate(int)),this,SLOT(receiveHDcamerastate(int)));//HDcamera 状态信息传递
     connect(this, SIGNAL(sendcameragain2HDcamera(double)),HDCamera, SLOT(setCameragain(double)));
     connect(this, SIGNAL(sendbrightness2HDcamera(double)),HDCamera, SLOT(setCamerbrightness(double)));
     connect(this, SIGNAL(sendcameragama2HDcamera( double )),HDCamera, SLOT(setCameragama(double)));
@@ -181,7 +182,11 @@ void MainWindow::searchCamera()//-----------------------------------------------
 {
 
     Cameralist = QCameraInfo::availableCameras();
-
+    if( Cameralist.size()!=0)
+    {
+       ui->openCamera->setEnabled(true);
+       ui->Scanningbutton->setEnabled(true);
+    }
     for (int i = 0; i < Cameralist.size(); i++)
     {
 
@@ -349,6 +354,18 @@ void MainWindow::receiveQimageFromHD(QImage image)
        glImage->pictureFromcamera(image);
        ui->openGLWidget_2->update();
 
+}
+void MainWindow::receiveHDcamerastate(int stateID)
+{
+  if(stateID=0)
+  {
+     ui->textEdit->append("find HDcamera success");
+     ui->OpenHDcamera->setEnabled(true);
+  }
+  else
+  {
+       ui->textEdit->append("no HDcamera connected");
+  }
 }
 cv::Mat XXIMAGE;
 cv::Mat XXgray;

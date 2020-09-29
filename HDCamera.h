@@ -53,7 +53,7 @@ public slots:
 
 signals:
     void sendQimage2Main(QImage);
-
+    void sendHDcamerastate(int);
 protected:
     void paintEvent(QPaintEvent *e);
 

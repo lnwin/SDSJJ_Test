@@ -372,6 +372,7 @@ public:
 
         openCamera = new QPushButton(toolFrame);
         openCamera->setObjectName(QString::fromUtf8("openCamera"));
+        openCamera->setEnabled(false);
         openCamera->setMinimumSize(QSize(0, 25));
         openCamera->setFocusPolicy(Qt::StrongFocus);
 
@@ -379,6 +380,7 @@ public:
 
         Scanningbutton = new QPushButton(toolFrame);
         Scanningbutton->setObjectName(QString::fromUtf8("Scanningbutton"));
+        Scanningbutton->setEnabled(false);
         Scanningbutton->setMinimumSize(QSize(0, 25));
 
         verticalLayout_6->addWidget(Scanningbutton);
@@ -633,10 +635,12 @@ public:
         horizontalLayout_4->addLayout(verticalLayout_13);
 
         verticalLayout_14 = new QVBoxLayout();
+        verticalLayout_14->setSpacing(0);
         verticalLayout_14->setObjectName(QString::fromUtf8("verticalLayout_14"));
         verticalLayout_14->setContentsMargins(7, -1, 7, -1);
         OpenHDcamera = new QPushButton(HDcameraWindow);
         OpenHDcamera->setObjectName(QString::fromUtf8("OpenHDcamera"));
+        OpenHDcamera->setEnabled(true);
         OpenHDcamera->setMinimumSize(QSize(97, 70));
 
         verticalLayout_14->addWidget(OpenHDcamera);
@@ -713,7 +717,7 @@ public:
 #if QT_CONFIG(tooltip)
         openCamera->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>\346\211\223\345\274\200/\345\205\263\351\227\255\347\233\270\346\234\272</p></body></html>", nullptr));
 #endif // QT_CONFIG(tooltip)
-        openCamera->setText(QCoreApplication::translate("MainWindow", "Open Camera", nullptr));
+        openCamera->setText(QCoreApplication::translate("MainWindow", "Open USB Camera", nullptr));
 #if QT_CONFIG(tooltip)
         Scanningbutton->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>\345\274\200\345\220\257\346\211\253\346\217\217</p></body></html>", nullptr));
 #endif // QT_CONFIG(tooltip)
@@ -761,7 +765,7 @@ public:
 #if QT_CONFIG(whatsthis)
         OpenHDcamera->setWhatsThis(QCoreApplication::translate("MainWindow", "<html><head/><body><p><br/></p></body></html>", nullptr));
 #endif // QT_CONFIG(whatsthis)
-        OpenHDcamera->setText(QCoreApplication::translate("MainWindow", "OpenHDCamera", nullptr));
+        OpenHDcamera->setText(QCoreApplication::translate("MainWindow", "Open HD Camera", nullptr));
     } // retranslateUi
 
 };

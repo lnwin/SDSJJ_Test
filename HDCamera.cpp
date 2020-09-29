@@ -258,12 +258,13 @@ void HDCamera::HDCameraParameterInt()
         {
             qDebug()<<"no camera\r\n";
             getchar();
+        // emit HDCamera::GetInstance()-> sendHDcamerastate(-1);
             return;
         }
          Camerainformation =&pCameraList[0];
-       //ui->HDcameraList->addItem(Camerainformation->getModelName(Camerainformation));
+      // ui->HDcameraList->addItem(Camerainformation->getModelName(Camerainformation));
          qDebug()<<"HDCamera init success! ";
-
+        // emit HDCamera::GetInstance()->sendHDcamerastate(0);
 
 };
 int32_t HDCamera::GENICAM_connect(GENICAM_Camera *pGetCamera)
