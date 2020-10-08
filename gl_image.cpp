@@ -24,8 +24,6 @@ void GL_Image::pictureFromcamera(QImage ss)
 {
     AK = ss;
 }
-
-
 void GL_Image::paintEvent(QPaintEvent *e)
 {
      if(GLpainter.begin(this))

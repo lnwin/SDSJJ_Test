@@ -11,7 +11,7 @@
 #include<QMessageBox>
 #include <QTime>
 #include <QCoreApplication>
-#include <GL/glut.h>
+//#include <GL/glut.h>
 #include<QPainter>
 //---------------------------------------------------------------
 
@@ -31,7 +31,6 @@ float viewDistance;
 bool mousebutton_left;
 bool mousebutton_right;
 bool mousebutton_mid;
-
 float Addclouddata_x=0,Addclouddata_y=0,Addclouddata_z=0;
 //---------------------------------------------------------------------------------------激光测距参数
 float PixelSize =0.004;//0.009
@@ -71,8 +70,6 @@ OpenGLshow::~OpenGLshow()
     vec_selected_pts_index.clear();
     this->destroy();
 }
-
-
 void OpenGLshow::initializeGL()
 {
 
@@ -90,6 +87,7 @@ void OpenGLshow::initializeGL()
 
 
 }
+/* GL窗体尺寸传值参数 */
 int GLwidth,GLheight;
 void OpenGLshow::resizeGL(int width, int height)
 {
@@ -106,17 +104,8 @@ void OpenGLshow::resizeGL(int width, int height)
         glLoadIdentity();
 
 }
+/*点云数据缓存区*/
 static M3DVector3f corners[1000000];
-//= {
-//    -25, 25, 25,
-//    25, 25, 25,
-//    25, -25, 25,
-//    -25, -25, 25,
-//    -25, 25, -25,
-//    25, 25, -25,
-//    25, -25, -25,
-//    -25, -25, -25
-//};
 void OpenGLshow:: paintGL()
 {
 
@@ -219,6 +208,7 @@ void OpenGLshow:: paintGL()
 
    // this->update();
 }
+/* 距离测量功能鼠标左键计数 */
 int mouserightclick_times=0;
 void OpenGLshow:: mousePressEvent(QMouseEvent *event)
 {
@@ -348,6 +338,7 @@ void OpenGLshow:: receivecloudfilename(QString filename)//----------------接受
     this->update();
 
 };
+/* 三维数据点临时缓冲数组 */
 int cornernumber=10;
 void OpenGLshow:: readclouddata()//---------------------------------------读取点云数据文件
 {
@@ -382,7 +373,7 @@ void OpenGLshow:: receiveseting(QList<float> setinglist)
     RGB        =setinglist[5];
 
 }
-float Lx=0,Ly=0,Lz=0;//------------------测试数据
+
 int RGBdata=0;
 int dataSum=0;
 void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//-------------------------------实时帧处理函数
@@ -465,19 +456,13 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
           yaw_angle = (PI/2)-acos((rotation_r * rotation_r + real_center_distance * real_center_distance - laser_to_center_pt * laser_to_center_pt)/2.0f/rotation_r/real_center_distance);
           real_distance = sqrt((laser_to_dist_pt - rotation_r) * (laser_to_dist_pt - rotation_r) + pitch_distance * pitch_distance);
           center2target = real_distance * cos(pitch_angle);
-         // if(turnleft)
-         // {
-//              real_x = center2target * sin(yaw_angle + Math_angle);
-//              real_z = center2target * cos(yaw_angle + Math_angle);
-         // }
-         // else
-         // {
+
 
                real_x = center2target * sin(yaw_angle - Math_angle);
                real_z = center2target * cos(yaw_angle - Math_angle);
-         // }
+
                real_y = real_distance * sin(-pitch_angle);
-              // Lx+=0.1;Ly+=0.1;Lz+=0.1;
+
                cloud_x.append(real_x);
                cloud_y.append(real_y);
                cloud_z.append(real_z);
@@ -492,11 +477,12 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
 
 }
 
+/* 三维点实时绘制+延时 */
 void OpenGLshow::doingfreshen(cv::Mat frame)
 {
 
     GLclouddataprocess(frame);
-   // this->update();
+
     Delay_MSec(1);
 
 
@@ -512,7 +498,6 @@ void OpenGLshow::clearcloud()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 }
-
 void OpenGLshow::show3Dframefrompicturepath(QString picturepath)//------------------------------------读取历史照片数据
  {
      cloud_x.clear();
@@ -548,7 +533,6 @@ void OpenGLshow::show3Dframefrompicturepath(QString picturepath)//--------------
 
          }
  }
-
 void OpenGLshow::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数
  {
      QTime _Timer = QTime::currentTime().addMSecs(msec);
@@ -558,7 +542,7 @@ void OpenGLshow::Delay_MSec(unsigned int msec)//--------------------------------
      QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
  }
 //-----------------------------------------------------------------------------------------------------以下为opengl框选函数
-
+/* 测距-鼠标绘制框体函数 */
 void OpenGLshow::draw_area()
 {
     int width =GLwidth, height = GLheight;
@@ -617,8 +601,7 @@ void OpenGLshow::draw_area()
 }
 float painter_x_start,painter_y_start,painter_z_start;
 float painter_x_end,painter_y_end,painter_z_end;
-
-
+/* 选点高亮函数 */
 void OpenGLshow::highlight_selected_pts()
 {
     int i = 0;
@@ -731,11 +714,13 @@ void OpenGLshow::highlight_selected_pts()
         glPopMatrix();
 
 }
+/* 选点赋值函数 */
 void OpenGLshow::get_selected_pts_index( vector<int> &v )
 {
     // assign 赋值最快
     v.assign(vec_selected_pts_index.begin(), vec_selected_pts_index.end());
 }
+/* 测距-配置函数 */
 void OpenGLshow::set_config( M3DVector3f *_pts, int _nr, M3DVector2f _left_bottom, M3DVector2f _right_top, M3DMatrix44f _model_view, M3DMatrix44f _proj, int _viewport[] )
 {
     pts = _pts;
@@ -757,6 +742,7 @@ if(mouserightclick_times==2)
 
     cal_selected_index();
 }
+/* 测距-数据填充 */
 void OpenGLshow::cal_selected_index()
 {
     vec_selected_pts_index.clear();
@@ -770,6 +756,7 @@ void OpenGLshow::cal_selected_index()
 
     }
 }
+/* 测距-落点函数 */
 bool OpenGLshow::drop_in_area( M3DVector3f x )
 {
     M3DVector2f win_coord;
@@ -793,8 +780,6 @@ if(mouserightclick_times==2)
 }
 
 //-----------------------------------------------------------------------------------------------------实现函数
-
-
 
 void OpenGLshow:: display(void)
 {

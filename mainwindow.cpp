@@ -23,7 +23,7 @@
 #include <Windows.h>
 #include <process.h>
 #include <exception>
-#include<GL/glut.h>
+//#include<GL/glut.h>
 using namespace std;
 using namespace cv;
 
@@ -347,12 +347,30 @@ void MainWindow::receivedSetTabWidgt2Camera(int K)//----------------------------
 {
     //ui->tabWidget->setCurrentIndex(K);
 }
-void MainWindow::receiveQimageFromHD(QImage image)
+void MainWindow::receiveQimageFromHD(QImage image)//------------------------------------接收HD相机帧
 {
-
+    cv::Mat XXIMAGE;
+    cv::Mat XXgray;
 
        glImage->pictureFromcamera(image);
        ui->openGLWidget_2->update();
+
+       if(startscan)
+       {
+
+         XXIMAGE = Qtthread->QImage2cvMat(image);
+         if(!XXIMAGE.empty())
+        {
+
+             //OpenGL->show();
+             cvtColor(XXIMAGE, XXgray,cv::COLOR_BGR2GRAY);
+             OpenGL->doingfreshen(XXgray);
+             ui->openGLWidget->update();
+            // Delay_MSec(1);
+
+
+         }
+       }
 
 }
 void MainWindow::receiveHDcamerastate(int stateID)
@@ -367,13 +385,13 @@ void MainWindow::receiveHDcamerastate(int stateID)
        ui->textEdit->append("no HDcamera connected");
   }
 }
-cv::Mat XXIMAGE;
-cv::Mat XXgray;
+
 int ddd=0;
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示与扫描开启函数
 {
 
-
+    cv::Mat XXIMAGE;
+    cv::Mat XXgray;
 
 
       QImage rgba =image.mirrored();

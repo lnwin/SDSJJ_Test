@@ -1,6 +1,6 @@
 ﻿#include "mainwindow.h"
 #include <QApplication>
-#include<GL/glut.h>
+//#include<GL/glut.h>
 #include<OpenGLShow.h>
 #include<QDebug>
 
