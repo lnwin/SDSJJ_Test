@@ -1,4 +1,4 @@
-#ifndef GLVIDEOIMAGE_H
+﻿#ifndef GLVIDEOIMAGE_H
 #define GLVIDEOIMAGE_H
 
 #include <QWheelEvent>
@@ -20,7 +20,7 @@ signals:
     void sendcloudlist2GLshow(QList <float>);
 protected:
     void paintEvent(QPaintEvent *e);
-
+    void  resizeGL(int width, int height);
 public slots:
 
     void pictureFromcamera(QImage);

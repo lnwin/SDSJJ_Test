@@ -28,7 +28,7 @@
 #include <OpenGLShow.h>
 #include <CameraParameter.h>
 #include <HDCamera.h>
-
+#include <configuration.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -54,8 +54,7 @@ public:
     void SendData();   
     void searchCamera();
     void USBCameraint();   
-    QtVideoCapture* surface_;
-    void readcamerainformation();
+    QtVideoCapture* surface_;   
 public slots:
     void showImage(QImage );
 
@@ -64,30 +63,16 @@ private slots:
     void on_PortButton_clicked();
     void on_senddatabutton_clicked();
     void on_pointfilepushButton_clicked();   
-    void on_Scanningbutton_clicked();   
-    void on_loadseting_clicked();
+    void on_Scanningbutton_clicked();
     void on_openCamera_clicked();
     void on_show3D_clicked();
-    void on_MaxGLView_clicked();
-    void on_ProduceMatrix_clicked();
-    void on_ParameterContrast_clicked();
+    void on_MaxGLView_clicked();   
     void receivedFromThread(int);
     void receivedSetTabWidgt2Camera(int);
     void on_OpenHDcamera_clicked();
     void receiveQimageFromHD(QImage);
-    void receiveHDcamerastate(int);
-    void on_CameraBrightness_valueChanged(int value);
-
-    void on_CameraGain_valueChanged(int value);
-
-
-    void on_CameraGama_valueChanged(int value);
-
-    void on_Brightness_spinBoxdouble_valueChanged(double arg1);
-
-    void on_Cameragain_spinBoxdouble_valueChanged(double arg1);
-
-    void on_Gama_spinBoxdouble_valueChanged(double arg1);
+    void receiveHDcamerastate(int);   
+    void on_openconfigurationfor_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -95,18 +80,18 @@ private:
     GL_Image *glImage;
     QImage *Picture;
     OpenGLshow *OpenGL;
-    HDCamera *HDCamera;
-    CameraParameter *Camera_Parameter;
+    HDCamera *HDCamera;   
+    Configuration *ConfigForm;
     void  Delay_MSec(unsigned int );
-   // unsigned __stdcall frameGrabbingProc(void);
+    void  MesStatusBar();
+    QLabel *Scanner_Model;
+    QLabel *system_time;
+    QLabel *system_status;
 signals:
     void sendfilepath2Thread(QString);
     //void sendfilepath2opengl(QString);
     void sendfilename2opengl(QString);
-    void sendseting2opengl(QList<float>);
-    void sendbrightness2HDcamera(double);
-    void sendcameragain2HDcamera(double);
-    void sendcameragama2HDcamera(double);
+
 
 
 };

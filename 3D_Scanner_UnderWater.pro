@@ -56,6 +56,7 @@ SOURCES += \
     OpenGLShow.cpp \
     QtVideoCapture.cpp \
     WorkThread.cpp \
+    configuration.cpp \
     gl_image.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -67,12 +68,14 @@ HEADERS += \
     QtVideoCapture.h \
     SDK.h \
     WorkThread.h \
+    configuration.h \
     gl_image.h \
     mainwindow.h \
     math3d.h \
     stb_image.h
 
 FORMS += \
+    configuration.ui \
     mainwindow.ui
 
 TRANSLATIONS += \

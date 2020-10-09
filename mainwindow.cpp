@@ -31,8 +31,6 @@ using namespace cv;
 WorkThread *Qtthread =new WorkThread ();
 QtVideoCapture *Qtvideo ;
 QList <QCameraInfo>Cameralist;
-QList<float>setinglist;
-QList<float>parametersetinglist;
 QString Cameraresolution;
 bool Do=true; //线程标志位
 Mat transformmat;
@@ -54,18 +52,18 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     ui->setupUi(this);
     ui->progressBar->setRange(0,1000);
     surface_= new QtVideoCapture();
+    ConfigForm =new Configuration;
     serial =  new QSerialPort;
     glImage = new GL_Image();
-    OpenGL  = new OpenGLshow();
-    Camera_Parameter =new CameraParameter();//校准对象
+    OpenGL  = new OpenGLshow();   
     HDCamera = HDCamera::GetInstance();
-
+    MesStatusBar();
     //----------------------------------------------------------------------------------串口、工业相机载入
 
     searchPort();
     searchCamera();
    // USBCameraint();//载入USB相机
-   // HDCamera->HDCameraParameterInt();//相机信息获取
+    HDCamera->HDCameraParameterInt();//相机信息获取
 
     //----------------------------------------------------------------------------------工业相机载入
 
@@ -74,24 +72,39 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(surface_, SIGNAL(frameAvailable(QImage)),this, SLOT(showImage(QImage)));//QtVideo显示信号链接
     connect(this, SIGNAL(sendfilepath2Thread(QString)),Qtthread, SLOT(receivefilepath(QString)));//点云文件路径传输
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输   
-    connect(this, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
+    connect(ConfigForm, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
     connect(HDCamera,SIGNAL(sendQimage2Main(QImage)),this,SLOT(receiveQimageFromHD(QImage)));//   HDcamera 的单例类传递函数
    // connect(HDCamera,SIGNAL(sendHDcamerastate(int)),this,SLOT(receiveHDcamerastate(int)));//HDcamera 状态信息传递
-    connect(this, SIGNAL(sendcameragain2HDcamera(double)),HDCamera, SLOT(setCameragain(double)));
-    connect(this, SIGNAL(sendbrightness2HDcamera(double)),HDCamera, SLOT(setCamerbrightness(double)));
-    connect(this, SIGNAL(sendcameragama2HDcamera( double )),HDCamera, SLOT(setCameragama(double)));
-    //--------------------------------------------------glut函数加载
+    connect(ConfigForm, SIGNAL(sendcameragain2HDcamera(double)),HDCamera, SLOT(setCameragain(double)));
+    connect(ConfigForm, SIGNAL(sendbrightness2HDcamera(double)),HDCamera, SLOT(setCamerbrightness(double)));
+    connect(ConfigForm, SIGNAL(sendcameragama2HDcamera( double )),HDCamera, SLOT(setCameragama(double)));
 
-
-
-
-    //------------------------------------------------------------
 
 }
 MainWindow::~MainWindow()
 {
 
    delete ui;
+}
+void MainWindow::MesStatusBar()
+{
+    Scanner_Model=new QLabel(tr(" Scanner Model : Model_0"));
+    system_status=new QLabel(tr(" Scanner Status : null    "));
+    //system_time =new QLabel();
+    //在statusBar中加入两个label
+    ui->statusBar->addWidget(Scanner_Model, 1 );
+    ui->statusBar->addWidget(system_status,0);
+    statusBar()->setStyleSheet(QString("QStatusBar::item{border: 0px}"));
+//    ui->statusBar->addPermanentWidget(system_time,0);
+
+//    QString timeLabel="  current time:";
+//    QDateTime Currtime=QDateTime::currentDateTime();
+//    QString CurrTimeStr=Currtime.toString("  yyyy-MM-dd hh:mm:ss  ");
+//    timeLabel.append(CurrTimeStr);
+//    system_time->setText(timeLabel);
+
+
+
 }
 void MainWindow::on_PortButton_clicked()//-----------------------------------------------串口开启函数
 {
@@ -124,7 +137,7 @@ void MainWindow::on_senddatabutton_clicked()//----------------------------------
 void MainWindow::on_pointfilepushButton_clicked()//--------------------------------------点云路径选择
 {
 
-    QString  srcDirPath = QFileDialog::getExistingDirectory( this, "请选择点云存储路径", "/");
+    QString  srcDirPath = QFileDialog::getExistingDirectory( this, "cloud points path", "/");
     if (srcDirPath.isEmpty())
     {
         return;
@@ -198,22 +211,6 @@ void MainWindow::searchCamera()//-----------------------------------------------
 
 
 }
-void MainWindow::readcamerainformation()
-{
-//    QList<QSize>Cameresollution =Qtthread->camera->supportedViewfinderResolutions();
-
-//    for (const QSize &resolution : Cameresollution)
-//    {
-//        ui->Cameraresolution->addItem(QString("%1x%2").arg(resolution.width()).arg(resolution.height()));
-//    }
-
-//    QList<QCamera::FrameRateRange>Cameframrate =Qtthread->camera->supportedViewfinderFrameRateRanges();
-
-//    for (const QCamera::FrameRateRange & camerarate : Cameframrate)
-//    {
-//        ui->Cameraframerate->addItem(QString::number( camerarate.maximumFrameRate) );
-//    }
-}
 void MainWindow::on_openCamera_clicked()//-----------------------------------------------打开关闭Qt摄像头按钮
  {
 
@@ -225,7 +222,7 @@ void MainWindow::on_openCamera_clicked()//--------------------------------------
          ui->openCamera->setText("Close Camera");
          // ui->openCamera->setStyleSheet("QPushButton{background-color:lightgreen;border-style: inherit ;}");
          ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
-         readcamerainformation();
+
     }
     else
      {
@@ -272,7 +269,7 @@ void MainWindow::on_Scanningbutton_clicked() //---------------------------------
     }
 
 }
-void MainWindow::on_show3D_clicked()
+void MainWindow::on_show3D_clicked()//---------------------------------------------------3D点云显示按钮
 {
 
     QString  srcDirPath = QFileDialog::getOpenFileName( this, "请选择点云文件", "/");
@@ -292,22 +289,6 @@ void MainWindow::on_MaxGLView_clicked()//---------------------------------------
 
 
 };
-void MainWindow::on_ProduceMatrix_clicked()//--------------------------------------------生成校准矩阵按钮
-{
-     parametersetinglist.append(ui->Picture_N->text().toFloat());
-     parametersetinglist.append(ui->P_CornerNumber_row->text().toFloat());
-     parametersetinglist.append(ui->P_CornerNumber_col->text().toFloat());
-     parametersetinglist.append(ui->CellSize_width->text().toFloat());
-     parametersetinglist.append(ui->CellSize_height->text().toFloat());
-     parametersetinglist.append(ui->Iteration_N->text().toFloat());
-     parametersetinglist.append(ui->Accuracy->text().toFloat());
-     Camera_Parameter->CameraParameter_ProduceMatrix(parametersetinglist);
-     parametersetinglist.clear();
-}
-void MainWindow::on_ParameterContrast_clicked()//----------------------------------------校准对比测试按钮
-{
-     Camera_Parameter->CameraParameter_Constrast();
-};
 void MainWindow::on_OpenHDcamera_clicked()//---------------------------------------------打开工业相机
 {
    // HDCamera->show();
@@ -317,12 +298,7 @@ void MainWindow::on_OpenHDcamera_clicked()//------------------------------------
        HDCamerastarted=true;
        ui->OpenHDcamera ->setText("CloseHDcamera");
        ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
-       ui->CameraGain->setEnabled(true);
-       ui->CameraGama->setEnabled(true);
-       ui->CameraBrightness->setEnabled(true);
-       ui->Brightness_spinBoxdouble->setEnabled(true);
-       ui->Gama_spinBoxdouble->setEnabled(true);
-       ui->Cameragain_spinBoxdouble->setEnabled(true);
+
    }
    else
    {
@@ -330,12 +306,7 @@ void MainWindow::on_OpenHDcamera_clicked()//------------------------------------
        HDCamerastarted=false;
        ui->OpenHDcamera ->setText("OpenHDcamera");
        ui->camera_light->setStyleSheet("border-image: url(:/new/icon/picture/gray.png);");
-       ui->CameraGain->setEnabled(false);
-       ui->CameraGama->setEnabled(false);
-       ui->CameraBrightness->setEnabled(false);
-       ui->Brightness_spinBoxdouble->setEnabled(false);
-       ui->Gama_spinBoxdouble->setEnabled(false);
-       ui->Cameragain_spinBoxdouble->setEnabled(false);
+
    }
 
 }
@@ -385,7 +356,6 @@ void MainWindow::receiveHDcamerastate(int stateID)
        ui->textEdit->append("no HDcamera connected");
   }
 }
-
 int ddd=0;
 void MainWindow::showImage(QImage image)//----------------------------------------------图像显示与扫描开启函数
 {
@@ -416,26 +386,6 @@ void MainWindow::showImage(QImage image)//--------------------------------------
 
 
 }
-void MainWindow::on_loadseting_clicked() //----------------------------------------------载入参数按钮
-{
-    setinglist.append( ui->pixelSizeLine->text().toFloat());
-    setinglist.append(ui->focalLine->text().toFloat());
-    setinglist.append(ui->baseLineLine->text().toFloat());
-    setinglist.append(ui->stepAngleLine->text().toFloat()*PI/180);
-    setinglist.append( ui->laserAngleLine->text().toFloat()*PI/180);
-    setinglist.append( ui->rgeLine->text().toInt());
-    emit sendseting2opengl(setinglist);
-    setinglist.clear();
-    ui->textEdit->append("setting successful");
-    //-------------------------------------------------------------------
-   // OpenGL->show();
-   // OpenGL->show3Dframefrompicturepath(ui->pointfilelineEdit->text());
-    //OpenGL->doingfreshen(XXgray);
-   //OpenGL->doingfreshen();
-   // Qtthread->run();
-
-
-}
 void MainWindow::Delay_MSec(unsigned int msec)//-----------------------------------------延时函数
 {
     QTime _Timer = QTime::currentTime().addMSecs(msec);
@@ -444,7 +394,7 @@ void MainWindow::Delay_MSec(unsigned int msec)//--------------------------------
 
     QCoreApplication::processEvents(QEventLoop::AllEvents, 1);
 }
-void MainWindow::USBCameraint()//USB相机载入
+void MainWindow::USBCameraint()//--------------------------------------------------------USB相机载入
 {
     Qtthread-> camera =new QCamera(Cameralist.at(ui->cameralist->currentIndex()));
     QCameraViewfinderSettings set;
@@ -456,73 +406,9 @@ void MainWindow::USBCameraint()//USB相机载入
     Qtthread-> camera->setViewfinder(surface_);
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//---------------------------------------------------------------------按键槽函数
-
-
-
-void MainWindow::on_CameraBrightness_valueChanged(int value)
+void MainWindow::on_openconfigurationfor_clicked()//-------------------------------------配置界面开启按钮
 {
-   double K=value*0.1;
-    ui->Brightness_spinBoxdouble->setValue(K);
-   emit sendbrightness2HDcamera(K);
+    ConfigForm->setWindowTitle("Configuration");
+    ConfigForm->show();
+
 }
-
-void MainWindow::on_CameraGain_valueChanged(int value)
-{
-     double K=value*0.1;
-    ui->Cameragain_spinBoxdouble ->setValue(  K);
-     emit sendcameragain2HDcamera( K);
-}
-
-
-
-
-void MainWindow::on_CameraGama_valueChanged(int value)
-{
-     double K=value*0.1;
-     ui->Gama_spinBoxdouble->setValue( K);
-     emit sendcameragama2HDcamera( K);
-}
-
-
-
-void MainWindow::on_Brightness_spinBoxdouble_valueChanged(double arg1)
-{
-   int K =arg1*10;
-    ui->CameraBrightness->setValue(K);
-}
-
-void MainWindow::on_Cameragain_spinBoxdouble_valueChanged(double arg1)
-{
- int K =arg1*10;
-    ui->CameraGain->setValue(K);
-}
-
-void MainWindow::on_Gama_spinBoxdouble_valueChanged(double arg1)
-{
- int K =arg1*10;
-    ui->CameraGama->setValue(K);
-}
-
-
