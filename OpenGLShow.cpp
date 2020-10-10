@@ -43,6 +43,8 @@ const float pic_height = 480;//480
 const float rotation_r = 50;//50//420
 const float PI = 3.14159265;
 float RGB = 50;
+int SweepSpeed=0;
+int scannermodel=0;
 float Math_angle=0;
 float sumXRGB;
 float sumXX;
@@ -371,14 +373,19 @@ void OpenGLshow:: receiveseting(QList<float> setinglist)
     step_angle= setinglist[3];
     Laser_angle=setinglist[4];
     RGB        =setinglist[5];
-
+    SweepSpeed =setinglist[6];
+    scannermodel =setinglist[7];
 }
 
 int RGBdata=0;
 int dataSum=0;
 void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//-------------------------------实时帧处理函数
 {
-     Math_angle=Math_angle+step_angle;
+
+    if(scannermodel==0)//旋转模式
+    {
+
+    Math_angle=Math_angle+step_angle;
   // cv::Mat AK =frame.clone();
   // mi++;//https://zhidao.baidu.com/question/225669970.html   进行数字的格式化输出
  //  QString b=QString("%1").arg(mi, 4, 10, QChar('0'));
@@ -474,7 +481,12 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
         }
      }
 
+   }
 
+    else//推扫模式
+    {
+
+    }
 }
 
 /* 三维点实时绘制+延时 */

@@ -39,6 +39,7 @@ bool startscan=false;
 bool cameraIsStarted=false;
 bool HDCamerastarted=false;
 const float PI =3.1415926;
+int Scannermodel =0;// 0是选转，1是推扫
 //---------------------------------------------------------------------------------------select
 
 
@@ -63,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     searchPort();
     searchCamera();
    // USBCameraint();//载入USB相机
-    HDCamera->HDCameraParameterInt();//相机信息获取
+   // HDCamera->HDCameraParameterInt();//相机信息获取
 
     //----------------------------------------------------------------------------------工业相机载入
 
@@ -74,10 +75,11 @@ MainWindow::MainWindow(QWidget *parent)// --------------------------------------
     connect(this, SIGNAL(sendfilename2opengl(QString)),OpenGL, SLOT(receivecloudfilename(QString)));//点云文件名字传输   
     connect(ConfigForm, SIGNAL(sendseting2opengl(QList<float>)),OpenGL, SLOT(receiveseting(QList<float>)));//配置信息传输
     connect(HDCamera,SIGNAL(sendQimage2Main(QImage)),this,SLOT(receiveQimageFromHD(QImage)));//   HDcamera 的单例类传递函数
-   // connect(HDCamera,SIGNAL(sendHDcamerastate(int)),this,SLOT(receiveHDcamerastate(int)));//HDcamera 状态信息传递
+   //connect(HDCamera,SIGNAL(sendHDcamerastate(int)),this,SLOT(receiveHDcamerastate(int)));//HDcamera 状态信息传递
     connect(ConfigForm, SIGNAL(sendcameragain2HDcamera(double)),HDCamera, SLOT(setCameragain(double)));
     connect(ConfigForm, SIGNAL(sendbrightness2HDcamera(double)),HDCamera, SLOT(setCamerbrightness(double)));
     connect(ConfigForm, SIGNAL(sendcameragama2HDcamera( double )),HDCamera, SLOT(setCameragama(double)));
+    connect(ConfigForm, SIGNAL(sendscannermodel(int)),this, SLOT(receiveScannerModel(int)));
 
 
 }
@@ -88,21 +90,11 @@ MainWindow::~MainWindow()
 }
 void MainWindow::MesStatusBar()
 {
-    Scanner_Model=new QLabel(tr(" Scanner Model : Model_0"));
+    Scanner_Model=new QLabel(tr(" Scanner Model : Rotating"));
     system_status=new QLabel(tr(" Scanner Status : null    "));
-    //system_time =new QLabel();
-    //在statusBar中加入两个label
     ui->statusBar->addWidget(Scanner_Model, 1 );
     ui->statusBar->addWidget(system_status,0);
     statusBar()->setStyleSheet(QString("QStatusBar::item{border: 0px}"));
-//    ui->statusBar->addPermanentWidget(system_time,0);
-
-//    QString timeLabel="  current time:";
-//    QDateTime Currtime=QDateTime::currentDateTime();
-//    QString CurrTimeStr=Currtime.toString("  yyyy-MM-dd hh:mm:ss  ");
-//    timeLabel.append(CurrTimeStr);
-//    system_time->setText(timeLabel);
-
 
 
 }
@@ -411,4 +403,18 @@ void MainWindow::on_openconfigurationfor_clicked()//----------------------------
     ConfigForm->setWindowTitle("Configuration");
     ConfigForm->show();
 
+}
+void MainWindow::receiveScannerModel(int A)
+{
+   Scannermodel =A;
+  if(A=0)
+  {
+   Scanner_Model->setText(" Scanner Model : Rotating");
+
+  }
+  else
+  {
+      Scanner_Model->setText(" Scanner Model : Sweeping");
+
+  }
 }

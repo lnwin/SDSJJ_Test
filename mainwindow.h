@@ -73,7 +73,7 @@ private slots:
     void receiveQimageFromHD(QImage);
     void receiveHDcamerastate(int);   
     void on_openconfigurationfor_clicked();
-
+    void receiveScannerModel(int);
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;

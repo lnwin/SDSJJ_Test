@@ -1,11 +1,11 @@
-#include<CameraParameter.h>
+﻿#include<CameraParameter.h>
 #include<QApplication>
 #include<QDebug>
 #include<QMessageBox>
 //------------------------------------------------------------------------参数配置
 using namespace cv;
 using namespace std;
-QString Matrixfilepath ;
+QString Matrixfilepath;
 string imagename;
 float picture_N,p_CornerNumber_row,p_CornerNumber_col,cellSize_width,cellSize_height,iteration_N,accuracy;
 cv::Mat img_source;

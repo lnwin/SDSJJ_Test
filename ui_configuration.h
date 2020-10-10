@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QDoubleSpinBox>
@@ -19,6 +20,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
+#include <QtWidgets/QSplitter>
 
 QT_BEGIN_NAMESPACE
 
@@ -29,20 +31,22 @@ public:
     QGroupBox *groupBox;
     QPushButton *ProduceMatrix;
     QPushButton *ParameterContrast;
-    QLineEdit *Picture_N;
-    QLabel *label;
-    QLabel *label_6;
-    QLabel *label_2;
-    QLabel *label_4;
-    QLineEdit *P_CornerNumber_col;
-    QLineEdit *Accuracy;
-    QLabel *label_5;
-    QLineEdit *Iteration_N;
-    QLineEdit *CellSize_height;
-    QLineEdit *P_CornerNumber_row;
-    QLabel *label_3;
+    QSplitter *splitter;
     QLabel *label_7;
+    QLabel *label_2;
+    QLabel *label;
+    QLabel *label_3;
+    QLabel *label_4;
+    QLabel *label_5;
+    QLabel *label_6;
+    QSplitter *splitter_2;
+    QLineEdit *Picture_N;
+    QLineEdit *P_CornerNumber_row;
+    QLineEdit *P_CornerNumber_col;
     QLineEdit *CellSize_width;
+    QLineEdit *CellSize_height;
+    QLineEdit *Iteration_N;
+    QLineEdit *Accuracy;
     QGroupBox *groupBox_2;
     QLabel *label_10;
     QDoubleSpinBox *Brightness_spinBoxdouble;
@@ -66,73 +70,87 @@ public:
     QLabel *stepangleplable;
     QLineEdit *stepAngleLine;
     QLabel *PixelSizelable;
+    QLabel *sweepspeed;
+    QLineEdit *sweepspeedline;
+    QGroupBox *groupBox_4;
+    QCheckBox *rotatingmodel;
+    QCheckBox *sweepingmodel;
+    QLabel *label_8;
 
     void setupUi(QDialog *Configuration)
     {
         if (Configuration->objectName().isEmpty())
             Configuration->setObjectName(QString::fromUtf8("Configuration"));
-        Configuration->resize(548, 326);
+        Configuration->resize(548, 365);
         buttonBox = new QDialogButtonBox(Configuration);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(340, 290, 161, 32));
+        buttonBox->setGeometry(QRect(400, 310, 141, 41));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::SaveAll);
         groupBox = new QGroupBox(Configuration);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(180, 10, 361, 181));
+        groupBox->setGeometry(QRect(180, 10, 361, 211));
         ProduceMatrix = new QPushButton(groupBox);
         ProduceMatrix->setObjectName(QString::fromUtf8("ProduceMatrix"));
-        ProduceMatrix->setGeometry(QRect(200, 25, 150, 75));
+        ProduceMatrix->setGeometry(QRect(200, 30, 150, 75));
         ProduceMatrix->setMinimumSize(QSize(0, 75));
         ParameterContrast = new QPushButton(groupBox);
         ParameterContrast->setObjectName(QString::fromUtf8("ParameterContrast"));
-        ParameterContrast->setGeometry(QRect(200, 100, 150, 75));
+        ParameterContrast->setGeometry(QRect(200, 120, 150, 75));
         ParameterContrast->setMinimumSize(QSize(0, 75));
-        Picture_N = new QLineEdit(groupBox);
-        Picture_N->setObjectName(QString::fromUtf8("Picture_N"));
-        Picture_N->setGeometry(QRect(140, 24, 39, 20));
-        label = new QLabel(groupBox);
-        label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(10, 65, 108, 21));
-        label_6 = new QLabel(groupBox);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
-        label_6->setGeometry(QRect(10, 151, 108, 21));
-        label_2 = new QLabel(groupBox);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(10, 43, 108, 22));
-        label_4 = new QLabel(groupBox);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(10, 108, 108, 21));
-        P_CornerNumber_col = new QLineEdit(groupBox);
-        P_CornerNumber_col->setObjectName(QString::fromUtf8("P_CornerNumber_col"));
-        P_CornerNumber_col->setGeometry(QRect(140, 66, 39, 20));
-        Accuracy = new QLineEdit(groupBox);
-        Accuracy->setObjectName(QString::fromUtf8("Accuracy"));
-        Accuracy->setGeometry(QRect(140, 150, 39, 20));
-        label_5 = new QLabel(groupBox);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setGeometry(QRect(10, 129, 108, 22));
-        Iteration_N = new QLineEdit(groupBox);
-        Iteration_N->setObjectName(QString::fromUtf8("Iteration_N"));
-        Iteration_N->setGeometry(QRect(140, 129, 39, 20));
-        CellSize_height = new QLineEdit(groupBox);
-        CellSize_height->setObjectName(QString::fromUtf8("CellSize_height"));
-        CellSize_height->setGeometry(QRect(140, 108, 39, 20));
-        P_CornerNumber_row = new QLineEdit(groupBox);
-        P_CornerNumber_row->setObjectName(QString::fromUtf8("P_CornerNumber_row"));
-        P_CornerNumber_row->setGeometry(QRect(140, 45, 39, 20));
-        label_3 = new QLabel(groupBox);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(10, 86, 108, 22));
-        label_7 = new QLabel(groupBox);
+        splitter = new QSplitter(groupBox);
+        splitter->setObjectName(QString::fromUtf8("splitter"));
+        splitter->setGeometry(QRect(10, 20, 108, 181));
+        splitter->setOrientation(Qt::Vertical);
+        label_7 = new QLabel(splitter);
         label_7->setObjectName(QString::fromUtf8("label_7"));
-        label_7->setGeometry(QRect(10, 22, 108, 21));
-        CellSize_width = new QLineEdit(groupBox);
+        splitter->addWidget(label_7);
+        label_2 = new QLabel(splitter);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        splitter->addWidget(label_2);
+        label = new QLabel(splitter);
+        label->setObjectName(QString::fromUtf8("label"));
+        splitter->addWidget(label);
+        label_3 = new QLabel(splitter);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        splitter->addWidget(label_3);
+        label_4 = new QLabel(splitter);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        splitter->addWidget(label_4);
+        label_5 = new QLabel(splitter);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        splitter->addWidget(label_5);
+        label_6 = new QLabel(splitter);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+        splitter->addWidget(label_6);
+        splitter_2 = new QSplitter(groupBox);
+        splitter_2->setObjectName(QString::fromUtf8("splitter_2"));
+        splitter_2->setGeometry(QRect(130, 20, 41, 181));
+        splitter_2->setOrientation(Qt::Vertical);
+        Picture_N = new QLineEdit(splitter_2);
+        Picture_N->setObjectName(QString::fromUtf8("Picture_N"));
+        splitter_2->addWidget(Picture_N);
+        P_CornerNumber_row = new QLineEdit(splitter_2);
+        P_CornerNumber_row->setObjectName(QString::fromUtf8("P_CornerNumber_row"));
+        splitter_2->addWidget(P_CornerNumber_row);
+        P_CornerNumber_col = new QLineEdit(splitter_2);
+        P_CornerNumber_col->setObjectName(QString::fromUtf8("P_CornerNumber_col"));
+        splitter_2->addWidget(P_CornerNumber_col);
+        CellSize_width = new QLineEdit(splitter_2);
         CellSize_width->setObjectName(QString::fromUtf8("CellSize_width"));
-        CellSize_width->setGeometry(QRect(140, 87, 39, 20));
+        splitter_2->addWidget(CellSize_width);
+        CellSize_height = new QLineEdit(splitter_2);
+        CellSize_height->setObjectName(QString::fromUtf8("CellSize_height"));
+        splitter_2->addWidget(CellSize_height);
+        Iteration_N = new QLineEdit(splitter_2);
+        Iteration_N->setObjectName(QString::fromUtf8("Iteration_N"));
+        splitter_2->addWidget(Iteration_N);
+        Accuracy = new QLineEdit(splitter_2);
+        Accuracy->setObjectName(QString::fromUtf8("Accuracy"));
+        splitter_2->addWidget(Accuracy);
         groupBox_2 = new QGroupBox(Configuration);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
-        groupBox_2->setGeometry(QRect(10, 200, 271, 121));
+        groupBox_2->setGeometry(QRect(10, 230, 271, 121));
         label_10 = new QLabel(groupBox_2);
         label_10->setObjectName(QString::fromUtf8("label_10"));
         label_10->setGeometry(QRect(20, 50, 66, 24));
@@ -191,7 +209,7 @@ public:
         CameraBrightness->setOrientation(Qt::Horizontal);
         groupBox_3 = new QGroupBox(Configuration);
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-        groupBox_3->setGeometry(QRect(10, 10, 141, 181));
+        groupBox_3->setGeometry(QRect(10, 10, 141, 211));
         Focallabel = new QLabel(groupBox_3);
         Focallabel->setObjectName(QString::fromUtf8("Focallabel"));
         Focallabel->setGeometry(QRect(20, 50, 60, 20));
@@ -231,6 +249,25 @@ public:
         PixelSizelable = new QLabel(groupBox_3);
         PixelSizelable->setObjectName(QString::fromUtf8("PixelSizelable"));
         PixelSizelable->setGeometry(QRect(20, 24, 60, 20));
+        sweepspeed = new QLabel(groupBox_3);
+        sweepspeed->setObjectName(QString::fromUtf8("sweepspeed"));
+        sweepspeed->setGeometry(QRect(20, 180, 54, 12));
+        sweepspeedline = new QLineEdit(groupBox_3);
+        sweepspeedline->setObjectName(QString::fromUtf8("sweepspeedline"));
+        sweepspeedline->setGeometry(QRect(90, 180, 39, 20));
+        groupBox_4 = new QGroupBox(Configuration);
+        groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
+        groupBox_4->setGeometry(QRect(290, 230, 101, 121));
+        rotatingmodel = new QCheckBox(groupBox_4);
+        rotatingmodel->setObjectName(QString::fromUtf8("rotatingmodel"));
+        rotatingmodel->setGeometry(QRect(10, 40, 71, 16));
+        rotatingmodel->setChecked(true);
+        sweepingmodel = new QCheckBox(groupBox_4);
+        sweepingmodel->setObjectName(QString::fromUtf8("sweepingmodel"));
+        sweepingmodel->setGeometry(QRect(10, 80, 71, 16));
+        label_8 = new QLabel(Configuration);
+        label_8->setObjectName(QString::fromUtf8("label_8"));
+        label_8->setGeometry(QRect(410, 270, 131, 21));
 
         retranslateUi(Configuration);
         QObject::connect(buttonBox, SIGNAL(accepted()), Configuration, SLOT(accept()));
@@ -251,25 +288,25 @@ public:
         ParameterContrast->setToolTip(QCoreApplication::translate("Configuration", "<html><head/><body><p>\347\225\270\345\217\230\346\240\241\345\207\206\346\265\213\350\257\225</p></body></html>", nullptr));
 #endif // QT_CONFIG(tooltip)
         ParameterContrast->setText(QCoreApplication::translate("Configuration", "Calibrate Contrast", nullptr));
-        Picture_N->setText(QCoreApplication::translate("Configuration", "62", nullptr));
-        label->setText(QCoreApplication::translate("Configuration", "P_CornerNumber_col", nullptr));
-        label_6->setText(QCoreApplication::translate("Configuration", "Accuracy", nullptr));
-        label_2->setText(QCoreApplication::translate("Configuration", "P_CornerNumber_row", nullptr));
-        label_4->setText(QCoreApplication::translate("Configuration", "CellSize_height", nullptr));
-        P_CornerNumber_col->setText(QCoreApplication::translate("Configuration", "6", nullptr));
-        Accuracy->setText(QCoreApplication::translate("Configuration", "0.01", nullptr));
-        label_5->setText(QCoreApplication::translate("Configuration", "Iteration_N", nullptr));
-        Iteration_N->setText(QCoreApplication::translate("Configuration", "50", nullptr));
-        CellSize_height->setText(QCoreApplication::translate("Configuration", "20", nullptr));
-        P_CornerNumber_row->setText(QCoreApplication::translate("Configuration", "9", nullptr));
-        label_3->setText(QCoreApplication::translate("Configuration", "CellSize_width", nullptr));
         label_7->setText(QCoreApplication::translate("Configuration", "Picture_N", nullptr));
+        label_2->setText(QCoreApplication::translate("Configuration", "P_CornerNumber_row", nullptr));
+        label->setText(QCoreApplication::translate("Configuration", "P_CornerNumber_col", nullptr));
+        label_3->setText(QCoreApplication::translate("Configuration", "CellSize_width", nullptr));
+        label_4->setText(QCoreApplication::translate("Configuration", "CellSize_height", nullptr));
+        label_5->setText(QCoreApplication::translate("Configuration", "Iteration_N", nullptr));
+        label_6->setText(QCoreApplication::translate("Configuration", "Accuracy", nullptr));
+        Picture_N->setText(QCoreApplication::translate("Configuration", "62", nullptr));
+        P_CornerNumber_row->setText(QCoreApplication::translate("Configuration", "9", nullptr));
+        P_CornerNumber_col->setText(QCoreApplication::translate("Configuration", "6", nullptr));
         CellSize_width->setText(QCoreApplication::translate("Configuration", "22", nullptr));
+        CellSize_height->setText(QCoreApplication::translate("Configuration", "20", nullptr));
+        Iteration_N->setText(QCoreApplication::translate("Configuration", "50", nullptr));
+        Accuracy->setText(QCoreApplication::translate("Configuration", "0.01", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("Configuration", "CameraSetting", nullptr));
         label_10->setText(QCoreApplication::translate("Configuration", "Camera gain", nullptr));
         label_11->setText(QCoreApplication::translate("Configuration", "Gama", nullptr));
         label_9->setText(QCoreApplication::translate("Configuration", "brightness ", nullptr));
-        groupBox_3->setTitle(QCoreApplication::translate("Configuration", "ScannerSetting", nullptr));
+        groupBox_3->setTitle(QCoreApplication::translate("Configuration", "ScannerSetting(mm)", nullptr));
         Focallabel->setText(QCoreApplication::translate("Configuration", "focal", nullptr));
         pixelSizeLine->setText(QCoreApplication::translate("Configuration", "0.009", nullptr));
         RGBlabel->setText(QCoreApplication::translate("Configuration", "rgb", nullptr));
@@ -282,6 +319,12 @@ public:
         stepangleplable->setText(QCoreApplication::translate("Configuration", "stepAngle", nullptr));
         stepAngleLine->setText(QCoreApplication::translate("Configuration", "0.7", nullptr));
         PixelSizelable->setText(QCoreApplication::translate("Configuration", "pixelSize", nullptr));
+        sweepspeed->setText(QCoreApplication::translate("Configuration", "sweepspeed", nullptr));
+        sweepspeedline->setText(QCoreApplication::translate("Configuration", "70", nullptr));
+        groupBox_4->setTitle(QCoreApplication::translate("Configuration", "Scanner Model", nullptr));
+        rotatingmodel->setText(QCoreApplication::translate("Configuration", "Rotating", nullptr));
+        sweepingmodel->setText(QCoreApplication::translate("Configuration", "Sweeping", nullptr));
+        label_8->setText(QCoreApplication::translate("Configuration", "Save all before close ", nullptr));
     } // retranslateUi
 
 };

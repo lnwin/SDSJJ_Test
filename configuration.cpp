@@ -1,6 +1,6 @@
 ﻿#include "configuration.h"
 #include "ui_configuration.h"
-
+#include <QMessageBox>
 QList<float>setinglist;
 const float PI =3.1415926;
 QList<float>parametersetinglist;
@@ -26,8 +26,22 @@ void Configuration::on_buttonBox_accepted()
     setinglist.append( ui->stepAngleLine->text().toFloat()*PI/180);
     setinglist.append( ui->laserAngleLine->text().toFloat()*PI/180);
     setinglist.append( ui->rgeLine->text().toInt());
+    setinglist.append(ui->sweepspeedline->text().toInt());
+
+
+    if(ui->rotatingmodel->isChecked())
+    {
+        emit sendscannermodel(0);
+        setinglist.append(0);
+    }
+    if(ui->sweepingmodel->isChecked())
+    {
+        emit sendscannermodel(1);
+         setinglist.append(1);
+    }
     emit sendseting2opengl(setinglist);
     setinglist.clear();
+
 }
 
 void Configuration::on_CameraBrightness_valueChanged(int value)
@@ -80,9 +94,51 @@ void Configuration::on_ProduceMatrix_clicked()
     parametersetinglist.append(ui->Accuracy->text().toFloat());
     Camera_Parameter->CameraParameter_ProduceMatrix(parametersetinglist);
     parametersetinglist.clear();
+
+
 }
 
 void Configuration::on_ParameterContrast_clicked()
 {
    Camera_Parameter->CameraParameter_Constrast();
+}
+
+
+
+void Configuration::on_rotatingmodel_clicked()
+{
+    if(ui->sweepingmodel->isChecked())
+    {
+
+        ui->sweepingmodel->setChecked(false);
+        ui->rotatingmodel->setChecked(true);
+    }
+    if(ui->rotatingmodel->isChecked())
+    {
+        ui->rotatingmodel->setChecked(true);
+
+
+    }
+
+
+}
+
+void Configuration::on_sweepingmodel_clicked()
+{
+    if(ui->rotatingmodel->isChecked())
+    {
+
+        ui->sweepingmodel->setChecked(true);
+        ui->rotatingmodel->setChecked(false);
+    }
+    if(ui->sweepingmodel->isChecked())
+    {
+        ui->sweepingmodel->setChecked(true);
+//        QMessageBox mesbox;
+//        mesbox.setText("Model selected already");
+//        mesbox.exec();
+//        return;
+
+    }
+
 }
