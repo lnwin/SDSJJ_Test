@@ -53,6 +53,7 @@ float Pic_y;
 float yaw_angle,laser_to_dist_pt,laser_to_current_pt,laser_to_center_pt,center_distance,real_center_distance,real_distance,pitch_angle,pitch_distance,center2target;
 int Maxindex_n,MaxRGB;
 float real_x=0,real_y=0,real_z=0;
+float Ddx,Ddy;
 //---------------------------------------------------------------------------------------激光测距参数
 
 cv::Mat copymat =cv::Mat(cv::Size(640,480),CV_8UC3);
@@ -276,6 +277,8 @@ void OpenGLshow:: mousePressEvent(QMouseEvent *event)
 void OpenGLshow:: mouseReleaseEvent(QMouseEvent *event)
 {
         bool_select_area = false;
+        Ddx=pitch;
+        Ddy=yaw;
 
         this->update();
 }
@@ -287,10 +290,10 @@ void OpenGLshow:: mouseMoveEvent(QMouseEvent *event)
 
 
 
-       xoffset = (event->x()-mousedond_x)/40;
-       yaw+=xoffset;
-       yoffset = (event->y()-mousedond_y)/40;
-       pitch-=yoffset;
+       pitch = Ddx+(event->x()-mousedond_x);
+
+       yaw = Ddy+(event->y()-mousedond_y);
+
 
     }
     else if(mousebutton_right)
@@ -792,7 +795,7 @@ if(mouserightclick_times==2)
 }
 
 //-----------------------------------------------------------------------------------------------------实现函数
-
+int _z;
 void OpenGLshow:: display(void)
 {
    M3DMatrix44f mat_proj, mat_modelview;
@@ -820,8 +823,9 @@ void OpenGLshow:: display(void)
    glLoadIdentity();
  //  gluLookAt(0, 0, 70, 0, 0, 0, 0, 1, 0);
    glTranslatef(translate_x,translate_y,fov); //先平移再旋转
-   glRotatef(yaw,0.0,1.0,0.0);
-   glRotatef(pitch,0.0,0.0,1.0);
+   glRotatef(yaw,1.0,0.0,0.0);
+   glRotatef(pitch,0.0,1.0,0.0);
+   //glRotatef(_z,0.0,0.0,1.0);
  //  glColor4f(0.1, 0.4, 0.6, 0.7);
    glPushMatrix();
   // 获取模型视图矩阵
