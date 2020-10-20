@@ -112,6 +112,7 @@ void MainWindow::on_PortButton_clicked()//--------------------------------------
     QObject::connect(serial,&QSerialPort::readyRead,this,&MainWindow::ReadData);
     ui->textEdit->append("SerialPort Opened");
     ui->PortButton->setText("Close Port");
+
     }
     else
     {
@@ -257,6 +258,14 @@ void MainWindow::on_Scanningbutton_clicked() //---------------------------------
           ui->Scanningbutton->setText("Start Scan");
           startscan=false;
           ui->scan_light->setStyleSheet("border-image: url(:/new/icon/picture/gray.png);");
+          if(!ui->pointfilelineEdit->text().isEmpty())
+          {
+          OpenGL->savepointdata(ui->pointfilelineEdit->text());
+          }
+          else
+          {
+              ui->textEdit->append("pointfile's path is empty");
+          }
          // Qtthread->cloudDataRecord();
     }
 

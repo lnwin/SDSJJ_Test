@@ -35,7 +35,7 @@ public:
    /*** 还可以添加一些helper函数 ***/
    //-----------------------------------
    void display();
-
+   void savepointdata(QString filepath);
 private:
        bool drop_in_area(M3DVector3f x);
        void cal_selected_index();

@@ -344,7 +344,7 @@ void OpenGLshow:: receivecloudfilename(QString filename)//----------------接受
 
 };
 /* 三维数据点临时缓冲数组 */
-int cornernumber=10;
+int cornernumber=0;
 void OpenGLshow:: readclouddata()//---------------------------------------读取点云数据文件
 {
      QFile file(cloudfilename);
@@ -473,10 +473,13 @@ void OpenGLshow:: GLclouddataprocess(cv::Mat frame)//---------------------------
 
                real_y = real_distance * sin(-pitch_angle);
 
-               cloud_x.append(real_x);
-               cloud_y.append(real_y);
-               cloud_z.append(real_z);
+              // cloud_x.append(real_x);
+              // cloud_y.append(real_y);
+             //  cloud_z.append(real_z);
 
+               corners[cornernumber][0]=real_x;
+               corners[cornernumber][1]=real_y;
+               corners[cornernumber][2]=real_z;
 
 
 
@@ -497,12 +500,44 @@ void OpenGLshow::doingfreshen(cv::Mat frame)
 {
 
     GLclouddataprocess(frame);
-
+    cornernumber++;
     Delay_MSec(1);
 
 
 
 };
+void OpenGLshow::savepointdata(QString filepath)
+{
+
+    QDateTime filedate;
+    filepath=filepath+"/"+filedate.currentDateTime().toString("yyyy.MM.dd&hh_mm_ss")+".txt";
+    QFile cloudfile(filepath);
+    QTextStream stream(&cloudfile);
+    if(!cloudfile.exists())
+             {
+                 cloudfile.open(QIODevice::WriteOnly | QIODevice::Text );
+                 for( int i=0;i<cornernumber; i++)
+                 {
+                      stream<< QString::number( corners[i][0]) +","+QString::number( corners[i][1])+","+QString::number( corners[i][2])<<"\n";
+                 }
+
+             }
+    else
+    {
+        cloudfile.open(QIODevice::WriteOnly | QIODevice::Text|QIODevice::Append);
+
+         for( int i=0;i<cornernumber; i++)
+        {
+            stream<< QString::number( corners[i][0]) +","+QString::number( corners[i][1])+","+QString::number( corners[i][2])<<"\n";
+
+         }
+
+    }
+
+    cornernumber=0;
+
+
+}
 void OpenGLshow::clearcloud()
 {
     cloud_x.clear();
