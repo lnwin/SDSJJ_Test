@@ -239,6 +239,8 @@ void MainWindow::on_Scanningbutton_clicked() //---------------------------------
         if(cameraIsStarted)
         {
           ui->Scanningbutton->setText("Stop Scan");
+          Delay_MSec(10);
+          SendData();
           startscan=true;
           ui->scan_light->setStyleSheet("border-image: url(:/new/icon/picture/green.png);");
         // OpenGL->show();  //添加这句后数据处理只执行一次就卡死

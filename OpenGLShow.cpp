@@ -851,44 +851,49 @@ void OpenGLshow:: display(void)
    glLoadIdentity ();
    gluPerspective(65.0, (GLfloat) width/(GLfloat) height, 1.0, 30000);
 
-   // 获取投影矩阵
+   //获取投影矩阵
    glGetFloatv(GL_PROJECTION_MATRIX, mat_proj);
 
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
- //  gluLookAt(0, 0, 70, 0, 0, 0, 0, 1, 0);
-   glTranslatef(translate_x,translate_y,fov); //先平移再旋转
+   //gluLookAt(0, 0, 70, 0, 0, 0, 0, 1, 0);
    glRotatef(yaw,1.0,0.0,0.0);
    glRotatef(pitch,0.0,1.0,0.0);
+   glTranslatef(translate_x,translate_y,fov); //先平移再旋转,opengl的逆操作
+
    //glRotatef(_z,0.0,0.0,1.0);
- //  glColor4f(0.1, 0.4, 0.6, 0.7);
+   //glColor4f(0.1, 0.4, 0.6, 0.7);
    glPushMatrix();
-  // 获取模型视图矩阵
+   //获取模型视图矩阵
    glGetFloatv(GL_MODELVIEW_MATRIX, mat_modelview);
+   //*******可以尝试设置点云的材质属性***********//http://anony3721.blog.163.com/blog/static/511974201141345834693/
+   glColorMaterial(GL_FRONT,GL_DIFFUSE);
+   glEnable(GL_COLOR_MATERIAL);
    for (int i = 0; i < cornernumber-3; i++)
              {
                 // glLoadName(i);//name the points
                  glBegin(GL_POINTS);
+
                  viewDistance = sqrt(corners[i][0]*corners[i][0]+corners[i][2]*corners[i][2])/1000.0f;
-                 if(viewDistance < 5)
+                if(viewDistance < 5)
                 {
                      glColor3f (1.0f, 0.5f, 0.0f);
                      glVertex3fv(corners[i]);
 
                 }
-                 else if(viewDistance >= 5 && viewDistance < 6)
+                else if(viewDistance >= 5 && viewDistance < 6)
                 {
                      glColor3f (1.0f, 0.6f, 0.0f);
                       glVertex3fv(corners[i]);
 
                 }
-                 else if(viewDistance >= 6 && viewDistance < 7)
+                else if(viewDistance >= 6 && viewDistance < 7)
                 {
                      glColor3f (1.0f, 0.7f, 0.0f);
                      glVertex3fv(corners[i]);
 
                 }
-                 else if(viewDistance >= 7 && viewDistance < 8)
+                else if(viewDistance >= 7 && viewDistance < 8)
                 {
                      glColor3f (1.0f, 0.8f, 0.0f);
                       glVertex3fv(corners[i]);
@@ -918,7 +923,7 @@ void OpenGLshow:: display(void)
                      glVertex3fv(corners[i]);
 
                 }
-               else   if(viewDistance >= 12 && viewDistance < 13)
+                else  if(viewDistance >= 12 && viewDistance < 13)
                 {
                      glColor3f (0.7f, 1.0f, 0.0f);
                      glVertex3fv(corners[i]);
@@ -954,14 +959,16 @@ void OpenGLshow:: display(void)
                      glVertex3fv(corners[i]);
 
                 }
-                 else  if(viewDistance >= 18)
+                else  if(viewDistance >= 18)
                  {
                  glColor3f (0.1f, 1.0f, 0.0f);
                  glVertex3fv(corners[i]);
 
                 }
-               glEnd();
+                glEnd();
+
 }
+   glDisable(GL_COLOR_MATERIAL);
    glPopMatrix();
    glPopAttrib();
    // 配置  
